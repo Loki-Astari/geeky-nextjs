@@ -14,6 +14,7 @@ description: C++ for beginners. Part 2 Common Mistakes
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2013/11/18/so-you-want-to-learn-c-plus-plus-part-2/"
 ---
 
 ### 1: using namespace

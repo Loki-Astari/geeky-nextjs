@@ -14,6 +14,7 @@ description: Socket wrappers in C++
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2016/04/09/socket-read/"
 ---
 
 ## Checking read/write success

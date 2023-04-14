@@ -14,6 +14,7 @@ description: C++ for beginners. Part 5 Control Flow. So far we have demonstrated
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2013/12/02/so-you-want-to-learn-c-plus-plus-part-5/"
 ---
 
 So far we have demonstrated basic programs that just do a single task without making any decisions. Most (all but the most trivial) programming languages provide constructs for decision making (Conditional Branching).

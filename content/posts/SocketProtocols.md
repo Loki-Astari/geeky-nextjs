@@ -14,6 +14,7 @@ description: A very cursory look at protocols and why they are needed
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2016/05/29/socket-protocols/"
 ---
 
 In the previous articles I have used a very simplistic protocol. In real world situations this simple protocol is not sufficient. To provide a more robust connection between client and server a communications protocol is required so that we can validate messages are sent correctly and generate appropriate responses that can also be validated.

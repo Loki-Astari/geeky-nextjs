@@ -14,6 +14,7 @@ description: Socket wrappers in C++
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2016/04/08/socket-programming-in-c-version-1/"
 ---
 
 Building a simple client/server application is the common first internet based applications developers attempt. These applications are built on top of the socket communication library, but socket programming in C++ is not obvious as there are no standard libraries and thus you have to fall back to the C API. The closest "standardish" sort of thing we have is [Boost.asio](https://www.boost.org/doc/libs/1_60_0/doc/html/boost_asio/overview.html) which is at the other end of the spectrum in terms of API and involves a cognitive leap to understand what is happening underneath (or you can just trust the library maintainers). The other alternative is [libcurl](https://curl.haxx.se/libcurl/c/); the "easy curl" layer is an abstraction of the `socket()` API, while the "multi curl" layer is an abstraction of the `pselect()` API that allows multiple sockets to be handled in a single thread.

@@ -14,6 +14,7 @@ description: C++ for beginners. Part 3 Variables. In most programming languages 
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2013/11/19/so-you-want-to-learn-c-plus-plus-part-3/"
 ---
 
 ## Variables

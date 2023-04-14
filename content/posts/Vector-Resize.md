@@ -14,6 +14,7 @@ description: C++ By Example. The Vector Part 3. Because resizing a vector is exp
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2016/03/12/vector-resize/"
 ---
 Because resizing a vector is expensive; the `std::vector` class uses exponential growth to minimize the number of times that the vector is resized: a technique we replicate in this version. But every now and then you still need to resize the internal buffer.
 

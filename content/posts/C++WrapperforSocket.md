@@ -14,6 +14,7 @@ description: Socket wrappers in C++
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2016/05/26/c-plus-plus-wrapper-for-socket/"
 ---
 The last two articles examined the "C Socket" interface that is provided by OS. In this article I wrap this functionality in a very simple C++ class to provide guaranteed closing and apply a consistent exception strategy. The first step is to rewrite the client/server code with all the low level socket code removed. This will help identify the interface that the wrapper class needs to implement.
 

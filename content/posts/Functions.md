@@ -14,6 +14,7 @@ description: C++ for beginners. Part 4 Functions. All C++ applications must have
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2013/11/24/so-you-want-to-learn-c-plus-plus-part-4/"
 ---
 
 ### Usage

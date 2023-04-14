@@ -9,6 +9,7 @@ description: Switching the blog to octopress.
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2013/11/30/switching-to-octopress/"
 ---
 
 ## Switching to OctoPress and Github

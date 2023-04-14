@@ -11,6 +11,7 @@ description: One of the things the most non-programmers are surprised about is t
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2011/10/21/interviews-processes/"
 ---
 
 We ([SEOmoz.org](https://SEOmoz.org)) have been doing a lot of interviews for new engineers lately. I have been asked to help out trying to find the great new team members from the hordes of applicants (luckily we have a great team pre-screening applicants before they get to engineers (thanks you guys).

@@ -14,6 +14,7 @@ description: C++ for beginners. Part 1 Hello World. I keep trying to think about
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2013/11/12/want-to-set-up-wordpress-to-write-about-programming/"
 ---
 This is the first article in the series
 OK. Lets do this.

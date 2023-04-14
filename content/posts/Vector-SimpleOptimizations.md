@@ -14,6 +14,7 @@ description: C++ By Example. The Vector Part 4. We look at a couple of other typ
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2016/03/19/vector-simple-optimizations/"
 ---
 
 So now that we have used `std::is_nothrow_move_constructible` we can also look at a couple of other types available in the template utility library.

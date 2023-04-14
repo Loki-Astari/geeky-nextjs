@@ -14,6 +14,7 @@ description: C++ By Example. Part 1 Unique Pointer. It seems that it is a write 
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2014/12/30/c-plus-plus-by-example-smart-pointer/"
 ---
 On [codereview.stackexchange.com](https://codereview.stackexchange.com) in the C++ tag it seems that it is a write of passage to implement your own version of a smart pointer. A quick search brings up the following:
 

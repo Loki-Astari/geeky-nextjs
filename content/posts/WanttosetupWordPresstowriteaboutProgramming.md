@@ -9,6 +9,7 @@ description: Setting up WordPress to display syntax highlighted code was a strug
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2013/11/12/want-to-set-up-wordpress-to-write-about-programming/"
 ---
 
 Setting up WordPress to display syntax highlighted code was a struggle due to different plugins that don’t all seem to work together, the different types of editor, etc. I don’t want to learn all about WordPress. I just want to write some simple articles.

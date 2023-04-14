@@ -9,6 +9,7 @@ description: New Years resolution
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2014/12/06/nearly-new-year-slash-new-resolution/"
 ---
 ## New Year/New Resolution
 They say you can only get better at something by doing it.

@@ -12,6 +12,7 @@ description: So why is the constant resize factor of the array 1.5 or 2?
 image: /images/post/post-1.png
 featured: true
 draft: false
+disqusId: "http://lokiastari.com/blog/2016/03/25/resizemaths/"
 ---
 
 So I never really considered why the resize of vector used a constant expansion of 1.5 or 2 (in some popular implementations). That was until I did my previous article Xseries ["Vector"]({{config.site}}/blog/2016/02/27/vector/) where I concentrated a lot on resource management and did a section on [resizing the vector]({{config.site}}/blog/2016/03/12/vector-resize/). Originally in the code I tried to be clever, a mistake. I used a resize value of 1.62 (an approximation of `Phi`), because I vaguely remembered reading an article that this was the optimum resize factor. When I put this out for code review it was pointed out to me that this value was too large, the optimum value must be less than or equal to `Phi` (1.6180339887) and that exceeding this limit actually made things a lot worse.
