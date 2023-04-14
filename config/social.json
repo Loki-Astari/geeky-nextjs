@@ -1,11 +1,11 @@
 {
-  "facebook": "https://facebook.com/",
-  "stackoverflow": "https://stackoverflow.com/",
-  "twitter": "https://twitter.com/",
-  "instagram": "https://instagram.com/",
-  "youtube": "",
-  "linkedin": "https://linkedin.com/",
-  "github": "https://github.com/",
+  "facebook": "",
+  "stackoverflow": "https://stackoverflow.com/users/14065/martin-york",
+  "twitter": "https://twitter.com/LokiAstari",
+  "instagram": "",
+  "youtube": "https://www.youtube.com/channel/UCAB-zGNTQKdwFnzNwtWBhJw",
+  "linkedin": "https://www.linkedin.com/in/lokiastari/",
+  "github": "https://github.com/Loki-Astari",
   "gitlab": "",
   "discord": "",
   "slack": "",
@@ -29,5 +29,5 @@
   "phone": "",
   "address": "",
   "skype": "",
-  "website": ""
+  "website": "https://LokiAstari.com"
 }
