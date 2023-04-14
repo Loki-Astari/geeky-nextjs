@@ -72,7 +72,7 @@ For a response object this is:
 </tbody></table>
 
 #### Example:
-```http
+```
 HTTP/1.1 200 OK\r\n
 ```
 
@@ -89,7 +89,7 @@ This is a set of key/value pairs one per line separated by a colon. Each Line is
 </tbody></table>
 
 #### Example
-```http
+```
 Content-Length: 42\r\n
 Content-Type: text/text\r\n
 \r\n
