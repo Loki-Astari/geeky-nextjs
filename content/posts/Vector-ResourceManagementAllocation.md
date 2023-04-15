@@ -4,7 +4,7 @@ title: "Vector - Resource Management Allocation"
 date: 2016-02-27T12:00:31-0800
 author: Loki Astari, (C)2016
 comments: true
-categories: ["C++", "Vector", "ResourceManagement", "C++-By-Example", "Coding"]
+categories: ["C++", "Vector", "Resource-Management", "C++-By-Example", "Coding"]
 series: Vector
 tags: Vector
 sharing: true

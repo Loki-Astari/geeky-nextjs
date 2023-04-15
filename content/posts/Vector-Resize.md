@@ -4,7 +4,7 @@ title: "Vector - Resize"
 date: 2016-03-12T05:53:07-0700
 author: Loki Astari, (C)2016
 comments: true
-categories: ["C++", "Vector", "ResourceManagement", "C++-By-Example", "Coding"]
+categories: ["C++", "Vector", "Resource-Management", "C++-By-Example", "Coding"]
 series: Vector
 tags: Vector
 sharing: true

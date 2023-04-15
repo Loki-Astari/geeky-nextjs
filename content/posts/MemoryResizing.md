@@ -4,7 +4,7 @@ title: "Memory Resizing"
 date: 2016-03-25T05:53:07-0700
 author: Loki Astari (C)2016
 comments: true
-categories: ["C++", "ResourceManagement", "C++-By-Example", "Coding"]
+categories: ["C++", "Resource-Management", "C++-By-Example", "Coding"]
 sharing: true
 footer: true
 subtitle: So you want to learn C++
