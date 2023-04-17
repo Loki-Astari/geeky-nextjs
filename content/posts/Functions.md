@@ -11,7 +11,7 @@ sharing: true
 footer: true
 subtitle: So you want to learn C++
 description: C++ for beginners. Part 4 Functions. All C++ applications must have at least one function; this is called `main()`. Additionally, you can have user defined functions that encapsulate individual tasks, thus allowing the code to be cleaner and easier to read. Therefore, this is a useful feature if you repeat the same task many time with only slight variations.
-image: /images/post/post-1.png
+image: /images/post/post-6.png
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2013/11/24/so-you-want-to-learn-c-plus-plus-part-4/"

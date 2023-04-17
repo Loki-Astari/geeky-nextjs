@@ -11,7 +11,7 @@ sharing: true
 footer: true
 subtitle: C++ By Example
 description: C++ By Example. Part 3 Smart Pointer Constructors. In this article we examine constructors that are often missed or overlooked. This article looks at the use cases for these constructors and explains why the added functionality provides a meaningful addition in relation to smart pointers.
-image: /images/post/post-1.png
+image: /images/post/post-4.png
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2015/01/23/c-plus-plus-by-example-smart-pointer-part-iii/"

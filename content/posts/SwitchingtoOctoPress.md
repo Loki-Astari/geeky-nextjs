@@ -6,7 +6,7 @@ author: Loki Astari, (C)2013
 comments: true
 categories: ["WordPress", "OctoPress", "Blogging"]
 description: Switching the blog to octopress.
-image: /images/post/post-1.png
+image: /images/post/post-7.png
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2013/11/30/switching-to-octopress/"

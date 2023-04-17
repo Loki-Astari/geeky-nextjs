@@ -11,7 +11,7 @@ sharing: true
 footer: true
 subtitle: C++ By Example
 description: C++ By Example. Part 2 Shared Pointer. In this article we cover some of the common implementation techniques used for a smart pointer that provides shared ownership of a resource.
-image: /images/post/post-1.png
+image: /images/post/post-3.png
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2015/01/15/c-plus-plus-by-example-smart-pointer-part-ii/"

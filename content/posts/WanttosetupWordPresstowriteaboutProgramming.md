@@ -6,7 +6,7 @@ author: Loki Astari, (C)2012
 comments: true
 categories: ["Blogging", "Coding", "Markup", "Markup Plugin", "WordPress"]
 description: Setting up WordPress to display syntax highlighted code was a struggle due to different plugins that don’t all seem to work together, the different types of editor, etc. I don’t want to learn all about WordPress. I just want to write some simple articles.
-image: /images/post/post-1.png
+image: /images/post/post-3.png
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2013/11/12/want-to-set-up-wordpress-to-write-about-programming/"
