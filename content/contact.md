@@ -9,7 +9,8 @@ layout: "contact"
 addresses:
   - icon: FaUserAlt
     content: ""
-    link: tel: ""
+    link: ""
+    tel: ""
   - icon: FaMapMarkerAlt
     content: ""
     link: ""

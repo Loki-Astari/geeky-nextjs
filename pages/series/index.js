@@ -19,15 +19,15 @@ const Categories = ({ series }) => {
           "h2 mb-16 bg-theme-light dark:bg-darkmode-theme-dark py-12 text-center lg:text-[55px]"
         )}
         <div className="container pt-12">
-          {series.map((aSeries, i) => (
-            <div>
+          {series.map(aSeries => (
+            <div key="{aSeries.name}">
                 <div className="row">
                   <span className="col mt-4 block flex w-full rounded-lg bg-theme-light px-4 py-4 font-bold text-dark transition dark:bg-darkmode-theme-dark dark:text-darkmode-light">
                       {humanize(aSeries.name)}
                   </span>
                 </div>
                 {aSeries.posts.map(post => (
-                  <div className="row">
+                  <div key="{post.frontmatter.title}" className="row">
                     <span className="col block mt-2 block rounded-lg hover:bg-primary hover:text-red">
                         <Link
                           href={`${blog_folder}/${post.slug}`}

@@ -17,7 +17,7 @@ const All = ({ posts }) => {
         )}
         <div className="container pt-12">
           {posts.map(post => (
-            <div className="row">
+            <div key="post.frontmatter.title" className="row">
               <span className="col block mt-2 block rounded-lg hover:bg-primary hover:text-red">
                 <Link
                   href={`${blog_folder}/${post.slug}`}
