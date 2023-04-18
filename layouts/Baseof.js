@@ -30,6 +30,7 @@ const Base = ({
 
         {/* canonical url */}
         {canonical && <link rel="canonical" href={canonical} itemProp="url" />}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/github-dark.min.css"></link>
 
         {/* noindex robots */}
         {noindex && <meta name="robots" content="noindex,nofollow" />}

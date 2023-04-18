@@ -1,36 +1,28 @@
 ---
 title: About The Author
 image: /images/author.png
-description: "meta description"
+description: "Martin York (Aka: Loki Astari) Bio"
 layout: about
 education:
-  title: Formal Education
+  title: "University of Manchester"
   degrees:
-    - university: "Southeast University"
-      content: "1985 • 1991 • gravida nibh velvelit auctor alimo quet menean solli"
-    - university: "Northeast University"
-      content: "1985 • 1991 • gravida nibh velvelit auctor alimo quet menean solli"
-    - university: "Easteast University"
-      content: "1985 • 1991 • gravida nibh velvelit auctor alimo quet menean solli"
-    - university: "Southeast University"
-      content: "1985 • 1991 • gravida nibh velvelit auctor alimo quet menean solli"  
+    - university: "PhD"
+      content:    "Compiler optimization techniques for distributed memory multiprocessor architectures”. Ported the SISAL compiler to the 64 processor, distributed memory KSR-1. Added compile time analysis of the interaction of hardware and software memory management for multi-threaded processes in order to provide timely pre-movement of data between processors at run time to avoid processor stalls."
+    - university: "MSc"
+      content:    "Compiler optimization techniques”. Modified the code generation phase of the SISAL compiler to produce efficient code for multidimensional array access. Extended the code generation phase to handle higher order functions and partial function closures."
+    - university: "BSc"
+      content: "1st Class"
 
 experience:
   title: Work Experience
   list:
-    - Best Writer Award
-    - Best New Newel
-    - Best Book
-    - Best Article
-    - Best New Newel
-    - Best New Newel
-    - Best Book
-    - Best Article
-    - Best New Newel
-    - Best Book
+    - Indeed
+    - Moz
+    - Microsoft
+    - Amazon
+    - Semantic
+    - Startups
 
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi amet, ultrices scelerisue cras. Tincidunt hendrerit egestas venenatis risus sit nunc. Est esglit non in ipsum lect;aaus adipiscing et enim porttitor. Dui ultrices et volud eetpat nunc, turpis rutrum elit vestibululm ipsum. Arcu fringilla duis vitae mos dsdllis duicras interdum purus cursus massa metus. Acc umsan felaais, egsdvet nisi, viverra turpis fermentum sit suspf bafedfb ndisse fermentum consectetur. Facilisis feugiat trisique orci tempor sed masd fbsssa tristique ultrices sodales. Augue est sapien elementum facilisis. Enim tincidnt cras interdum purus ndisse. morbi quis nunc.
-
-Et dolor placerat tempus risus nunc urna, nunc a. Mattis viverra ut sapidaaen enim sed tortor. Mattis gravida fusce cras interdum purus cursus massa metus. Acc umsan felaais, eget nisi, viverra turpis fermentum sit suspf bafedfb ndisse. morbi quis nunc, at arcu quam facilisi. In in lacus aliquam dictum sagittis morbi odio. Et magnis cursus sem sed condimentum. Nibh non potenti ac amsdfet Tincidunt hendrerit egestas venenatis risus sit nunc. Est esglit non in ipsuasdm lect;aaus adipiscing et enim porttitor. Dui ultrices et volud eetpat nunc, turpis ndisse. morbi quis nunc, at arcu quam facilisi ndisse. morbi quis nunc, at arcu quam facilisi
+Martin's favorite Job was the Director of Engineering at Moz responsible for all the Big-Data teams. In his spare time, Martin enjoys the company of anybody that enjoys beer/wine and talking politics as long as they do not take either too seriously. Martin  enjoys skiing and will use up all his holiday in the winter.

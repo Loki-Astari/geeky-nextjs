@@ -1,22 +1,22 @@
 ---
 banner:
-  title: Welcome **!**
-  title_small: "to John Bravo's Blog"
-  content: Are Developer and recently started your own business Already made website to ensure presence wants to develop.
-  image_enable: true
+  title: Loki Astari **!**
+  title_small: Thoughts of a former code monkey.
+  content: Things I think about from time to time!
+  image_enable: false
   image: /images/banner-author.png
   button:
-    enable: true
+    enable: false
     label: Know About Me
     link: /about
     rel: ""
 
 featured_posts:
-  enable: true
+  enable: false
   title: Featured Posts
 
 promotion:
-  enable: true
+  enable: false
   image: /images/promotion.png
   link: "#"
 
