@@ -12,6 +12,12 @@ sharing: true
 subtitle: C++ By Example
 description: C++ By Example. Part 1 Unique Pointer. It seems that it is a write of passage to implement your own version of a smart pointer. This article examines some of the common mistakes made by developers developing their own smart pointers.
 image: /images/post/post-2.png
+imageInfo:
+    original:           https://unsplash.com/photos/uyfohHiTxho
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        ThisisEngineering RAEng
+    AttributionLink:    https://unsplash.com/@thisisengineering
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2014/12/30/c-plus-plus-by-example-smart-pointer/"

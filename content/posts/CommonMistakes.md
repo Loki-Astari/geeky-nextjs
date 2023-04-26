@@ -12,6 +12,12 @@ footer: true
 subtitle: So you want to learn C++
 description: C++ for beginners. Part 2 Common Mistakes
 image: /images/post/post-4.png
+imageInfo:
+    original:           https://unsplash.com/photos/wX2L8L-fGeA
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Roman Synkevych
+    AttributionLink:    https://unsplash.com/@synkevych
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2013/11/18/so-you-want-to-learn-c-plus-plus-part-2/"

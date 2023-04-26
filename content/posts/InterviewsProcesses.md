@@ -9,6 +9,12 @@ sharing: true
 footer: true
 description: One of the things the most non-programmers are surprised about is the severity of programming interviews. So why are they so intense?
 image: /images/post/post-1.png
+imageInfo:
+    original:           https://unsplash.com/photos/g29arbbvPjo
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Possessed Photography
+    AttributionLink:    https://unsplash.com/@possessedphotography
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2011/10/21/interviews-processes/"

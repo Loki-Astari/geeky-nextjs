@@ -12,6 +12,12 @@ footer: true
 subtitle: C++ By Example
 description: C++ By Example. The Vector - Part 1. A lot of new developers to C++ attempt to build a `Vector` like container as a learning processes. Getting a simple version of this working for POD types (like int) is not that complicated. The next step in getting this working for arbitrary data types takes a significant leap forward in thinking in C++ especially when you start looking at efficiency and exception safety. This set of five articles looks at building an efficient `Vector` implementation. I show some of the common mistakes and explain why and how to resolve the problems.
 image: /images/post/post-5.png
+imageInfo:
+    original:           https://unsplash.com/photos/W-oqNwbmin0
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Oscar Nilsson
+    AttributionLink:    https://unsplash.com/@oscrse
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/02/27/vector/"

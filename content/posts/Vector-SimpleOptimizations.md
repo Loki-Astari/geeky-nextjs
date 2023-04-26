@@ -12,6 +12,12 @@ footer: true
 subtitle: C++ By Example
 description: C++ By Example. The Vector Part 4. We look at a couple of other types available in the template utility library that allow optimization via SFINAE.
 image: /images/post/post-8.png
+imageInfo:
+    original:           https://unsplash.com/photos/oSvR0wGYUBs
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Matthew Brodeur
+    AttributionLink:    https://unsplash.com/@mrbrodeur
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/03/19/vector-simple-optimizations/"

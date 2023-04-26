@@ -12,6 +12,12 @@ footer: true
 subtitle: So you want to learn C++
 description: Socket wrappers in C++
 image: /images/post/post-4.png
+imageInfo:
+    original:           https://unsplash.com/photos/wX2L8L-fGeA
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Roman Synkevych
+    AttributionLink:    https://unsplash.com/@synkevych
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/04/09/socket-read/"

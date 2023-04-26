@@ -7,6 +7,12 @@ comments: true
 categories: ["WordPress", "OctoPress", "Blogging"]
 description: Switching the blog to octopress.
 image: /images/post/post-7.png
+imageInfo:
+    original:           https://unsplash.com/photos/2EJCSULRwC8
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Alex Knight
+    AttributionLink:    https://unsplash.com/@agk42
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2013/11/30/switching-to-octopress/"

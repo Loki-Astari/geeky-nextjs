@@ -12,6 +12,12 @@ footer: true
 subtitle: C++ By Example
 description: C++ By Example. The Vector Part 2. In the previous article I went over basic allocation for a `Vector` like class. In this article I want to put some detail around the copy assignment operator and resizing the underlying `Vector`. Unlike the other methods previously discussed these methods have to deal with both construction and destruction of elements and the potential of exceptions interrupting the processes. The goal is to provide exception safe methods that provide the strong exception guarantee for the object and do not leak resources.
 image: /images/post/post-6.png
+imageInfo:
+    original:           https://unsplash.com/photos/Bj6ENZDMSDY
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Ben Griffiths
+    AttributionLink:    https://unsplash.com/@benofthenorth
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/02/29/vector-resource-management-ii-copy-assignment/"

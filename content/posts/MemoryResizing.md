@@ -10,6 +10,12 @@ footer: true
 subtitle: So you want to learn C++
 description: So why is the constant resize factor of the array 1.5 or 2?
 image: /images/post/post-2.png
+imageInfo:
+    original:           https://unsplash.com/photos/uyfohHiTxho
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        ThisisEngineering RAEng
+    AttributionLink:    https://unsplash.com/@thisisengineering
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/03/25/resizemaths/"

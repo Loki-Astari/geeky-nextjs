@@ -12,6 +12,12 @@ footer: true
 subtitle: So you want to learn C++
 description: A very cursory look at protocols and why they are needed
 image: /images/post/post-6.png
+imageInfo:
+    original:           https://unsplash.com/photos/Bj6ENZDMSDY
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Ben Griffiths
+    AttributionLink:    https://unsplash.com/@benofthenorth
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/05/29/socket-protocols/"

@@ -12,6 +12,12 @@ footer: true
 subtitle: So you want to learn C++
 description: Socket wrappers in C++
 image: /images/post/post-3.png
+imageInfo:
+    original:           https://unsplash.com/photos/d6dxQwmxV2Q
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Ken Blode
+    AttributionLink:    https://unsplash.com/@benkolde
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/04/08/socket-programming-in-c-version-1/"

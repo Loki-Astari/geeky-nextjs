@@ -12,6 +12,12 @@ footer: true
 subtitle: So you want to learn C++
 description: C++ for beginners. Part 1 Hello World. I keep trying to think about something big and interesting to write about. But that is just not working. All my time is spent trying to think of the blockbuster idea; which just gets in the way of actually writing. So lets start with the small things. If I can get into the habit of writing something a couple of times a week. Then maybe we can work up to interesting stuff.
 image: /images/post/post-2.png
+imageInfo:
+    original:           https://unsplash.com/photos/uyfohHiTxho
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        ThisisEngineering RAEng
+    AttributionLink:    https://unsplash.com/@thisisengineering
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2013/11/12/want-to-set-up-wordpress-to-write-about-programming/"

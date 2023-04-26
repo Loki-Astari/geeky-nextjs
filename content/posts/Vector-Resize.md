@@ -12,6 +12,12 @@ footer: true
 subtitle: C++ By Example
 description: C++ By Example. The Vector Part 3. Because resizing a vector is expensive; the standard vector class uses exponential growth to minimize the number of times that the vector is resized; a technique we replicate in this version. But every now and then you still need to resize the internal buffer.
 image: /images/post/post-7.png
+imageInfo:
+    original:           https://unsplash.com/photos/2EJCSULRwC8
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Alex Knight
+    AttributionLink:    https://unsplash.com/@agk42
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/03/12/vector-resize/"

@@ -52,6 +52,11 @@ const PostSingle = ({
                       className="rounded-lg"
                     />
                   )}
+                  {frontmatter.imageInfo.Attribution && ( 
+                    <div>
+                    Photo by <a href={frontmatter.imageInfo.AttributionLink}>{frontmatter.imageInfo.Attribution}</a> on <a href={frontmatter.imageInfo.original}>Unsplash</a>
+                    </div>
+                  )}
                   <ul className="absolute top-3 left-2 flex flex-wrap items-center">
                     {categories.map((tag, index) => (
                       <li
