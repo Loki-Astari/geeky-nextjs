@@ -97,7 +97,7 @@ const PostSingle = ({
                 <div className="content mb-16">
                   <MDXRemote {...mdxContent} components={shortcodes} />
                 </div>
-                {config.settings.InnerPaginationOptions.enableBottom && (
+                {config.settings.InnerPaginationOptions.enableBot && (
                   <InnerPagination posts={posts} date={date} />
                 )}
               </article>
