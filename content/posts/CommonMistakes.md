@@ -18,7 +18,7 @@ imageInfo:
     LicenseLink:        https://unsplash.com/license
     Attribution:        Roman Synkevych
     AttributionLink:    https://unsplash.com/@synkevych
-featured: true
+featured: false
 draft: false
 disqusId: "http://lokiastari.com/blog/2013/11/18/so-you-want-to-learn-c-plus-plus-part-2/"
 ---

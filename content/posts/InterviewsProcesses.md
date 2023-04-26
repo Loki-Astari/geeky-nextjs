@@ -15,7 +15,7 @@ imageInfo:
     LicenseLink:        https://unsplash.com/license
     Attribution:        Possessed Photography
     AttributionLink:    https://unsplash.com/@possessedphotography
-featured: true
+featured: false
 draft: false
 disqusId: "http://lokiastari.com/blog/2011/10/21/interviews-processes/"
 ---

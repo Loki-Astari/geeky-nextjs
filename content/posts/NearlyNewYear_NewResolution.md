@@ -13,7 +13,7 @@ imageInfo:
     LicenseLink:        https://unsplash.com/license
     Attribution:        Possessed Photography
     AttributionLink:    https://unsplash.com/@possessedphotography
-featured: true
+featured: false
 draft: false
 disqusId: "http://lokiastari.com/blog/2014/12/06/nearly-new-year-slash-new-resolution/"
 ---

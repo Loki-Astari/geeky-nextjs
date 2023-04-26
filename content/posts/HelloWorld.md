@@ -18,7 +18,7 @@ imageInfo:
     LicenseLink:        https://unsplash.com/license
     Attribution:        ThisisEngineering RAEng
     AttributionLink:    https://unsplash.com/@thisisengineering
-featured: true
+featured: false
 draft: false
 disqusId: "http://lokiastari.com/blog/2013/11/12/want-to-set-up-wordpress-to-write-about-programming/"
 ---

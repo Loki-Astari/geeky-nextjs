@@ -56,7 +56,7 @@ export const getStaticProps = () => {
     );
     return {
       name: seriesName,
-      posts: filteredPosts,
+      posts: filteredPosts.reverse(),
     };
   });
   return {

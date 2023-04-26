@@ -16,7 +16,7 @@ imageInfo:
     LicenseLink:        https://unsplash.com/license
     Attribution:        ThisisEngineering RAEng
     AttributionLink:    https://unsplash.com/@thisisengineering
-featured: true
+featured: false
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/03/25/resizemaths/"
 ---

@@ -18,7 +18,7 @@ imageInfo:
     LicenseLink:        https://unsplash.com/license
     Attribution:        Ken Blode
     AttributionLink:    https://unsplash.com/@benkolde
-featured: true
+featured: false
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/04/08/socket-programming-in-c-version-1/"
 ---

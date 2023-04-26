@@ -18,7 +18,7 @@ imageInfo:
     LicenseLink:        https://unsplash.com/license
     Attribution:        Alex Knight
     AttributionLink:    https://unsplash.com/@agk42
-featured: true
+featured: false
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/03/12/vector-resize/"
 ---

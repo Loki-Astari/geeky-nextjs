@@ -18,7 +18,7 @@ imageInfo:
     LicenseLink:        https://unsplash.com/license
     Attribution:        Possessed Photography
     AttributionLink:    https://unsplash.com/@possessedphotography
-featured: true
+featured: false
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/03/20/vector-the-other-stuff/"
 ---

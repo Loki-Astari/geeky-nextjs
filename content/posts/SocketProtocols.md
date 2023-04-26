@@ -18,7 +18,7 @@ imageInfo:
     LicenseLink:        https://unsplash.com/license
     Attribution:        Ben Griffiths
     AttributionLink:    https://unsplash.com/@benofthenorth
-featured: true
+featured: false
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/05/29/socket-protocols/"
 ---

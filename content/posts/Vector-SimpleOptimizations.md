@@ -18,7 +18,7 @@ imageInfo:
     LicenseLink:        https://unsplash.com/license
     Attribution:        Matthew Brodeur
     AttributionLink:    https://unsplash.com/@mrbrodeur
-featured: true
+featured: false
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/03/19/vector-simple-optimizations/"
 ---

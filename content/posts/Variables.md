@@ -18,7 +18,7 @@ imageInfo:
     LicenseLink:        https://unsplash.com/license
     Attribution:        Oscar Nilsson
     AttributionLink:    https://unsplash.com/@oscrse
-featured: true
+featured: false
 draft: false
 disqusId: "http://lokiastari.com/blog/2013/11/19/so-you-want-to-learn-c-plus-plus-part-3/"
 ---

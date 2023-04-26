@@ -18,7 +18,7 @@ imageInfo:
     LicenseLink:        https://unsplash.com/license
     Attribution:        Roman Synkevych
     AttributionLink:    https://unsplash.com/@synkevych
-featured: true
+featured: false
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/04/09/socket-read/"
 ---
