@@ -1,4 +1,6 @@
 import config from "@config/config.json";
+import React, { useContext, useRef, useEffect } from "react";
+import { MathJaxContext, MathJaxBaseContext } from "better-react-mathjax";
 import Base from "@layouts/Baseof";
 import InnerPagination from "@layouts/components/InnerPagination";
 import dateFormat from "@lib/utils/dateFormat";
@@ -14,6 +16,27 @@ import Sidebar from "./partials/Sidebar";
 import shortcodes from "./shortcodes/all";
 const { disqus } = config;
 const { meta_author } = config.metadata;
+const ThorMath = ({content}) => {
+
+  const mjContext = useContext(MathJaxBaseContext);
+  const mathBlock = useRef(null);
+
+  useEffect(() => {
+    if (mjContext && mathBlock.current) {
+      mjContext.promise.then((mathJax) => {
+        mathJax.startup.promise.then(() => {
+          mathJax.typesetClear([mathBlock.current]);
+          mathJax.typesetPromise([mathBlock.current]);
+        });
+      });
+    }
+  });
+
+  return (
+    <div ref={mathBlock}>$$ {content} $$</div>
+  );
+}; 
+const components={shortcodes: shortcodes, ThorMath: ThorMath, MathJaxContext: MathJaxContext};
 
 const PostSingle = ({
   frontmatter,
@@ -95,7 +118,7 @@ const PostSingle = ({
                   </li>
                 </ul>
                 <div className="content mb-16">
-                  <MDXRemote {...mdxContent} components={shortcodes} />
+                  <MDXRemote {...mdxContent} components={components} />
                 </div>
                 {config.settings.InnerPaginationOptions.enableBot && (
                   <InnerPagination posts={posts} date={date} />

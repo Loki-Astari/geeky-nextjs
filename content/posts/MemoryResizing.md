@@ -27,8 +27,6 @@ So I had to know why....
 
 So the theory goes: You have a memory resource of size `B`. If you resize this resource by a constant factor `r` by re-allocating a new block then releasing the old block. Then if the value of `r` is smaller than or equal to `Phi` you will eventually be able to reuse memory that has previously been released; otherwise the new block of memory being allocated will always be larger than the previously released memory.
 
-<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML,https://lokiastari.com/resource/maths/MathJaxLocal.js"></script>
-
 So I thought lets try that:
 Test one `r > Phi`:
 
@@ -66,67 +64,45 @@ OK. That also seems to be holding. But can we show that holds for all values of 
 
 So the size `S` of any block after `n` resize operations will be:
 
-```
-$$ S   = Br^n $$
-```
+<MathJaxContext>
+<ThorMath content="S   = Br^n" />
 
 Thus the size of `Released Memory` can be expressed as:
 
-```
-$$ \sum_&#123;k=0&#125;^&#123;n-1&#125;\ Br^k $$
-```
+<ThorMath content="\sum_&#123;k=0&#125;^&#123;n-1&#125;\ Br^k" />
 
 Also the size of the next block will be:
 
-```
-$$ Br^&#123;n+1&#125; $$
-```
+<ThorMath content="Br^&#123;n+1&#125;" />
 
 So if the amount of `Released Memory` >= the amount required for the next block, then we can reuse the `Released Memory`.
 
-```
-$$ \sum_&#123;k=0&#125;^&#123;n-1&#125;\ Br^k &gt;= Br^&#123;n+1&#125; $$
+<ThorMath content="\sum_&#123;k=0&#125;^&#123;n-1&#125;\ Br^k &gt;= Br^&#123;n+1&#125;" />
 
-$$ B \sum_&#123;k=0&#125;^&#123;n-1&#125;\ r^k &gt;= Br^&#123;n+1&#125; $$
+<ThorMath content="B \sum_&#123;k=0&#125;^&#123;n-1&#125;\ r^k &gt;= Br^&#123;n+1&#125;" />
 
-$$ \sum_&#123;k=0&#125;^&#123;n-1&#125;\ r^k &gt;= r^&#123;n+1&#125; $$
+<ThorMath content="\sum_&#123;k=0&#125;^&#123;n-1&#125;\ r^k &gt;= r^&#123;n+1&#125;" />
 
-$$ &#123;1-r^&#123;(n-1)+1&#125;\over1-r&#125; &gt;= r^&#123;n+1&#125; $$
+<ThorMath content="&#123;1-r^&#123;(n-1)+1&#125;\over1-r&#125; &gt;= r^&#123;n+1&#125;" />
 
-$$ &#123;1-r^n\over1-r&#125; &gt;= r^&#123;n+1&#125; $$
+<ThorMath content="&#123;1-r^n\over1-r&#125; &gt;= r^&#123;n+1&#125;" />
 
-$$ 1-r^n &gt;= r^&#123;n+1&#125; (1-r) $$
+<ThorMath content="1-r^n &gt;= r^&#123;n+1&#125; (1-r)" />
 
-$$ 1-r^n &gt;= r^&#123;n+1&#125; - r^&#123;n+2&#125; $$
+<ThorMath content="1-r^n &gt;= r^&#123;n+1&#125; - r^&#123;n+2&#125;" />
 
-$$ 1 + r^&#123;n+2&#125; - r^&#123;n+1&#125; - r^n &gt;= 0 $$
+<ThorMath content="1 + r^&#123;n+2&#125; - r^&#123;n+1&#125; - r^n &gt;= 0" />
 
-$$ 1 + r^n (r^2 - r - 1) &gt;= 0 $$
-```
+<ThorMath content="1 + r^n (r^2 - r - 1) &gt;= 0" />
 
-This is were my maths broke down and I had to plot some graphs (my old "maths" teacher would have been so proud).<br/>
+This is were my maths broke down. So after talking to some smart people. They noticed that:
 
-
-<img src='/images/Root4.png' style={{width:400, height:200, n:4}}/>
-<img src='/images/Root8.png' style={{width:400, height:200, n:8}}/>
-<br/><br/>
-
-So after looking at the graphs (to understand the formula) then talking to some smart people.
-They noticed that:
-
-```
-$$ \sqrt&#123;(r^2 - r - 1)&#125; . when . r = \Phi $$
-```
-
+<ThorMath content="\sqrt&#123;(r^2 - r - 1)&#125; . when . r = \Phi" />
 
 We find that the first root of the equation is 1. The second root of the equation depends on `n`, as `n` tends to `infinity` the other root tends towards `Phi`. From this we can infer the following:
 
-```
-$$ 1 < r < = \Phi $$
-```
+<ThorMath content="1 < r < = \Phi" />
+</MathJaxContext>
 
 Thus if `r` remains in the above range then the above theory holds.
-
-
-
 
