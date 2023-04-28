@@ -1,0 +1,840 @@
+<html>
+<head>
+<link rel="stylesheet" href="combine.css">
+<script src="combine.js"></script>
+<!--
+<script src="https://code.jquery.com/jquery-1.8.2.js"></script>
+<script src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['controls', 'charteditor']}]}"></script>
+<script src="https://jquery-csv.googlecode.com/git/src/jquery.csv.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+-->
+<script>
+$(function() {
+  google.load("visualization", "1", {packages:["corechart"]});
+
+  var csv = $('#textInput').val();
+  var dt = google.visualization.arrayToDataTable($.csv.toArrays(csv, {onParseValue: $.csv.hooks.castToScalar}));
+
+  function sortCaseInsensitive(dt, column) {
+    for (var row = 0; row < dt.getNumberOfRows(); row++) {
+      var s = dt.getValue(row, column);
+      dt.setValue(row, column, s.toUpperCase());
+      dt.setFormattedValue(row, column, s);
+    }
+    dt.sort(column);
+  }
+
+  function AddToOverall(dt) {
+    if (overallDt == null) {
+      overallDt = dt.clone();
+    }
+    else {
+      var col1 = [];
+      for (var i = 1; i < overallDt.getNumberOfColumns(); i++)
+        col1.push(i);
+      overallDt = google.visualization.data.join(overallDt, dt, 'full', [[0, 0]], col1, [1]);
+    }
+
+    var newCol = overallDt.getNumberOfColumns() - 1;
+    overallDt.setColumnLabel(newCol, type + ' ' + overallDt.getColumnLabel(newCol))
+    var formatter1 = new google.visualization.NumberFormat({ fractionDigits: 0 });
+    formatter1.format(overallDt, newCol);
+
+    for (var row = 0; row < overallDt.getNumberOfRows(); row++) {
+      if (overallDt.getValue(row, newCol) == null) {
+        overallDt.setValue(row, newCol, Number.POSITIVE_INFINITY);
+        overallDt.setFormattedValue(row, newCol, "");
+      }
+    }
+  }
+
+  function createSortEvent(type, dt, chart) {
+    return function(e) {
+      if (e.column == 0 || e.column == 1) {
+        var t = dt.clone();
+        drawBarChart(type, t, chart, [{column: e.column, desc: !e.ascending }]);
+      }
+    }
+  }
+
+  addSection("0. Overall");
+
+  var overallDiv = document.createElement("div");
+  overallDiv.className = "tablechart";
+  $("#main").append(overallDiv);
+
+  // Per type sections
+  var types = dt.getDistinctValues(0);
+  var overallDt;
+  for (var i in types) {
+    var type = types[i];
+    addSection(type);
+
+    var view = new google.visualization.DataView(dt);
+    view.setRows(view.getFilteredRows([{column: 0, value: type}]));
+
+    if (type.search("Code size") != -1) {
+      var sizedt = google.visualization.data.group(
+        view,
+        [1], 
+        [{"column": 9, "aggregation": google.visualization.data.sum, 'type': 'number' }]
+      );
+      AddToOverall(sizedt);
+      sortCaseInsensitive(sizedt, 0);
+      addSubsection(sizedt.getColumnLabel(1));
+      var sizeTable = drawTable(type, sizedt.clone(), false);
+      var sizeChart = drawBarChart(type, sizedt.clone());
+      google.visualization.events.addListener(sizeTable, 'sort', createSortEvent(type, sizedt, sizeChart));
+    }
+    else {
+      addSubsection("Time");
+
+      var timedt = google.visualization.data.group(
+        view,
+        [1], 
+        [{"column": 3, "aggregation": google.visualization.data.sum, 'type': 'number' }]
+      );
+
+      AddToOverall(timedt);
+      sortCaseInsensitive(timedt, 0);
+      var timeTable = drawTable(type, timedt.clone(), true);
+      var timeChart = drawBarChart(type, timedt.clone());
+      google.visualization.events.addListener(timeTable, 'sort', createSortEvent(type, timedt, timeChart));
+
+      // Per JSON
+      drawPivotBarChart(
+        type + " per JSON",
+        pivotTable(google.visualization.data.group(
+          view,
+          [2, 1],
+          [{"column": 3, "aggregation": google.visualization.data.sum, 'type': 'number' }]
+        )),
+        dt.getColumnLabel(3)
+      );
+
+      // Only show memory of Parse
+      if (type.search("Parse") != -1) {
+        for (var column = 4; column <= 6; column++) {
+          var memorydt = google.visualization.data.group(
+            view,
+            [1], 
+            [{"column": column, "aggregation": google.visualization.data.sum, 'type': 'number' }]
+          );
+          AddToOverall(memorydt);
+          sortCaseInsensitive(memorydt, 0);
+          addSubsection(memorydt.getColumnLabel(1));
+          var memoryTable = drawTable(type, memorydt.clone(), false);
+          var memoryChart = drawBarChart(type, memorydt.clone());
+
+          google.visualization.events.addListener(memoryTable, 'sort', createSortEvent(type, memorydt, memoryChart));
+        }
+      }
+      // Get memory leak information.
+      for (var column = 7; column <= 8; column++) {
+        var memorydt = google.visualization.data.group(
+          view,
+          [1], 
+          [{"column": column, "aggregation": google.visualization.data.sum, 'type': 'number' }]
+        );
+        AddToOverall(memorydt);
+        sortCaseInsensitive(memorydt, 0);
+        addSubsection(memorydt.getColumnLabel(1));
+        var memoryTable = drawTable(type, memorydt.clone(), false);
+        var memoryChart = drawBarChart(type, memorydt.clone());
+
+        google.visualization.events.addListener(memoryTable, 'sort', createSortEvent(type, memorydt, memoryChart));
+      }
+    }
+  }
+
+  var overallTable = new google.visualization.Table(overallDiv);
+  sortCaseInsensitive(overallDt, 0);
+  overallTable.draw(overallDt);
+
+  $(".chart").each(function() {
+    var chart = $(this);
+    var d = $("#downloadDD").clone().css("display", "");
+    $('li a', d).each(function() {
+          $(this).click(function() {
+              var svg = chart[0].getElementsByTagName('svg')[0].parentNode.innerHTML;
+              svg=sanitize(svg);
+              $('#imageFilename').val($("#title").html() + "_" + chart.data("filename"));
+              $('#imageGetFormTYPE').val($(this).attr('dltype'));
+              $('#imageGetFormSVG').val(svg);
+              $('#imageGetForm').submit();
+          });
+      });   
+    $(this).after(d);
+  });
+
+  // Add configurations
+  var thisConfig = "Performance.osx";
+  var configurations = [ "Conformance.osx", "Conformance.linux", "Performance.osx", "Performance.linux", "Stats"];
+
+  for (var i in configurations) {
+    var c = configurations[i];
+    $("#benchmark").append($("<li>", {class : (c == thisConfig ? "active" : "")}).append($("<a>", {href: c + ".html"}).append(c)));
+  }
+});
+
+function pivotTable(src) {
+  var dst = new google.visualization.DataTable();
+  
+  // Add columns
+  var key = src.getDistinctValues(1);
+  var keyColumnMap = {};
+  dst.addColumn(src.getColumnType(0), src.getColumnLabel(0));  
+  for (var k in key)
+    keyColumnMap[key[k]] = dst.addColumn(src.getColumnType(2), key[k]);
+
+  // Add rows
+  var pivot = src.getDistinctValues(0);
+  var pivotRowMap = {};  
+  for (var p in pivot)
+    dst.setValue(pivotRowMap[[pivot[p]]] = dst.addRow(), 0, pivot[p]);
+
+  // Fill cells
+  for (var row = 0; row < src.getNumberOfRows(); row++)
+    dst.setValue(
+      pivotRowMap[src.getValue(row, 0)],
+      keyColumnMap[src.getValue(row, 1)],
+      src.getValue(row, 2));
+
+  return dst;
+}
+
+function addSection(name) {
+  $("#main").append(
+    $("<a>", {"name": name}),
+    $("<h2>", {style: "padding-top: 70px; margin-top: -70px;"}).append(name)
+  );
+  $("#section").append($("<li>").append($("<a>", {href: "#" + name}).append(name)));
+}
+
+function addSubsection(name) {
+  $("#main").append(
+    $("<h3>", {style: "padding-top: 70px; margin-top: -70px;"}).append(name)
+  );
+}
+
+function drawTable(type, data, isSpeedup) {
+  if (isSpeedup)
+    data.addColumn('number', 'Speedup');
+  else
+    data.addColumn('number', 'Ratio');
+  //data.sort([{ column: 1, desc: true }]);
+  var formatter1 = new google.visualization.NumberFormat({ fractionDigits: 0 });
+  formatter1.format(data, 1);
+
+  var div = document.createElement("div");
+  div.className = "tablechart";
+  $("#main").append(div);
+    var table = new google.visualization.Table(div);
+    redrawTable(0);
+    table.setSelection([{ row: 0, column: null}]);
+
+  function redrawTable(selectedRow) {
+      var s = table.getSortInfo();
+      // Compute relative time using the first row as basis
+      var basis = data.getValue(selectedRow, 1);
+      for (var rowIndex = 0; rowIndex < data.getNumberOfRows(); rowIndex++)
+        data.setValue(rowIndex, 2, isSpeedup ? basis / data.getValue(rowIndex, 1) : data.getValue(rowIndex, 1) / basis);
+
+      var formatter = new google.visualization.NumberFormat({suffix: 'x'});
+      formatter.format(data, 2); // Apply formatter to second column
+
+      table.draw(data, s != null ? {sortColumn: s.column, sortAscending: s.ascending} : null);
+  }
+
+  google.visualization.events.addListener(table, 'select',
+  function() {
+      var selection = table.getSelection();
+      if (selection.length > 0) {
+          var item = selection[0];
+          if (item.row != null)
+              redrawTable(item.row);
+      }
+  });
+
+  return table;
+}
+
+function drawBarChart(type, data, chart, sortOptions) {
+  // Using same colors as in series
+  var colors = ["#3366cc","#dc3912","#ff9900","#109618","#990099","#0099c6","#dd4477","#66aa00","#b82e2e","#316395","#994499","#22aa99","#aaaa11","#6633cc","#e67300","#8b0707","#651067","#329262","#5574a6","#3b3eac","#b77322","#16d620","#b91383","#f4359e","#9c5935","#a9c413","#2a778d","#668d1c","#bea413","#0c5922","#743411","#3366cc","#dc3912","#ff9900","#109618","#990099","#0099c6","#dd4477","#66aa00","#b82e2e","#316395","#994499","#22aa99","#aaaa11","#6633cc","#e67300","#8b0707","#651067","#329262","#5574a6","#3b3eac","#b77322","#16d620","#b91383","#f4359e","#9c5935","#a9c413","#2a778d","#668d1c","#bea413","#0c5922","#743411"];
+  var h = data.getNumberOfRows() * 12;
+  var options = { 
+    title: type,
+    chartArea: {left: '20%', width: '70%', height: h },
+    width: 800,
+    height: h + 100,
+    fontSize: 10,
+    bar: {groupWidth: "80%"},
+    hAxis: { title: data.getColumnLabel(1) },
+    legend: { position: "none" },
+  };
+
+  data.addColumn({ type: "string", role: "style" });
+  data.addColumn({ type: "number", role: "annotation" });
+  for (var rowIndex = 0; rowIndex < data.getNumberOfRows(); rowIndex++) {
+    data.setValue(rowIndex, 2, colors[rowIndex]);
+    data.setValue(rowIndex, 3, data.getValue(rowIndex, 1));
+  }
+
+  if (sortOptions != null)
+    data.sort(sortOptions); // sort after assigning colors
+
+  var formatter1 = new google.visualization.NumberFormat({ fractionDigits: 0 });
+  formatter1.format(data, 3);
+
+  if (chart == null) {
+    var div = document.createElement("div");
+    div.className = "chart";
+    $(div).data("filename", type + "_" + data.getColumnLabel(1));
+    $("#main").append(div);
+    chart = new google.visualization.BarChart(div);
+  }
+
+  chart.draw(data, options);
+  return chart;
+}
+
+
+function drawPivotBarChart(type, data, title) {
+  var h = (data.getNumberOfColumns() + 1) * data.getNumberOfRows() * 5;
+  var options = { 
+    title: type,
+    chartArea: {left: '10%', width: '70%', 'height': h},
+    width: 800,
+    height: h + 100,
+    fontSize: 10,
+    hAxis: { "title": title },
+    legend: { textStyle: {fontSize: 8}},
+    bar : { groupWidth: "95%" }
+  };
+  var div = document.createElement("div");
+  div.className = "chart";
+  $(div).data("filename", type + "_" + title);
+  $("#main").append(div);
+  var chart = new google.visualization.BarChart(div);
+
+  chart.draw(data, options);
+}
+
+// https://jsfiddle.net/P6XXM/
+function sanitize(svg) {
+    svg = svg
+        .replace(/\<svg/,'<svg xmlns="http://www.w3.org/2000/svg" version="1.1"')
+        .replace(/zIndex="[^"]+"/g, '')
+        .replace(/isShadow="[^"]+"/g, '')
+        .replace(/symbolName="[^"]+"/g, '')
+        .replace(/jQuery[0-9]+="[^"]+"/g, '')
+        .replace(/isTracker="[^"]+"/g, '')
+        .replace(/url\([^#]+#/g, 'url(#')
+        .replace('<svg xmlns:xlink="http://www.w3.org/1999/xlink" ', '<svg ')
+        .replace(/ href=/g, ' xlink:href=')
+    /*.replace(/preserveAspectRatio="none">/g, 'preserveAspectRatio="none"/>')*/
+    /* This fails in IE < 8
+    .replace(/([0-9]+)\.([0-9]+)/g, function(s1, s2, s3) { // round off to save weight
+    return s2 +'.'+ s3[0];
+    })*/
+
+    // IE specific
+        .replace(/id=([^" >]+)/g, 'id="$1"')
+        .replace(/class=([^" ]+)/g, 'class="$1"')
+        .replace(/ transform /g, ' ')
+        .replace(/:(path|rect)/g, '$1')
+        .replace(/<img ([^>]*)>/gi, '<image $1 />')
+        .replace(/<\/image>/g, '') // remove closing tags for images as they'll never have any content
+        .replace(/<image ([^>]*)([^\/])>/gi, '<image $1$2 />') // closes image tags for firefox
+        .replace(/width=(\d+)/g, 'width="$1"')
+        .replace(/height=(\d+)/g, 'height="$1"')
+        .replace(/hc-svg-href="/g, 'xlink:href="')
+        .replace(/style="([^"]+)"/g, function (s) {
+            return s.toLowerCase();
+        });
+
+    // IE9 beta bugs with innerHTML. Test again with final IE9.
+    svg = svg.replace(/(url\(#highcharts-[0-9]+)&quot;/g, '$1')
+        .replace(/&quot;/g, "'");
+    if (svg.match(/ xmlns="/g).length == 2) {
+        svg = svg.replace(/xmlns="[^"]+"/, '');
+    }
+
+    return svg;
+}
+</script>
+<style type="text/css">
+@media (min-width: 800px) {
+/*  .container {
+    max-width: 800px;
+  }*/
+}
+textarea {
+  font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+}
+.tablechart {
+/*  width: 500px;
+*/  margin: auto;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.chart {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+body { padding-top: 70px; }
+</style>
+</head>
+<body>
+<div class="container">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://github.com/Loki-Astari/JSONBenchmark"><span class="glyphicon glyphicon-home"></span> JSONBenchmark</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Benchmark <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu" id="benchmark">
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Section <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu" id="section">
+          </ul>
+        </li>
+      </ul>
+      <p class="navbar-text navbar-right">Developed by <a href="https://github.com/miloyip" class="navbar-link">Milo Yip</a></p>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<div class="page-header">
+<h1 id="title">Performance.osx</h1>
+</div>
+<div id="main"></div>
+<h2>Source CSV</h2>
+<textarea id="textInput" class="form-control" rows="5" readonly>
+Type,Library,Filename,Time (ms),Memory (byte),MemoryPeak (byte),AllocCount,LeakedBytes,LeakCount,FileSize (byte)
+1. Parse,ThorsSerializer,canada.json,101.221,2868680,5199464,58644,0,0,0
+2. Stringify,ThorsSerializer,canada.json,53.6723,1573152,2359648,21,0,0,0
+3. Prettify,ThorsSerializer,canada.json,53.9854,1573152,2359648,21,0,0,0
+4. Statistics,ThorsSerializer,canada.json,0.152958,0,0,0,0,0,0
+5. SaxRoundtrip,ThorsSerializer,canada.json,162.126,1573152,5228328,58665,0,0,0
+6. SaxStatistics,ThorsSerializer,canada.json,107.339,0,5199464,58644,0,0,0
+1. Parse,ThorsSerializer,citm_catalog.json,27.1573,521540,3454704,33353,0,0,0
+2. Stringify,ThorsSerializer,citm_catalog.json,12.1918,786720,1180064,23,0,0,0
+3. Prettify,ThorsSerializer,citm_catalog.json,17.2382,1573152,2359712,24,0,0,0
+4. Statistics,ThorsSerializer,citm_catalog.json,0.030458,0,0,0,0,0,0
+5. SaxRoundtrip,ThorsSerializer,citm_catalog.json,41.1587,786720,3454704,33376,0,0,0
+6. SaxStatistics,ThorsSerializer,citm_catalog.json,28.489,0,3454704,33353,0,0,0
+7. Code size,ThorsSerializer,XXX,0,0,0,0,0,0,18446744073709551615
+1. Parse,ThorsSerializer,twitter.json,24.3954,472479,1263224,21836,0,0,0
+2. Stringify,ThorsSerializer,twitter.json,6.30755,786720,1180064,2641,0,0,0
+3. Prettify,ThorsSerializer,twitter.json,7.94547,786720,1180160,2641,0,0,0
+4. Statistics,ThorsSerializer,twitter.json,0.020221,0,0,0,0,0,0
+5. SaxRoundtrip,ThorsSerializer,twitter.json,30.9852,786720,1652543,24477,0,0,0
+6. SaxStatistics,ThorsSerializer,twitter.json,24.4727,0,1263224,21836,0,0,0
+1. Parse,ArduinoJson,canada.json,725.517,10639827,10639827,17,0,0,0
+2. Stringify,ArduinoJson,canada.json,28.8891,2251072,5396800,19,0,0,0
+3. Prettify,ArduinoJson,canada.json,284.001,5596480,11887936,20,0,0,0
+4. Statistics,ArduinoJson,canada.json,4.35373,0,0,0,0,0,0
+1. Parse,ArduinoJson,citm_catalog.json,3.74427,3824476,3824476,15,0,0,0
+2. Stringify,ArduinoJson,citm_catalog.json,19.8199,500336,1286768,17,0,0,0
+3. Prettify,ArduinoJson,citm_catalog.json,60.7016,1202432,2775296,18,0,0,0
+4. Statistics,ArduinoJson,citm_catalog.json,0.636837,0,0,0,0,0,0
+1. Parse,ArduinoJson,twitter.json,2.89502,1155874,1155874,13,0,0,0
+2. Stringify,ArduinoJson,twitter.json,21.907,466944,1253376,17,0,0,0
+3. Prettify,ArduinoJson,twitter.json,33.099,647040,1433472,17,0,0,0
+4. Statistics,ArduinoJson,twitter.json,0.415561,0,0,0,0,0,0
+1. Parse,cajun-jsonapi,canada.json,1628.95,235217256,502045520,3396966,0,0,0
+2. Stringify,cajun-jsonapi,canada.json,169.386,4270112,10561568,21,32,1,0
+4. Statistics,cajun-jsonapi,canada.json,3.83818,0,0,0,0,0,0
+1. Parse,cajun-jsonapi,citm_catalog.json,188.161,9672520,34090624,612137,0,0,0
+2. Stringify,cajun-jsonapi,citm_catalog.json,32.8822,891028,2463892,22,148,3,0
+4. Statistics,cajun-jsonapi,citm_catalog.json,0.349629,0,0,0,0,0,0
+1. Parse,cajun-jsonapi,twitter.json,66.1141,2504320,9563536,204803,0,0,0
+2. Stringify,cajun-jsonapi,twitter.json,29.5905,672528,1458960,1922,80,2,0
+4. Statistics,cajun-jsonapi,twitter.json,0.163953,0,0,0,0,0,0
+1. Parse,Configuru,canada.json,80.2346,9538896,9570368,170257,0,0,0
+2. Stringify,Configuru,canada.json,208.919,3145760,4718680,22,0,0,0
+3. Prettify,Configuru,canada.json,213.649,3145760,4718680,22,0,0,0
+4. Statistics,Configuru,canada.json,1.00231,0,0,0,0,0,0
+1. Parse,Configuru,citm_catalog.json,25.8287,4041728,4041800,54971,0,0,0
+2. Stringify,Configuru,citm_catalog.json,6.80434,786464,1179872,10951,0,0,0
+3. Prettify,Configuru,citm_catalog.json,11.2575,1572896,2359520,10952,0,0,0
+4. Statistics,Configuru,citm_catalog.json,0.537692,0,0,0,0,0,0
+1. Parse,Configuru,twitter.json,8.99698,1902344,1902416,25142,0,0,0
+2. Stringify,Configuru,twitter.json,2.49779,786464,1180392,1280,0,0,0
+3. Prettify,Configuru,twitter.json,5.00997,786464,1180392,1280,0,0,0
+4. Statistics,Configuru,twitter.json,0.291553,0,0,0,0,0,0
+1. Parse,fastjson,canada.json,15.4559,8715320,10966928,22,0,0,0
+2. Stringify,fastjson,canada.json,82.8088,2251692,2251692,17,620,4,0
+4. Statistics,fastjson,canada.json,0.770681,0,0,0,0,0,0
+1. Parse,fastjson,citm_catalog.json,6.21346,2687370,4415138,22,0,0,0
+2. Stringify,fastjson,citm_catalog.json,7.00732,503056,503056,28,2016,7,0
+4. Statistics,fastjson,citm_catalog.json,0.244409,0,0,0,0,0,0
+1. Parse,fastjson,twitter.json,3.0292,1361504,1994160,24,0,0,0
+2. Stringify,fastjson,twitter.json,2.49205,562792,562792,10,344,4,0
+4. Statistics,fastjson,twitter.json,0.144865,0,0,0,0,0,0
+1. Parse,jeayeson,canada.json,147.005,5350184,18301528,386911,0,0,0
+2. Stringify,jeayeson,canada.json,59.7026,1043280,2616144,18,0,0,0
+4. Statistics,jeayeson,canada.json,0.82471,0,0,0,0,0,0
+1. Parse,jeayeson,citm_catalog.json,52.9424,2672496,9744624,187912,0,0,0
+2. Stringify,jeayeson,citm_catalog.json,14.1074,499584,1286016,342,0,0,0
+4. Statistics,jeayeson,citm_catalog.json,0.349129,0,0,0,0,0,0
+1. Parse,jeayeson,twitter.json,27.7638,1447792,4974816,94228,0,0,0
+2. Stringify,jeayeson,twitter.json,8.4215,465664,1252096,3863,32,1,0
+4. Statistics,jeayeson,twitter.json,0.244963,0,0,0,0,0,0
+1. Parse,JsonBox,canada.json,539.118,5260296,10037892,754123,0,0,0
+2. Stringify,JsonBox,canada.json,821.385,2251072,5396800,19,0,0,0
+3. Prettify,JsonBox,canada.json,649.992,3923792,10215248,20,0,0,0
+4. Statistics,JsonBox,canada.json,1.18939,0,0,0,0,0,0
+1. Parse,JsonBox,citm_catalog.json,214.866,2676488,6130968,242399,0,0,0
+2. Stringify,JsonBox,citm_catalog.json,203.985,499616,1286048,673,0,0,0
+3. Prettify,JsonBox,citm_catalog.json,159.262,889456,2462320,674,0,0,0
+4. Statistics,JsonBox,citm_catalog.json,0.520687,0,0,0,0,0,0
+1. Parse,JsonBox,twitter.json,98.4507,1408879,3109684,77995,0,0,0
+2. Stringify,JsonBox,twitter.json,139.668,465392,1251824,9688,0,0,0
+3. Prettify,JsonBox,twitter.json,109.034,575440,1361872,9688,0,0,0
+4. Statistics,JsonBox,twitter.json,0.334974,0,0,0,0,0,0
+1. Parse,jsoncons,canada.json,83.8077,4468681,5111665,112132,0,0,0
+2. Stringify,jsoncons,canada.json,27.5253,3145760,4718852,508,0,0,0
+3. Prettify,jsoncons,canada.json,27.5751,3145760,4718852,508,0,0,0
+4. Statistics,jsoncons,canada.json,3.58508,0,0,0,0,0,0
+1. Parse,jsoncons,citm_catalog.json,16.096,1937535,1980943,45498,0,0,0
+2. Stringify,jsoncons,citm_catalog.json,4.99651,786464,1179908,21,0,0,0
+3. Prettify,jsoncons,citm_catalog.json,4.99911,786464,1179908,21,0,0,0
+4. Statistics,jsoncons,citm_catalog.json,0.927067,0,64,324,0,0,0
+1. Parse,jsoncons,twitter.json,7.97232,949194,992442,9571,0,0,0
+2. Stringify,jsoncons,twitter.json,4.68101,786464,1180036,22,0,0,0
+3. Prettify,jsoncons,twitter.json,4.66992,786464,1180036,22,0,0,0
+4. Statistics,jsoncons,twitter.json,0.720537,0,464,1901,0,0,0
+1. Parse,jsoncpp,canada.json,203.277,16057006,16062619,223288,0,0,0
+2. Stringify,jsoncpp,canada.json,137.062,2251104,5397901,111134,32,1,0
+4. Statistics,jsoncpp,canada.json,4.74966,0,0,0,0,0,0
+1. Parse,jsoncpp,citm_catalog.json,19.9625,4088659,4094272,112004,0,0,0
+2. Stringify,jsoncpp,citm_catalog.json,14.8989,501040,1288541,12295,0,0,0
+4. Statistics,jsoncpp,citm_catalog.json,1.24109,0,64,325,0,0,0
+1. Parse,jsoncpp,twitter.json,12.4095,1684960,1690580,50997,0,0,0
+2. Stringify,jsoncpp,twitter.json,11.4887,562780,1350281,7809,316,4,0
+4. Statistics,jsoncpp,twitter.json,1.11565,0,464,3804,0,0,0
+1. Parse,json-voorhees,canada.json,874.754,233327544,466654872,673236,0,0,0
+2. Stringify,json-voorhees,canada.json,68.2839,1043344,2616208,18,0,0,0
+3. Prettify,json-voorhees,canada.json,351.379,7064480,19647392,21,0,0,0
+4. Statistics,json-voorhees,canada.json,10.4588,0,0,0,0,0,0
+1. Parse,json-voorhees,citm_catalog.json,51.9067,9865920,18050776,200768,0,0,0
+2. Stringify,json-voorhees,citm_catalog.json,24.4149,501440,1287872,17,0,0,0
+3. Prettify,json-voorhees,citm_catalog.json,83.2476,1728352,4874080,19,0,0,0
+4. Statistics,json-voorhees,citm_catalog.json,1.00934,0,0,0,0,0,0
+1. Parse,json-voorhees,twitter.json,28.4282,2658528,5314920,95640,0,0,0
+2. Stringify,json-voorhees,twitter.json,27.7612,568496,1354928,17,0,0,0
+3. Prettify,json-voorhees,twitter.json,42.0055,868880,2441744,18,0,0,0
+4. Statistics,json-voorhees,twitter.json,0.425912,0,0,0,0,0,0
+1. Parse,jsonxx,canada.json,339.877,8244480,12746592,337434,0,0,0
+2. Stringify,jsonxx,canada.json,591.087,3979824,14251072,499228,0,0,0
+4. Statistics,jsonxx,canada.json,0.95626,0,0,0,0,0,0
+1. Parse,jsonxx,citm_catalog.json,137,3800536,7254968,92754,0,0,0
+2. Stringify,jsonxx,citm_catalog.json,131.301,946944,3466720,102930,0,0,0
+4. Statistics,jsonxx,citm_catalog.json,0.584604,0,0,0,0,0,0
+1. Parse,jsonxx,twitter.json,52.0595,1833048,3096088,42564,0,0,0
+2. Stringify,jsonxx,twitter.json,59.6332,575696,1937792,42914,0,0,0
+4. Statistics,jsonxx,twitter.json,0.299296,0,0,0,0,0,0
+1. Parse,jvar,canada.json,104.974,13017488,13017808,224866,0,0,0
+2. Stringify,jvar,canada.json,60.1147,1043376,3129982,168922,32,1,0
+4. Statistics,jvar,canada.json,1.13725,0,0,0,0,0,0
+1. Parse,jvar,citm_catalog.json,22.5875,4772305,4772497,102595,0,0,0
+2. Stringify,jvar,citm_catalog.json,10.1224,500336,1495056,45809,0,0,0
+4. Statistics,jvar,citm_catalog.json,0.602491,0,0,0,0,0,0
+1. Parse,jvar,twitter.json,9.46569,1749760,1749952,33012,0,0,0
+2. Stringify,jvar,twitter.json,3.67347,465860,1396560,17488,148,3,0
+4. Statistics,jvar,twitter.json,0.290449,0,0,0,0,0,0
+1. Parse,Jzon,canada.json,144.028,15557752,20092672,282601,0,0,0
+2. Stringify,Jzon,canada.json,44.3267,2251072,7647840,20,0,0,0
+3. Prettify,Jzon,canada.json,111.392,8272208,29127296,222274,0,0,0
+4. Statistics,Jzon,canada.json,1.65986,0,0,0,0,0,0
+1. Parse,Jzon,citm_catalog.json,50.4167,3552672,7036008,70784,0,0,0
+2. Stringify,Jzon,citm_catalog.json,16.8427,500752,1787904,666,0,0,0
+3. Prettify,Jzon,citm_catalog.json,32.3929,1988352,7122400,44093,0,0,0
+4. Statistics,Jzon,citm_catalog.json,0.68427,0,64,324,0,0,0
+7. Code size,Jzon,XXX,0,0,0,0,0,0,18446744073709551615
+1. Parse,Jzon,twitter.json,25.6888,1680448,2966808,49308,0,0,0
+2. Stringify,Jzon,twitter.json,11.0669,472992,1732384,4467,0,0,0
+3. Prettify,Jzon,twitter.json,13.7568,789552,3151936,6537,0,0,0
+4. Statistics,Jzon,twitter.json,0.562324,0,464,1901,0,0,0
+1. Parse,nlohmann,canada.json,96.5414,4443584,4631336,170279,0,0,0
+2. Stringify,nlohmann,canada.json,19.1274,3145760,4719192,20,0,0,0
+3. Prettify,nlohmann,canada.json,27.5295,12582944,18874968,22,0,0,0
+4. Statistics,nlohmann,canada.json,3.39599,0,0,0,0,0,0
+1. Parse,nlohmann,citm_catalog.json,23.3054,2661864,2662272,54989,0,0,0
+2. Stringify,nlohmann,citm_catalog.json,3.87051,786464,1180248,18,0,0,0
+3. Prettify,nlohmann,citm_catalog.json,5.43472,3145760,4719192,20,0,0,0
+4. Statistics,nlohmann,citm_catalog.json,1.06804,0,64,324,0,0,0
+1. Parse,nlohmann,twitter.json,11.3827,1395264,1398336,24723,0,0,0
+2. Stringify,nlohmann,twitter.json,3.60816,786464,1180248,18,0,0,0
+3. Prettify,nlohmann,twitter.json,4.0823,786464,1180248,18,0,0,0
+4. Statistics,nlohmann,twitter.json,0.778387,0,464,1901,0,0,0
+1. Parse,picojson,canada.json,88.4344,4443584,4443600,170254,0,0,0
+2. Stringify,picojson,canada.json,97.5317,3145792,4718656,19,32,1,0
+4. Statistics,picojson,canada.json,0.751648,0,0,0,0,0,0
+1. Parse,picojson,citm_catalog.json,11.5723,2662808,2662808,54975,0,0,0
+2. Stringify,picojson,citm_catalog.json,8.40326,786612,1179828,19,148,3,0
+4. Statistics,picojson,citm_catalog.json,0.33942,0,0,0,0,0,0
+1. Parse,picojson,twitter.json,7.9074,1469008,1469008,28649,0,0,0
+2. Stringify,picojson,twitter.json,5.12309,786544,1179760,18,80,2,0
+4. Statistics,picojson,twitter.json,0.229137,0,0,0,0,0,0
+1. Parse,rapidjson,canada.json,7.34579,2870858,3170053,61,0,0,0
+2. Stringify,rapidjson,canada.json,16.0647,2873369,2873882,28,0,0,0
+3. Prettify,rapidjson,canada.json,24.0629,9697485,9697998,31,0,0,0
+4. Statistics,rapidjson,canada.json,0.798724,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjson,canada.json,21.1772,2873369,2874139,30,0,0,0
+6. SaxStatistics,rapidjson,canada.json,5.35791,0,257,2,0,0,0
+1. Parse,rapidjson,citm_catalog.json,3.48479,1114674,1122707,29,0,0,0
+2. Stringify,rapidjson,citm_catalog.json,3.08228,567624,568137,24,0,0,0
+3. Prettify,rapidjson,citm_catalog.json,5.11427,1915598,1916111,27,0,0,0
+4. Statistics,rapidjson,citm_catalog.json,0.293725,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjson,citm_catalog.json,5.13491,567624,568394,26,0,0,0
+6. SaxStatistics,rapidjson,citm_catalog.json,2.40145,0,257,2,0,0,0
+1. Parse,rapidjson,twitter.json,2.39898,786874,792635,25,0,0,0
+2. Stringify,rapidjson,twitter.json,1.93422,687896,688409,21,0,0,0
+3. Prettify,rapidjson,twitter.json,2.42276,1090622,1091135,22,0,0,0
+4. Statistics,rapidjson,twitter.json,0.164698,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjson,twitter.json,3.72917,687896,688986,25,0,0,0
+6. SaxStatistics,rapidjson,twitter.json,1.83751,0,577,4,0,0,0
+1. Parse,rapidjsonFullPrec,canada.json,23.0218,2870858,3170053,61,0,0,0
+2. Stringify,rapidjsonFullPrec,canada.json,16.4377,2873369,2873882,28,0,0,0
+3. Prettify,rapidjsonFullPrec,canada.json,24.7272,9697485,9697998,31,0,0,0
+4. Statistics,rapidjsonFullPrec,canada.json,0.799832,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjsonFullPrec,canada.json,38.2832,2873369,2874139,30,0,0,0
+6. SaxStatistics,rapidjsonFullPrec,canada.json,21.1932,0,257,2,0,0,0
+1. Parse,rapidjsonFullPrec,citm_catalog.json,4.06809,1114674,1122707,29,0,0,0
+2. Stringify,rapidjsonFullPrec,citm_catalog.json,3.04356,567624,568137,24,0,0,0
+3. Prettify,rapidjsonFullPrec,citm_catalog.json,5.10937,1915598,1916111,27,0,0,0
+4. Statistics,rapidjsonFullPrec,citm_catalog.json,0.298074,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjsonFullPrec,citm_catalog.json,6.04944,567624,568394,26,0,0,0
+6. SaxStatistics,rapidjsonFullPrec,citm_catalog.json,3.14781,0,257,2,0,0,0
+1. Parse,rapidjsonFullPrec,twitter.json,2.43618,786874,792635,25,0,0,0
+2. Stringify,rapidjsonFullPrec,twitter.json,1.91246,687896,688409,21,0,0,0
+3. Prettify,rapidjsonFullPrec,twitter.json,2.55174,1090622,1091135,22,0,0,0
+4. Statistics,rapidjsonFullPrec,twitter.json,0.16946,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjsonFullPrec,twitter.json,3.90791,687896,688986,25,0,0,0
+6. SaxStatistics,rapidjsonFullPrec,twitter.json,1.93192,0,577,4,0,0,0
+1. Parse,rapidjsonInsitu,canada.json,7.42618,5121910,5420848,60,0,0,0
+2. Stringify,rapidjsonInsitu,canada.json,16.3595,2873369,2873882,28,0,0,0
+3. Prettify,rapidjsonInsitu,canada.json,24.4305,9697485,9697998,31,0,0,0
+4. Statistics,rapidjsonInsitu,canada.json,0.798408,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjsonInsitu,canada.json,22.107,2873369,5124974,30,0,0,0
+6. SaxStatistics,rapidjsonInsitu,canada.json,5.63217,0,2251092,2,0,0,0
+1. Parse,rapidjsonInsitu,citm_catalog.json,2.5385,2776319,2784095,27,0,0,0
+2. Stringify,rapidjsonInsitu,citm_catalog.json,3.10842,567624,568137,24,0,0,0
+3. Prettify,rapidjsonInsitu,citm_catalog.json,5.13419,1915598,1916111,27,0,0,0
+4. Statistics,rapidjsonInsitu,citm_catalog.json,0.293278,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjsonInsitu,citm_catalog.json,5.11745,567624,2295382,26,0,0,0
+6. SaxStatistics,rapidjsonInsitu,citm_catalog.json,2.15947,0,1727245,2,0,0,0
+1. Parse,rapidjsonInsitu,twitter.json,1.36745,1090589,1095773,17,0,0,0
+2. Stringify,rapidjsonInsitu,twitter.json,2.12307,687896,688409,21,0,0,0
+3. Prettify,rapidjsonInsitu,twitter.json,2.60882,1090622,1091135,22,0,0,0
+4. Statistics,rapidjsonInsitu,twitter.json,0.16301,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjsonInsitu,twitter.json,3.3793,687896,1319964,23,0,0,0
+6. SaxStatistics,rapidjsonInsitu,twitter.json,1.21906,0,631555,2,0,0,0
+1. Parse,rapidjsonIterative,canada.json,12.4865,2870858,3170053,61,0,0,0
+2. Stringify,rapidjsonIterative,canada.json,16.2663,2873369,2873882,28,0,0,0
+3. Prettify,rapidjsonIterative,canada.json,25.3417,9697485,9697998,31,0,0,0
+4. Statistics,rapidjsonIterative,canada.json,0.797155,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjsonIterative,canada.json,27.7819,2873369,2874139,30,0,0,0
+6. SaxStatistics,rapidjsonIterative,canada.json,10.1823,0,257,2,0,0,0
+1. Parse,rapidjsonIterative,citm_catalog.json,5.16004,1114674,1122707,29,0,0,0
+2. Stringify,rapidjsonIterative,citm_catalog.json,3.0464,567624,568137,24,0,0,0
+3. Prettify,rapidjsonIterative,citm_catalog.json,5.07286,1915598,1916111,27,0,0,0
+4. Statistics,rapidjsonIterative,citm_catalog.json,0.290699,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjsonIterative,citm_catalog.json,7.00515,567624,568394,26,0,0,0
+6. SaxStatistics,rapidjsonIterative,citm_catalog.json,3.94481,0,257,2,0,0,0
+1. Parse,rapidjsonIterative,twitter.json,2.72944,786874,792635,25,0,0,0
+2. Stringify,rapidjsonIterative,twitter.json,1.94433,687896,688409,21,0,0,0
+3. Prettify,rapidjsonIterative,twitter.json,2.44296,1090622,1091135,22,0,0,0
+4. Statistics,rapidjsonIterative,twitter.json,0.159401,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjsonIterative,twitter.json,4.22537,687896,688986,25,0,0,0
+6. SaxStatistics,rapidjsonIterative,twitter.json,2.16999,0,577,4,0,0,0
+1. Parse,rapidjsonAutoUTF,canada.json,11.5276,2870858,3170053,61,0,0,0
+2. Stringify,rapidjsonAutoUTF,canada.json,26.7232,2873369,2873882,28,0,0,0
+3. Prettify,rapidjsonAutoUTF,canada.json,65.8353,9697485,9697998,31,0,0,0
+4. Statistics,rapidjsonAutoUTF,canada.json,0.800156,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjsonAutoUTF,canada.json,35.5189,56,2874139,30,0,0,0
+6. SaxStatistics,rapidjsonAutoUTF,canada.json,9.63993,0,257,2,0,0,0
+1. Parse,rapidjsonAutoUTF,citm_catalog.json,8.29807,1114674,1122707,29,0,0,0
+2. Stringify,rapidjsonAutoUTF,citm_catalog.json,4.51382,567624,568137,24,0,0,0
+3. Prettify,rapidjsonAutoUTF,citm_catalog.json,12.5207,1915598,1916111,27,0,0,0
+4. Statistics,rapidjsonAutoUTF,citm_catalog.json,0.300491,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjsonAutoUTF,citm_catalog.json,11.5549,56,568394,26,0,0,0
+6. SaxStatistics,rapidjsonAutoUTF,citm_catalog.json,7.34521,0,257,2,0,0,0
+1. Parse,rapidjsonAutoUTF,twitter.json,6.16586,786874,792635,25,0,0,0
+2. Stringify,rapidjsonAutoUTF,twitter.json,3.77421,567624,568137,24,0,0,0
+3. Prettify,rapidjsonAutoUTF,twitter.json,5.87976,851408,851921,25,0,0,0
+4. Statistics,rapidjsonAutoUTF,twitter.json,0.16295,0,0,0,0,0,0
+5. SaxRoundtrip,rapidjsonAutoUTF,twitter.json,9.33244,56,568714,28,0,0,0
+6. SaxStatistics,rapidjsonAutoUTF,twitter.json,5.59141,0,577,4,0,0,0
+1. Parse,gason,canada.json,23.0624,4938060,4938060,658,0,0,0
+2. Stringify,gason,canada.json,57.3161,1295040,2867904,18,0,0,0
+3. Prettify,gason,canada.json,129.394,7316176,19899088,222273,0,0,0
+4. Statistics,gason,canada.json,0.842227,0,0,0,0,0,0
+1. Parse,gason,citm_catalog.json,13.5126,2546437,2546437,202,0,0,0
+2. Stringify,gason,citm_catalog.json,18.0607,601088,1387520,17,0,0,0
+3. Prettify,gason,citm_catalog.json,31.3856,1802112,4947840,34759,0,0,0
+4. Statistics,gason,citm_catalog.json,0.407112,0,0,0,0,0,0
+1. Parse,gason,twitter.json,4.9263,963323,963323,83,0,0,0
+2. Stringify,gason,twitter.json,10.5833,481712,1268144,17,0,0,0
+3. Prettify,gason,twitter.json,13.2913,768752,1555184,1920,0,0,0
+4. Statistics,gason,twitter.json,0.277563,0,0,0,0,0,0
+1. Parse,ujson,canada.json,197.768,8886320,8886384,170254,0,0,0
+2. Stringify,ujson,canada.json,148.447,2097184,3145760,17,0,0,0
+3. Prettify,ujson,canada.json,154.524,8388640,12582944,19,0,0,0
+4. Statistics,ujson,canada.json,2.07524,0,0,0,0,0,0
+1. Parse,ujson,citm_catalog.json,59.2351,3164520,3165088,63520,0,0,0
+2. Stringify,ujson,citm_catalog.json,22.8089,524320,786464,15,0,0,0
+3. Prettify,ujson,citm_catalog.json,23.9505,2097184,3145760,17,0,0,0
+4. Statistics,ujson,citm_catalog.json,0.869113,0,0,0,0,0,0
+1. Parse,ujson,twitter.json,27.5035,1562280,1562632,13992,0,0,0
+2. Stringify,ujson,twitter.json,9.70085,839712,1259552,15,0,0,0
+3. Prettify,ujson,twitter.json,10.127,917536,1376288,15,0,0,0
+4. Statistics,ujson,twitter.json,0.488597,0,0,0,0,0,0
+1. Parse,ujson4c,canada.json,8.94787,8372248,17376440,11,0,0,0
+4. Statistics,ujson4c,canada.json,2.77569,0,0,0,0,0,0
+1. Parse,ujson4c,citm_catalog.json,3.7763,4177944,11086732,10,0,0,0
+4. Statistics,ujson4c,citm_catalog.json,0.590357,0,0,0,0,0,0
+1. Parse,ujson4c,twitter.json,1.90956,4177944,6703980,10,0,0,0
+4. Statistics,ujson4c,twitter.json,0.26762,0,0,0,0,0,0
+6. SaxStatistics,pjson,canada.json,7.24977,0,256,1,0,0,0
+6. SaxStatistics,pjson,citm_catalog.json,4.96604,0,256,1,0,0,0
+7. Code size,pjson,XXX,0,0,0,0,0,0,18446744073709551615
+6. SaxStatistics,pjson,twitter.json,2.06624,0,1536,3,0,0,0
+1. Parse,udb-jsason-parser,canada.json,40.0451,12037126,12037126,223233,0,0,0
+2. Stringify,udb-jsason-parser,canada.json,63.9564,1265480,1265480,2,0,0,0
+3. Prettify,udb-jsason-parser,canada.json,80.9027,8179527,8179527,2,0,0,0
+4. Statistics,udb-jsason-parser,canada.json,0.906968,0,0,0,0,0,0
+1. Parse,udb-jsason-parser,citm_catalog.json,17.761,3381911,3381911,51205,0,0,0
+2. Stringify,udb-jsason-parser,citm_catalog.json,11.7051,500316,500316,2,0,0,0
+3. Prettify,udb-jsason-parser,citm_catalog.json,14.6691,1929093,1929093,2,0,0,0
+4. Statistics,udb-jsason-parser,citm_catalog.json,0.314138,0,0,0,0,0,0
+1. Parse,udb-jsason-parser,twitter.json,7.36078,1601352,1601352,20237,0,0,0
+2. Stringify,udb-jsason-parser,twitter.json,6.70396,466925,466925,2,0,0,0
+3. Prettify,udb-jsason-parser,twitter.json,7.46671,829239,829239,2,0,0,0
+4. Statistics,udb-jsason-parser,twitter.json,0.17511,0,0,0,0,0,0
+1. Parse,juson,canada.json,73.1105,7358224,7358232,115044,0,0,0
+4. Statistics,juson,canada.json,0.775066,0,0,0,0,0,0
+1. Parse,juson,citm_catalog.json,10.0549,3002954,3002978,6050,0,0,0
+4. Statistics,juson,citm_catalog.json,0.391278,0,0,0,0,0,0
+1. Parse,juson,twitter.json,2.43857,1357600,1357600,1104,0,0,0
+4. Statistics,juson,twitter.json,0.201645,0,0,0,0,0,0
+1. Parse,ccan,canada.json,68.1899,9362260,9362260,167193,0,0,0
+2. Stringify,ccan,canada.json,109.871,2097169,2097169,19,0,0,0
+3. Prettify,ccan,canada.json,125.708,8388625,8388625,21,0,0,0
+4. Statistics,ccan,canada.json,0.777898,0,0,0,0,0,0
+1. Parse,ccan,citm_catalog.json,9.19681,2635772,2635772,68345,0,0,0
+2. Stringify,ccan,citm_catalog.json,8.32139,524305,524305,17,0,0,0
+3. Prettify,ccan,citm_catalog.json,14.6263,2097169,2097169,19,0,0,0
+4. Statistics,ccan,citm_catalog.json,0.348415,0,0,0,0,0,0
+1. Parse,ccan,twitter.json,6.06386,1417675,1417675,43525,72,1,0
+2. Stringify,ccan,twitter.json,5.10615,524305,524305,17,0,0,0
+3. Prettify,ccan,twitter.json,6.49533,1048593,1048593,18,0,0,0
+4. Statistics,ccan,twitter.json,0.221046,0,0,0,0,0,0
+1. Parse,cJSON,canada.json,96.0884,10699586,10699586,167192,0,0,0
+2. Stringify,cJSON,canada.json,169.875,2102136,2102136,11,0,0,0
+3. Prettify,cJSON,canada.json,169.101,2109666,2109666,11,0,0,0
+4. Statistics,cJSON,canada.json,2.18946,0,0,0,0,0,0
+1. Parse,cJSON,citm_catalog.json,16.5456,2692395,2692395,64383,0,0,0
+2. Stringify,cJSON,citm_catalog.json,13.578,526926,526926,9,0,0,0
+3. Prettify,cJSON,citm_catalog.json,14.713,1052036,1052036,10,0,0,0
+4. Statistics,cJSON,citm_catalog.json,0.5342,0,0,0,0,0,0
+1. Parse,cJSON,twitter.json,6.82318,1294699,1294699,32016,72,1,0
+2. Stringify,cJSON,twitter.json,6.16245,529704,529704,9,0,0,0
+3. Prettify,cJSON,twitter.json,6.77142,1058056,1058056,10,0,0,0
+4. Statistics,cJSON,twitter.json,0.312532,0,0,0,0,0,0
+1. Parse,vincenthz-libjson,canada.json,92.4318,4460990,4489927,334389,0,0,0
+2. Stringify,vincenthz-libjson,canada.json,85.7073,4194336,4194336,13,0,0,0
+3. Prettify,vincenthz-libjson,canada.json,85.7602,4194336,4194336,13,0,0,0
+4. Statistics,vincenthz-libjson,canada.json,0.769766,0,0,0,0,0,0
+5. SaxRoundtrip,vincenthz-libjson,canada.json,20.4411,4194336,4198688,15,0,0,0
+6. SaxStatistics,vincenthz-libjson,canada.json,15.6131,0,4352,2,0,0,0
+1. Parse,vincenthz-libjson,citm_catalog.json,24.123,1877047,1905986,153901,0,0,0
+2. Stringify,vincenthz-libjson,citm_catalog.json,6.38473,524320,524320,10,0,0,0
+3. Prettify,vincenthz-libjson,citm_catalog.json,6.47731,524320,524320,10,0,0,0
+4. Statistics,vincenthz-libjson,citm_catalog.json,0.37182,0,0,0,0,0,0
+5. SaxRoundtrip,vincenthz-libjson,citm_catalog.json,13.9852,524320,528672,12,0,0,0
+6. SaxStatistics,vincenthz-libjson,citm_catalog.json,10.0157,0,4352,2,0,0,0
+1. Parse,vincenthz-libjson,twitter.json,10.5833,1052784,1081728,72620,0,0,0
+2. Stringify,vincenthz-libjson,twitter.json,4.82886,524320,524320,10,0,0,0
+3. Prettify,vincenthz-libjson,twitter.json,4.81243,524320,524320,10,0,0,0
+4. Statistics,vincenthz-libjson,twitter.json,0.24056,0,0,0,0,0,0
+5. SaxRoundtrip,vincenthz-libjson,twitter.json,7.90824,524320,528672,12,0,0,0
+6. SaxStatistics,vincenthz-libjson,twitter.json,3.90552,0,4352,2,0,0,0
+1. Parse,yajl,canada.json,106.098,10163570,10165994,501567,0,0,0
+2. Stringify,yajl,canada.json,98.3221,4194936,4194936,15,0,0,0
+3. Prettify,yajl,canada.json,128.521,16777848,16777848,17,0,0,0
+4. Statistics,yajl,canada.json,0.885108,0,0,0,0,0,0
+5. SaxRoundtrip,yajl,canada.json,161.292,4194936,4199408,22,0,0,0
+6. SaxStatistics,yajl,canada.json,62.2272,0,4472,7,0,0,0
+1. Parse,yajl,citm_catalog.json,23.936,2409606,2414078,189685,0,0,0
+2. Stringify,yajl,citm_catalog.json,5.76626,524920,524920,12,0,0,0
+3. Prettify,yajl,citm_catalog.json,13.0669,2097784,2097784,14,0,0,0
+4. Statistics,yajl,citm_catalog.json,0.420013,0,0,0,0,0,0
+5. SaxRoundtrip,yajl,citm_catalog.json,13.0176,524920,529392,19,0,0,0
+6. SaxStatistics,yajl,citm_catalog.json,7.54154,0,4472,7,0,0,0
+1. Parse,yajl,twitter.json,10.344,1172616,1177088,77047,0,0,0
+2. Stringify,yajl,twitter.json,3.06513,524920,524920,12,0,0,0
+3. Prettify,yajl,twitter.json,4.6833,1049208,1049208,13,0,0,0
+4. Statistics,yajl,twitter.json,0.256869,0,0,0,0,0,0
+5. SaxRoundtrip,yajl,twitter.json,5.55326,524920,529392,19,0,0,0
+6. SaxStatistics,yajl,twitter.json,2.62454,0,4472,7,0,0,0
+1. Parse,json-c,canada.json,161.265,13297282,13322500,446693,0,0,0
+2. Stringify,json-c,canada.json,13.0912,6445364,6445364,21,4194320,2,0
+3. Prettify,json-c,canada.json,20.7323,13761847,13761847,22,8388624,2,0
+4. Statistics,json-c,canada.json,7.93853,0,0,0,0,0,0
+1. Parse,json-c,citm_catalog.json,50.5078,10252899,10254091,141510,0,0,0
+2. Stringify,json-c,citm_catalog.json,7.25831,1025030,1025030,18,524304,2,0
+3. Prettify,json-c,citm_catalog.json,9.16131,3353997,3353997,20,2097168,2,0
+4. Statistics,json-c,citm_catalog.json,1.07639,0,0,0,0,0,0
+1. Parse,json-c,twitter.json,17.8098,2575445,2577110,45743,0,0,0
+2. Stringify,json-c,twitter.json,5.00127,997271,997271,18,524304,2,0
+3. Prettify,json-c,twitter.json,5.5128,1680904,1680904,19,1048592,2,0
+4. Statistics,json-c,twitter.json,0.367642,0,0,0,0,0,0
+1. Parse,jsmn,canada.json,515.432,4926076,4926076,3,0,0,0
+4. Statistics,jsmn,canada.json,0.478059,0,0,0,0,0,0
+1. Parse,jsmn,citm_catalog.json,16.8374,2745589,2745589,3,0,0,0
+4. Statistics,jsmn,citm_catalog.json,0.258164,0,0,0,0,0,0
+7. Code size,jsmn,XXX,0,0,0,0,0,0,18446744073709551615
+1. Parse,jsmn,twitter.json,5.6494,1067691,1067691,3,0,0,0
+4. Statistics,jsmn,twitter.json,0.141915,0,0,0,0,0,0
+</textarea>
+</div>
+<div class="row" id="downloadDD" style="display: none">
+<div class="btn-group pull-right" >
+    <button class="btn dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-picture"></span></button>
+    <ul class="dropdown-menu">
+        <li><a tabindex="-1" href="#" dltype="image/jpeg">JPEG</a></li>
+        <li><a tabindex="-1" href="#" dltype="image/png">PNG</a></li>
+        <li><a tabindex="-1" href="#" dltype="application/pdf">PDF</a></li>
+        <li><a tabindex="-1" href="#" dltype="image/svg+xml">SVG</a></li>
+    </ul>
+</div>
+</div>
+<form method="post" action="https://export.highcharts.com/" id="imageGetForm">
+    <input type="hidden" name="filename" id="imageFilename" value="" />
+    <input type="hidden" name="type" id="imageGetFormTYPE" value="" />
+    <input type="hidden" name="width" value="1600" />
+    <input type="hidden" name="svg" value="" id="imageGetFormSVG" />
+</form>
+</div>
+</body>
+</html>
