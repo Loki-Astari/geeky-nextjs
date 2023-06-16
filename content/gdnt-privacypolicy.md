@@ -1,5 +1,5 @@
 ---
-title: Google Docs Note Taker Chrome Extension Privacy Policy
+title: "Google Docs Note Taker Chrome Extension Privacy Policy"
 image: /images/author.png
 description: "Google Docs Note Taker Privacy Policy"
 layout: about
