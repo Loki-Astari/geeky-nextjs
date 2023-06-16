@@ -6,7 +6,7 @@ layout: about
 
 ---
 
-This extension click **NO** data about the user.
+This extension collects **NO** data about the user.
 
 All data entered by the user is stored locally in the browser.  
 No data entered by the user is shared/transmitted by this extension.  
