@@ -78,7 +78,7 @@ $(function() {
     if (type.search("Code size") != -1) {
       var sizedt = google.visualization.data.group(
         view,
-        [1], 
+        [1],
         [{"column": 9, "aggregation": google.visualization.data.sum, 'type': 'number' }]
       );
       AddToOverall(sizedt);
@@ -93,7 +93,7 @@ $(function() {
 
       var timedt = google.visualization.data.group(
         view,
-        [1], 
+        [1],
         [{"column": 3, "aggregation": google.visualization.data.sum, 'type': 'number' }]
       );
 
@@ -119,7 +119,7 @@ $(function() {
         for (var column = 4; column <= 6; column++) {
           var memorydt = google.visualization.data.group(
             view,
-            [1], 
+            [1],
             [{"column": column, "aggregation": google.visualization.data.sum, 'type': 'number' }]
           );
           AddToOverall(memorydt);
@@ -135,7 +135,7 @@ $(function() {
       for (var column = 7; column <= 8; column++) {
         var memorydt = google.visualization.data.group(
           view,
-          [1], 
+          [1],
           [{"column": column, "aggregation": google.visualization.data.sum, 'type': 'number' }]
         );
         AddToOverall(memorydt);
@@ -165,7 +165,7 @@ $(function() {
               $('#imageGetFormSVG').val(svg);
               $('#imageGetForm').submit();
           });
-      });   
+      });
     $(this).after(d);
   });
 
@@ -181,17 +181,17 @@ $(function() {
 
 function pivotTable(src) {
   var dst = new google.visualization.DataTable();
-  
+
   // Add columns
   var key = src.getDistinctValues(1);
   var keyColumnMap = {};
-  dst.addColumn(src.getColumnType(0), src.getColumnLabel(0));  
+  dst.addColumn(src.getColumnType(0), src.getColumnLabel(0));
   for (var k in key)
     keyColumnMap[key[k]] = dst.addColumn(src.getColumnType(2), key[k]);
 
   // Add rows
   var pivot = src.getDistinctValues(0);
-  var pivotRowMap = {};  
+  var pivotRowMap = {};
   for (var p in pivot)
     dst.setValue(pivotRowMap[[pivot[p]]] = dst.addRow(), 0, pivot[p]);
 
@@ -265,7 +265,7 @@ function drawBarChart(type, data, chart, sortOptions) {
   // Using same colors as in series
   var colors = ["#3366cc","#dc3912","#ff9900","#109618","#990099","#0099c6","#dd4477","#66aa00","#b82e2e","#316395","#994499","#22aa99","#aaaa11","#6633cc","#e67300","#8b0707","#651067","#329262","#5574a6","#3b3eac","#b77322","#16d620","#b91383","#f4359e","#9c5935","#a9c413","#2a778d","#668d1c","#bea413","#0c5922","#743411","#3366cc","#dc3912","#ff9900","#109618","#990099","#0099c6","#dd4477","#66aa00","#b82e2e","#316395","#994499","#22aa99","#aaaa11","#6633cc","#e67300","#8b0707","#651067","#329262","#5574a6","#3b3eac","#b77322","#16d620","#b91383","#f4359e","#9c5935","#a9c413","#2a778d","#668d1c","#bea413","#0c5922","#743411"];
   var h = data.getNumberOfRows() * 12;
-  var options = { 
+  var options = {
     title: type,
     chartArea: {left: '20%', width: '70%', height: h },
     width: 800,
@@ -304,7 +304,7 @@ function drawBarChart(type, data, chart, sortOptions) {
 
 function drawPivotBarChart(type, data, title) {
   var h = (data.getNumberOfColumns() + 1) * data.getNumberOfRows() * 5;
-  var options = { 
+  var options = {
     title: type,
     chartArea: {left: '10%', width: '70%', 'height': h},
     width: 800,
@@ -428,7 +428,6 @@ body { padding-top: 70px; }
 <h2>Source CSV</h2>
 <textarea id="textInput" class="form-control" rows="5" readonly>
 Type,Library,Filename,Time (ms),Memory (byte),MemoryPeak (byte),AllocCount,LeakedBytes,LeakCount,FileSize (byte)
-7. Code size,ThorsSerializer,XXX,0,0,0,0,0,0,18446744073709551615
 1. Parse,ThorsSerializer,canada.json,38.6233,0
 2. Stringify,ThorsSerializer,canada.json,36.5043,0
 3. Prettify,ThorsSerializer,canada.json,36.8312,0
@@ -447,6 +446,7 @@ Type,Library,Filename,Time (ms),Memory (byte),MemoryPeak (byte),AllocCount,Leake
 4. Statistics,ThorsSerializer,citm_catalog.json,0.014778,0
 5. SaxRoundtrip,ThorsSerializer,citm_catalog.json,13.4049,0
 6. SaxStatistics,ThorsSerializer,citm_catalog.json,10.2796,0
+7. Code size,ThorsSerializer,XXX,0,0,0,0,0,0,18446744073709551615
 1. Parse,ArduinoJson,canada.json,299.688,0
 2. Stringify,ArduinoJson,canada.json,8.60517,0
 3. Prettify,ArduinoJson,canada.json,82.4003,0
@@ -513,7 +513,6 @@ Type,Library,Filename,Time (ms),Memory (byte),MemoryPeak (byte),AllocCount,Leake
 1. Parse,jsonxx,citm_catalog.json,42.4704,0
 2. Stringify,jsonxx,citm_catalog.json,30.4545,0
 4. Statistics,jsonxx,citm_catalog.json,0.451261,0
-7. Code size,Jzon,XXX,0,0,0,0,0,0,18446744073709551615
 1. Parse,Jzon,canada.json,75.5586,0
 2. Stringify,Jzon,canada.json,14.1435,0
 3. Prettify,Jzon,canada.json,23.4253,0
@@ -526,6 +525,7 @@ Type,Library,Filename,Time (ms),Memory (byte),MemoryPeak (byte),AllocCount,Leake
 2. Stringify,Jzon,citm_catalog.json,4.65695,0
 3. Prettify,Jzon,citm_catalog.json,6.11576,0
 4. Statistics,Jzon,citm_catalog.json,0.420283,0
+7. Code size,Jzon,XXX,0,0,0,0,0,0,18446744073709551615
 1. Parse,nlohmann,canada.json,34.2316,0
 2. Stringify,nlohmann,canada.json,12.4898,0
 3. Prettify,nlohmann,canada.json,19.7733,0
@@ -691,13 +691,13 @@ Type,Library,Filename,Time (ms),Memory (byte),MemoryPeak (byte),AllocCount,Leake
 2. Stringify,json-c,citm_catalog.json,3.5413,0
 3. Prettify,json-c,citm_catalog.json,4.45168,0
 4. Statistics,json-c,citm_catalog.json,0.680265,0
-7. Code size,jsmn,XXX,0,0,0,0,0,0,18446744073709551615
 1. Parse,jsmn,canada.json,317.454,0
 4. Statistics,jsmn,canada.json,0.196581,0
 1. Parse,jsmn,twitter.json,3.14851,0
 4. Statistics,jsmn,twitter.json,0.034485,0
 1. Parse,jsmn,citm_catalog.json,11.5138,0
 4. Statistics,jsmn,citm_catalog.json,0.075382,0
+7. Code size,jsmn,XXX,0,0,0,0,0,0,18446744073709551615
 </textarea>
 </div>
 <div class="row" id="downloadDD" style="display: none">
