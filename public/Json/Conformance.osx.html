@@ -359,16 +359,16 @@ Type,Library,Test,Result
 1. Parse Validation,ThorsSerializer,fail07,true
 4. Roundtrip,ThorsSerializer,roundtrip25,true
 4. Roundtrip,ThorsSerializer,roundtrip09,true
-4. Roundtrip,ThorsSerializer,roundtrip13,true
+4. Roundtrip,ThorsSerializer,roundtrip13,false
 4. Roundtrip,ThorsSerializer,roundtrip05,true
 4. Roundtrip,ThorsSerializer,roundtrip04,true
 4. Roundtrip,ThorsSerializer,roundtrip12,true
 4. Roundtrip,ThorsSerializer,roundtrip08,true
-4. Roundtrip,ThorsSerializer,roundtrip24,false
+4. Roundtrip,ThorsSerializer,roundtrip24,true
 4. Roundtrip,ThorsSerializer,roundtrip15,true
 4. Roundtrip,ThorsSerializer,roundtrip03,true
 4. Roundtrip,ThorsSerializer,roundtrip23,true
-4. Roundtrip,ThorsSerializer,roundtrip19,false
+4. Roundtrip,ThorsSerializer,roundtrip19,true
 4. Roundtrip,ThorsSerializer,roundtrip18,true
 4. Roundtrip,ThorsSerializer,roundtrip22,true
 4. Roundtrip,ThorsSerializer,roundtrip02,true
@@ -378,7 +378,7 @@ Type,Library,Test,Result
 4. Roundtrip,ThorsSerializer,roundtrip21,true
 4. Roundtrip,ThorsSerializer,roundtrip20,true
 4. Roundtrip,ThorsSerializer,roundtrip16,true
-4. Roundtrip,ThorsSerializer,roundtrip27,false
+4. Roundtrip,ThorsSerializer,roundtrip27,true
 4. Roundtrip,ThorsSerializer,roundtrip07,true
 4. Roundtrip,ThorsSerializer,roundtrip11,true
 4. Roundtrip,ThorsSerializer,roundtrip10,true
@@ -462,145 +462,284 @@ Type,Library,Test,Result
 3. Parse String,ThorsSerializer,test2,true
 3. Parse String,ThorsSerializer,test3,true
 3. Parse String,ThorsSerializer,test11,true
-1. Parse Validation,simdjson,pass01,true
-1. Parse Validation,simdjson,pass03,true
-1. Parse Validation,simdjson,pass02,true
-1. Parse Validation,simdjson,fail12,true
-1. Parse Validation,simdjson,fail04,true
-1. Parse Validation,simdjson,fail28,true
-1. Parse Validation,simdjson,fail08,true
-1. Parse Validation,simdjson,fail24,true
-1. Parse Validation,simdjson,fail32,true
-1. Parse Validation,simdjson,fail33,true
-1. Parse Validation,simdjson,fail25,true
-1. Parse Validation,simdjson,fail09,true
-1. Parse Validation,simdjson,fail29,true
-1. Parse Validation,simdjson,fail05,true
-1. Parse Validation,simdjson,fail13,true
-1. Parse Validation,simdjson,fail22,true
-1. Parse Validation,simdjson,fail14,true
-1. Parse Validation,simdjson,fail02,true
-1. Parse Validation,simdjson,fail03,true
-1. Parse Validation,simdjson,fail15,true
-1. Parse Validation,simdjson,fail23,true
-1. Parse Validation,simdjson,fail19,true
-1. Parse Validation,simdjson,fail20,true
-1. Parse Validation,simdjson,fail16,true
-1. Parse Validation,simdjson,fail17,true
-1. Parse Validation,simdjson,fail21,true
-1. Parse Validation,simdjson,fail06,true
-1. Parse Validation,simdjson,fail10,true
-1. Parse Validation,simdjson,fail30,true
-1. Parse Validation,simdjson,fail26,true
-1. Parse Validation,simdjson,fail27,true
-1. Parse Validation,simdjson,fail31,true
-1. Parse Validation,simdjson,fail11,true
-1. Parse Validation,simdjson,fail07,true
-4. Roundtrip,simdjson,roundtrip25,true
-4. Roundtrip,simdjson,roundtrip09,true
-4. Roundtrip,simdjson,roundtrip13,true
-4. Roundtrip,simdjson,roundtrip05,true
-4. Roundtrip,simdjson,roundtrip04,true
-4. Roundtrip,simdjson,roundtrip12,true
-4. Roundtrip,simdjson,roundtrip08,true
-4. Roundtrip,simdjson,roundtrip24,true
-4. Roundtrip,simdjson,roundtrip15,true
-4. Roundtrip,simdjson,roundtrip03,true
-4. Roundtrip,simdjson,roundtrip23,true
-4. Roundtrip,simdjson,roundtrip19,true
-4. Roundtrip,simdjson,roundtrip18,true
-4. Roundtrip,simdjson,roundtrip22,true
-4. Roundtrip,simdjson,roundtrip02,true
-4. Roundtrip,simdjson,roundtrip14,true
-4. Roundtrip,simdjson,roundtrip01,true
-4. Roundtrip,simdjson,roundtrip17,true
-4. Roundtrip,simdjson,roundtrip21,true
-4. Roundtrip,simdjson,roundtrip20,true
-4. Roundtrip,simdjson,roundtrip16,true
-4. Roundtrip,simdjson,roundtrip27,true
-4. Roundtrip,simdjson,roundtrip07,true
-4. Roundtrip,simdjson,roundtrip11,true
-4. Roundtrip,simdjson,roundtrip10,true
-4. Roundtrip,simdjson,roundtrip06,true
-4. Roundtrip,simdjson,roundtrip26,true
-2. Parse Double,simdjson,test53,true
-2. Parse Double,simdjson,test45,true
-2. Parse Double,simdjson,test12,true
-2. Parse Double,simdjson,test69,true
-2. Parse Double,simdjson,test28,true
-2. Parse Double,simdjson,test49,true
-2. Parse Double,simdjson,test65,true
-2. Parse Double,simdjson,test32,true
-2. Parse Double,simdjson,test24,true
-2. Parse Double,simdjson,test25,true
-2. Parse Double,simdjson,test33,true
-2. Parse Double,simdjson,test64,true
-2. Parse Double,simdjson,test48,true
-2. Parse Double,simdjson,test29,true
-2. Parse Double,simdjson,test68,true
-2. Parse Double,simdjson,test13,true
-2. Parse Double,simdjson,test44,true
-2. Parse Double,simdjson,test1,true
-2. Parse Double,simdjson,test52,true
-2. Parse Double,simdjson,test59,true
-2. Parse Double,simdjson,test18,true
-2. Parse Double,simdjson,test63,true
-2. Parse Double,simdjson,test34,true
-2. Parse Double,simdjson,test22,true
-2. Parse Double,simdjson,test55,true
-2. Parse Double,simdjson,test6,true
-2. Parse Double,simdjson,test43,true
-2. Parse Double,simdjson,test14,true
-2. Parse Double,simdjson,test38,true
-2. Parse Double,simdjson,test39,true
-2. Parse Double,simdjson,test15,true
-2. Parse Double,simdjson,test42,true
-2. Parse Double,simdjson,test7,true
-2. Parse Double,simdjson,test54,true
-2. Parse Double,simdjson,test23,true
-2. Parse Double,simdjson,test35,true
-2. Parse Double,simdjson,test62,true
-2. Parse Double,simdjson,test19,true
-2. Parse Double,simdjson,test58,true
-2. Parse Double,simdjson,test20,true
-2. Parse Double,simdjson,test36,true
-2. Parse Double,simdjson,test61,true
-2. Parse Double,simdjson,test8,true
-2. Parse Double,simdjson,test16,true
-2. Parse Double,simdjson,test41,true
-2. Parse Double,simdjson,test4,true
-2. Parse Double,simdjson,test57,true
-2. Parse Double,simdjson,test56,true
-2. Parse Double,simdjson,test5,true
-2. Parse Double,simdjson,test40,true
-2. Parse Double,simdjson,test17,true
-2. Parse Double,simdjson,test9,true
-2. Parse Double,simdjson,test60,true
-2. Parse Double,simdjson,test37,true
-2. Parse Double,simdjson,test21,true
-2. Parse Double,simdjson,test10,true
-2. Parse Double,simdjson,test47,true
-2. Parse Double,simdjson,test2,true
-2. Parse Double,simdjson,test51,true
-2. Parse Double,simdjson,test26,true
-2. Parse Double,simdjson,test30,true
-2. Parse Double,simdjson,test67,true
-2. Parse Double,simdjson,test66,true
-2. Parse Double,simdjson,test31,true
-2. Parse Double,simdjson,test27,true
-2. Parse Double,simdjson,test50,true
-2. Parse Double,simdjson,test3,true
-2. Parse Double,simdjson,test46,true
-2. Parse Double,simdjson,test11,true
-3. Parse String,simdjson,test1,true
-3. Parse String,simdjson,test6,true
-3. Parse String,simdjson,test8,true
-3. Parse String,simdjson,test5,true
-3. Parse String,simdjson,test9,true
-3. Parse String,simdjson,test10,true
-3. Parse String,simdjson,test2,true
-3. Parse String,simdjson,test3,true
-3. Parse String,simdjson,test11,true
+1. Parse Validation,simdjsonDom,pass01,true
+1. Parse Validation,simdjsonDom,pass03,true
+1. Parse Validation,simdjsonDom,pass02,true
+1. Parse Validation,simdjsonDom,fail12,true
+1. Parse Validation,simdjsonDom,fail04,true
+1. Parse Validation,simdjsonDom,fail28,true
+1. Parse Validation,simdjsonDom,fail08,true
+1. Parse Validation,simdjsonDom,fail24,true
+1. Parse Validation,simdjsonDom,fail32,true
+1. Parse Validation,simdjsonDom,fail33,true
+1. Parse Validation,simdjsonDom,fail25,true
+1. Parse Validation,simdjsonDom,fail09,true
+1. Parse Validation,simdjsonDom,fail29,true
+1. Parse Validation,simdjsonDom,fail05,true
+1. Parse Validation,simdjsonDom,fail13,true
+1. Parse Validation,simdjsonDom,fail22,true
+1. Parse Validation,simdjsonDom,fail14,true
+1. Parse Validation,simdjsonDom,fail02,true
+1. Parse Validation,simdjsonDom,fail03,true
+1. Parse Validation,simdjsonDom,fail15,true
+1. Parse Validation,simdjsonDom,fail23,true
+1. Parse Validation,simdjsonDom,fail19,true
+1. Parse Validation,simdjsonDom,fail20,true
+1. Parse Validation,simdjsonDom,fail16,true
+1. Parse Validation,simdjsonDom,fail17,true
+1. Parse Validation,simdjsonDom,fail21,true
+1. Parse Validation,simdjsonDom,fail06,true
+1. Parse Validation,simdjsonDom,fail10,true
+1. Parse Validation,simdjsonDom,fail30,true
+1. Parse Validation,simdjsonDom,fail26,true
+1. Parse Validation,simdjsonDom,fail27,true
+1. Parse Validation,simdjsonDom,fail31,true
+1. Parse Validation,simdjsonDom,fail11,true
+1. Parse Validation,simdjsonDom,fail07,true
+4. Roundtrip,simdjsonDom,roundtrip25,true
+4. Roundtrip,simdjsonDom,roundtrip09,true
+4. Roundtrip,simdjsonDom,roundtrip13,true
+4. Roundtrip,simdjsonDom,roundtrip05,true
+4. Roundtrip,simdjsonDom,roundtrip04,true
+4. Roundtrip,simdjsonDom,roundtrip12,true
+4. Roundtrip,simdjsonDom,roundtrip08,true
+4. Roundtrip,simdjsonDom,roundtrip24,true
+4. Roundtrip,simdjsonDom,roundtrip15,true
+4. Roundtrip,simdjsonDom,roundtrip03,true
+4. Roundtrip,simdjsonDom,roundtrip23,true
+4. Roundtrip,simdjsonDom,roundtrip19,true
+4. Roundtrip,simdjsonDom,roundtrip18,true
+4. Roundtrip,simdjsonDom,roundtrip22,true
+4. Roundtrip,simdjsonDom,roundtrip02,true
+4. Roundtrip,simdjsonDom,roundtrip14,true
+4. Roundtrip,simdjsonDom,roundtrip01,true
+4. Roundtrip,simdjsonDom,roundtrip17,true
+4. Roundtrip,simdjsonDom,roundtrip21,true
+4. Roundtrip,simdjsonDom,roundtrip20,true
+4. Roundtrip,simdjsonDom,roundtrip16,true
+4. Roundtrip,simdjsonDom,roundtrip27,true
+4. Roundtrip,simdjsonDom,roundtrip07,true
+4. Roundtrip,simdjsonDom,roundtrip11,true
+4. Roundtrip,simdjsonDom,roundtrip10,true
+4. Roundtrip,simdjsonDom,roundtrip06,true
+4. Roundtrip,simdjsonDom,roundtrip26,true
+2. Parse Double,simdjsonDom,test53,true
+2. Parse Double,simdjsonDom,test45,true
+2. Parse Double,simdjsonDom,test12,true
+2. Parse Double,simdjsonDom,test69,true
+2. Parse Double,simdjsonDom,test28,true
+2. Parse Double,simdjsonDom,test49,true
+2. Parse Double,simdjsonDom,test65,true
+2. Parse Double,simdjsonDom,test32,true
+2. Parse Double,simdjsonDom,test24,true
+2. Parse Double,simdjsonDom,test25,true
+2. Parse Double,simdjsonDom,test33,true
+2. Parse Double,simdjsonDom,test64,true
+2. Parse Double,simdjsonDom,test48,true
+2. Parse Double,simdjsonDom,test29,true
+2. Parse Double,simdjsonDom,test68,true
+2. Parse Double,simdjsonDom,test13,true
+2. Parse Double,simdjsonDom,test44,true
+2. Parse Double,simdjsonDom,test1,true
+2. Parse Double,simdjsonDom,test52,true
+2. Parse Double,simdjsonDom,test59,true
+2. Parse Double,simdjsonDom,test18,true
+2. Parse Double,simdjsonDom,test63,true
+2. Parse Double,simdjsonDom,test34,true
+2. Parse Double,simdjsonDom,test22,true
+2. Parse Double,simdjsonDom,test55,true
+2. Parse Double,simdjsonDom,test6,true
+2. Parse Double,simdjsonDom,test43,true
+2. Parse Double,simdjsonDom,test14,true
+2. Parse Double,simdjsonDom,test38,true
+2. Parse Double,simdjsonDom,test39,true
+2. Parse Double,simdjsonDom,test15,true
+2. Parse Double,simdjsonDom,test42,true
+2. Parse Double,simdjsonDom,test7,true
+2. Parse Double,simdjsonDom,test54,true
+2. Parse Double,simdjsonDom,test23,true
+2. Parse Double,simdjsonDom,test35,true
+2. Parse Double,simdjsonDom,test62,true
+2. Parse Double,simdjsonDom,test19,true
+2. Parse Double,simdjsonDom,test58,true
+2. Parse Double,simdjsonDom,test20,true
+2. Parse Double,simdjsonDom,test36,true
+2. Parse Double,simdjsonDom,test61,true
+2. Parse Double,simdjsonDom,test8,true
+2. Parse Double,simdjsonDom,test16,true
+2. Parse Double,simdjsonDom,test41,true
+2. Parse Double,simdjsonDom,test4,true
+2. Parse Double,simdjsonDom,test57,true
+2. Parse Double,simdjsonDom,test56,true
+2. Parse Double,simdjsonDom,test5,true
+2. Parse Double,simdjsonDom,test40,true
+2. Parse Double,simdjsonDom,test17,true
+2. Parse Double,simdjsonDom,test9,true
+2. Parse Double,simdjsonDom,test60,true
+2. Parse Double,simdjsonDom,test37,true
+2. Parse Double,simdjsonDom,test21,true
+2. Parse Double,simdjsonDom,test10,true
+2. Parse Double,simdjsonDom,test47,true
+2. Parse Double,simdjsonDom,test2,true
+2. Parse Double,simdjsonDom,test51,true
+2. Parse Double,simdjsonDom,test26,true
+2. Parse Double,simdjsonDom,test30,true
+2. Parse Double,simdjsonDom,test67,true
+2. Parse Double,simdjsonDom,test66,true
+2. Parse Double,simdjsonDom,test31,true
+2. Parse Double,simdjsonDom,test27,true
+2. Parse Double,simdjsonDom,test50,true
+2. Parse Double,simdjsonDom,test3,true
+2. Parse Double,simdjsonDom,test46,true
+2. Parse Double,simdjsonDom,test11,true
+3. Parse String,simdjsonDom,test1,true
+3. Parse String,simdjsonDom,test6,true
+3. Parse String,simdjsonDom,test8,true
+3. Parse String,simdjsonDom,test5,true
+3. Parse String,simdjsonDom,test9,true
+3. Parse String,simdjsonDom,test10,true
+3. Parse String,simdjsonDom,test2,true
+3. Parse String,simdjsonDom,test3,true
+3. Parse String,simdjsonDom,test11,true
+1. Parse Validation,simdjsonOndemand,pass01,true
+1. Parse Validation,simdjsonOndemand,pass03,true
+1. Parse Validation,simdjsonOndemand,pass02,true
+1. Parse Validation,simdjsonOndemand,fail12,true
+1. Parse Validation,simdjsonOndemand,fail04,true
+1. Parse Validation,simdjsonOndemand,fail28,true
+1. Parse Validation,simdjsonOndemand,fail08,true
+1. Parse Validation,simdjsonOndemand,fail24,true
+1. Parse Validation,simdjsonOndemand,fail32,true
+1. Parse Validation,simdjsonOndemand,fail33,true
+1. Parse Validation,simdjsonOndemand,fail25,true
+1. Parse Validation,simdjsonOndemand,fail09,true
+1. Parse Validation,simdjsonOndemand,fail29,true
+1. Parse Validation,simdjsonOndemand,fail05,true
+1. Parse Validation,simdjsonOndemand,fail13,true
+1. Parse Validation,simdjsonOndemand,fail22,true
+1. Parse Validation,simdjsonOndemand,fail14,true
+1. Parse Validation,simdjsonOndemand,fail02,true
+1. Parse Validation,simdjsonOndemand,fail03,true
+1. Parse Validation,simdjsonOndemand,fail15,true
+1. Parse Validation,simdjsonOndemand,fail23,true
+1. Parse Validation,simdjsonOndemand,fail19,true
+1. Parse Validation,simdjsonOndemand,fail20,true
+1. Parse Validation,simdjsonOndemand,fail16,true
+1. Parse Validation,simdjsonOndemand,fail17,true
+1. Parse Validation,simdjsonOndemand,fail21,true
+1. Parse Validation,simdjsonOndemand,fail06,true
+1. Parse Validation,simdjsonOndemand,fail10,true
+1. Parse Validation,simdjsonOndemand,fail30,true
+1. Parse Validation,simdjsonOndemand,fail26,true
+1. Parse Validation,simdjsonOndemand,fail27,true
+1. Parse Validation,simdjsonOndemand,fail31,true
+1. Parse Validation,simdjsonOndemand,fail11,true
+1. Parse Validation,simdjsonOndemand,fail07,true
+4. Roundtrip,simdjsonOndemand,roundtrip25,true
+4. Roundtrip,simdjsonOndemand,roundtrip09,true
+4. Roundtrip,simdjsonOndemand,roundtrip13,true
+4. Roundtrip,simdjsonOndemand,roundtrip05,true
+4. Roundtrip,simdjsonOndemand,roundtrip04,true
+4. Roundtrip,simdjsonOndemand,roundtrip12,true
+4. Roundtrip,simdjsonOndemand,roundtrip08,true
+4. Roundtrip,simdjsonOndemand,roundtrip24,true
+4. Roundtrip,simdjsonOndemand,roundtrip15,true
+4. Roundtrip,simdjsonOndemand,roundtrip03,true
+4. Roundtrip,simdjsonOndemand,roundtrip23,true
+4. Roundtrip,simdjsonOndemand,roundtrip19,true
+4. Roundtrip,simdjsonOndemand,roundtrip18,true
+4. Roundtrip,simdjsonOndemand,roundtrip22,true
+4. Roundtrip,simdjsonOndemand,roundtrip02,true
+4. Roundtrip,simdjsonOndemand,roundtrip14,true
+4. Roundtrip,simdjsonOndemand,roundtrip01,true
+4. Roundtrip,simdjsonOndemand,roundtrip17,true
+4. Roundtrip,simdjsonOndemand,roundtrip21,true
+4. Roundtrip,simdjsonOndemand,roundtrip20,true
+4. Roundtrip,simdjsonOndemand,roundtrip16,true
+4. Roundtrip,simdjsonOndemand,roundtrip27,true
+4. Roundtrip,simdjsonOndemand,roundtrip07,true
+4. Roundtrip,simdjsonOndemand,roundtrip11,true
+4. Roundtrip,simdjsonOndemand,roundtrip10,true
+4. Roundtrip,simdjsonOndemand,roundtrip06,true
+4. Roundtrip,simdjsonOndemand,roundtrip26,true
+2. Parse Double,simdjsonOndemand,test53,true
+2. Parse Double,simdjsonOndemand,test45,true
+2. Parse Double,simdjsonOndemand,test12,true
+2. Parse Double,simdjsonOndemand,test69,true
+2. Parse Double,simdjsonOndemand,test28,true
+2. Parse Double,simdjsonOndemand,test49,true
+2. Parse Double,simdjsonOndemand,test65,true
+2. Parse Double,simdjsonOndemand,test32,true
+2. Parse Double,simdjsonOndemand,test24,true
+2. Parse Double,simdjsonOndemand,test25,true
+2. Parse Double,simdjsonOndemand,test33,true
+2. Parse Double,simdjsonOndemand,test64,true
+2. Parse Double,simdjsonOndemand,test48,true
+2. Parse Double,simdjsonOndemand,test29,true
+2. Parse Double,simdjsonOndemand,test68,true
+2. Parse Double,simdjsonOndemand,test13,true
+2. Parse Double,simdjsonOndemand,test44,true
+2. Parse Double,simdjsonOndemand,test1,true
+2. Parse Double,simdjsonOndemand,test52,true
+2. Parse Double,simdjsonOndemand,test59,true
+2. Parse Double,simdjsonOndemand,test18,true
+2. Parse Double,simdjsonOndemand,test63,true
+2. Parse Double,simdjsonOndemand,test34,true
+2. Parse Double,simdjsonOndemand,test22,true
+2. Parse Double,simdjsonOndemand,test55,true
+2. Parse Double,simdjsonOndemand,test6,true
+2. Parse Double,simdjsonOndemand,test43,true
+2. Parse Double,simdjsonOndemand,test14,true
+2. Parse Double,simdjsonOndemand,test38,true
+2. Parse Double,simdjsonOndemand,test39,true
+2. Parse Double,simdjsonOndemand,test15,true
+2. Parse Double,simdjsonOndemand,test42,true
+2. Parse Double,simdjsonOndemand,test7,true
+2. Parse Double,simdjsonOndemand,test54,true
+2. Parse Double,simdjsonOndemand,test23,true
+2. Parse Double,simdjsonOndemand,test35,true
+2. Parse Double,simdjsonOndemand,test62,true
+2. Parse Double,simdjsonOndemand,test19,true
+2. Parse Double,simdjsonOndemand,test58,true
+2. Parse Double,simdjsonOndemand,test20,true
+2. Parse Double,simdjsonOndemand,test36,true
+2. Parse Double,simdjsonOndemand,test61,true
+2. Parse Double,simdjsonOndemand,test8,true
+2. Parse Double,simdjsonOndemand,test16,true
+2. Parse Double,simdjsonOndemand,test41,true
+2. Parse Double,simdjsonOndemand,test4,true
+2. Parse Double,simdjsonOndemand,test57,true
+2. Parse Double,simdjsonOndemand,test56,true
+2. Parse Double,simdjsonOndemand,test5,true
+2. Parse Double,simdjsonOndemand,test40,true
+2. Parse Double,simdjsonOndemand,test17,true
+2. Parse Double,simdjsonOndemand,test9,true
+2. Parse Double,simdjsonOndemand,test60,true
+2. Parse Double,simdjsonOndemand,test37,true
+2. Parse Double,simdjsonOndemand,test21,true
+2. Parse Double,simdjsonOndemand,test10,true
+2. Parse Double,simdjsonOndemand,test47,true
+2. Parse Double,simdjsonOndemand,test2,true
+2. Parse Double,simdjsonOndemand,test51,true
+2. Parse Double,simdjsonOndemand,test26,true
+2. Parse Double,simdjsonOndemand,test30,true
+2. Parse Double,simdjsonOndemand,test67,true
+2. Parse Double,simdjsonOndemand,test66,true
+2. Parse Double,simdjsonOndemand,test31,true
+2. Parse Double,simdjsonOndemand,test27,true
+2. Parse Double,simdjsonOndemand,test50,true
+2. Parse Double,simdjsonOndemand,test3,true
+2. Parse Double,simdjsonOndemand,test46,true
+2. Parse Double,simdjsonOndemand,test11,true
+3. Parse String,simdjsonOndemand,test1,true
+3. Parse String,simdjsonOndemand,test6,true
+3. Parse String,simdjsonOndemand,test8,true
+3. Parse String,simdjsonOndemand,test5,true
+3. Parse String,simdjsonOndemand,test9,true
+3. Parse String,simdjsonOndemand,test10,true
+3. Parse String,simdjsonOndemand,test2,true
+3. Parse String,simdjsonOndemand,test3,true
+3. Parse String,simdjsonOndemand,test11,true
 1. Parse Validation,ArduinoJson,pass01,true
 1. Parse Validation,ArduinoJson,pass03,true
 1. Parse Validation,ArduinoJson,pass02,true
