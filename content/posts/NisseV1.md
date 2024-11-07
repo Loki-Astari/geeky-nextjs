@@ -31,7 +31,7 @@ Even better, we already have applications (browsers) that handle all the difficu
 
 ## NisseV1
 
-All the code for this article is in a single [file](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/). It uses only the standard libraries, which should be easy to build for anybody. A “Makefile” is provided just as an example.
+All the code for this article is in a single [file](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V1). It uses only the standard libraries, which should be easy to build for anybody. A “Makefile” is provided just as an example.
 
 ### Build & Run
 
@@ -44,7 +44,7 @@ All the code for this article is in a single [file](https://github.com/Loki-Asta
 
 I will go over a couple of things in the file that I believe are worth explicitly pointing out:
 
-### `int main()` function
+### int main()
 
 ```C++
 int main(int argc, char* argv[])
@@ -83,14 +83,21 @@ Here are two main points to note:
 
 1. Unlike most beginner tutorials, web applications are event-driven. They operate with a "dispatch loop" that executes user code when events occur, rather than following a sequential list of commands. In this example, the `run()` function represents the dispatch loop and manages all the underlying details. Typically, frameworks allow you to register user code for specific events, but since this is a simple application, it simply handles an HTTP request.
 
-2. I use exceptions to handle critical errors. Many engineers believe exceptions are problematic because they obscure control flow (and I partially agree). However, I prefer using exceptions judiciously, as they reduce the amount of explicit error-handling code required for serious issues that necessitate application shutdown. It is essential to unwind the stack correctly and ensure all relevant destructors are called to release resources; therefore, `abort()` and `exit()` are usually inappropriate in C++ applications (unlike in C). For this reason, you **MUST** catch exceptions in `main()`, as it is implementation-defined whether the stack unwinds if an exception escapes the `main()` function. By catching the exception in `main()`, you ensure the stack unwinds correctly, and all destructors are called. Then, you can generate appropriate messages and logs before rethrowing the exceptions. Rethrowing allows the OS to take necessary actions when the application exits abnormally.
+2. I use exceptions to handle critical errors. Many engineers believe exceptions are problematic because they obscure control flow (and I partially agree). However, I prefer using exceptions, judiciously, as they reduce the amount of explicit error-handling code required for serious issues that necessitate application shutdown. It is essential to unwind the stack correctly and ensure all relevant destructors are called to release resources; therefore, `abort()` and `exit()` are usually inappropriate in C++ applications (unlike in C). For this reason, you **MUST** catch exceptions in `main()`, as it is implementation-defined whether the stack unwinds if an exception escapes the `main()` function. By catching the exception in `main()`, you ensure the stack unwinds correctly, and all destructors are called. Then, you can generate appropriate messages and logs before rethrowing the exceptions. Rethrowing allows the OS to take necessary actions when the application exits abnormally.
 
 ### Socket Code
 
 The socket code is all C code (and thus in the global namespace). You will see in my code that all C code is prefixed by `::`. For example, when creating a server-end socket, I call `::socket(),` `::bind(),` `::listen()`, and `::accept()`. This ensures that I do not accidentally call similarly named methods.
 
-A lot of the code in this example is simply creating and handling sockets and doing a rudimentary job of checking and handling basic errors that these functions could generate; class [Server](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L230-L280) is 50 lines and class [Socket](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L282-L470) is another 200 lines and represents at least a third of the code. I bring this up because many C++ wrapper libraries exist that wrap this C interface and provide a much simpler and cleaner interface and have much better error handling than I have hacked together for this example.
+A lot of the code in this example is simply creating and handling sockets and doing a rudimentary job of checking and handling basic errors that these functions could generate; class [Server](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L230-L280) is 50 lines and class [Socket](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L282-L470) is another 200 lines and represents at least a third of the code.
 
-### So What is Missing?
+This code is so bulky because it requires a lot of explicit code to detect edge cases and potentially retry IO operations, which is needed to handle non-blocking asynchronous code. Additionally, we have not included any code to handle SSL connections, which is required for HTTPS connections, the de facto industry standard.
 
-Though the web-server can handle a limited number of simultaneous requests, they will all be processed sequentially. The problem is that sending data over a network is orders of magnitude slower than most other operations the server could perform; therefore, when handling a request, the server is usually blocked, waiting for confirmation that its writes have succeeded, when it could utilize this time to work on another request.
+### What is the next step
+
+We should utilize a C++ sockets library that provides a simpler-to-use interface, has built-in support for SSL, and explicitly handles all the error situations nicely.
+
+### Future Notes
+
+Though the web server can handle a limited number of simultaneous requests, they will all be processed sequentially. The problem is that sending data over a network is orders of magnitude slower than most other operations the server could perform; therefore, when handling a request, the server is usually blocked, waiting for confirmation that its writes have succeeded when it could utilize this time to work on another request.
+
