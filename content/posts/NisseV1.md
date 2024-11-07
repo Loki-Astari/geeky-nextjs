@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "A WebServer"
-date: 2024-11-04T12:50:31-0800
+date: 2024-11-06T12:48:31-0800
 author: Loki Astari, (C)2024
 comments: true
 categories: ["C++", "Nisse", "Server", "C++-By-Example", "Coding"]
