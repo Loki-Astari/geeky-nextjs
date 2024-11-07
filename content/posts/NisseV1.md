@@ -1,0 +1,98 @@
+---
+layout: post
+title: "Nisse - Origins of a serverice"
+date: 2024-11-04T12:50:31-0800
+author: Loki Astari, (C)2024
+comments: true
+categories: ["C++", "Nisse", "Server", "C++-By-Example", "Coding"]
+series: Nisse
+tags: Nisse
+sharing: true
+footer: true
+subtitle: Nisse
+description: Nisse. The step by step creation of a C++ Server architecture.
+image: /images/post/post-3.png
+imageInfo:
+    original:           https://unsplash.com/photos/W-oqNwbmin0
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Oscar Nilsson
+    AttributionLink:    https://unsplash.com/@oscrse
+featured: true
+draft: false
+disqusId: "http://lokiastari.com/blog/2024/11/06/Nisse/"
+---
+
+# [Nisse](https://github.com/Loki-Astari/Nisse)
+
+Before I start describing the different parts of Nisse I want to start out with the simplest Web Application that I can build. This is a WebServer. A WebServer maintains no state between calls and the interface is trivial, an [HTTP message](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#http_requests) is sent by client and in return receives an [HTTP response](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#http_responses).
+
+Even nicer is that we already have applications (browsers) that do all the hard parts of interacting with a web browser so we don't need to write the client side.
+
+## [NisseV1](https://github.com/Loki-Astari/NisseBlogCode/blob/master/NisseOrigins/NisseV1.cpp)
+
+All the code for this article is in a single file. It uses only the standard libraries should be easy to build by anybody.
+
+### Build & Run
+
+```bash
+  > git clone https://github.com/Loki-Astari/NisseBlogCode.git
+  > cd NisseBlogCode/NisseOrigins
+  > make
+  > ./NisseV1 8080 /Directory/You/Want/To/Server/On/Port/8080
+```
+
+I will go over a couple of things in the file that I believe are worth explicitly pointing out:
+
+
+### `int main()` function
+
+```C++
+int main(int argc, char* argv[])
+{
+    if (argc != 3)
+    {
+        std::cerr << "Usage: NisseV1 <port> <documentPath>" << "\n";
+        return 1;
+    }
+
+    try
+    {
+        static const int port = std::stoi(argv[1]);
+        static const std::filesystem::path  contentDir  = std::filesystem::canonical(argv[2]);
+
+        std::cout << "Nisse Proto 1\n";
+        WebServer   server(port, contentDir);
+        server.run();
+    }
+    catch(std::exception const& e)
+    {
+        std::cerr << "Exception: " << e.what() << "\n";
+        throw;
+    }
+    catch(...)
+    {
+        std::cerr << "Exception: UNKNOWN\n";
+        throw;
+    }
+}
+```
+
+The `main()` entry point to the application simply gets (and validates) input from the user to initialize the server. If everything looks good then a `WebServer` object is created and the application dispatch loop is started by calling `run()`.
+
+Two main things to notice.
+
+1. Web Applications, unlike most beginner tutorials, are event driven and will have a "dispatch loop" that calls user code when things happen rather than executing a sequential list of commands (we will get more into events later). In this example we represent the "dispatch loop" with the function `run()` and it hides all the details. Normally frameworks allow you to register user code to be executed on specific events (we will get there but this is still a simple app). Just imagine that we have user code that executes when a connection is made to the server.
+
+2. I use exceptions for critical error handling. I know a lot of engineers think exceptions are bad because they hide the flow of control (and I agree to an extent). But I like to use exceptions (judiciously) as they reduce the amount of error handling code that is explicitly needed when critical issues forces you to shut down the application. In my opinion it is important to correctly unwind the stack and make sure that all appropriate destructors are called to release any resources, thus `abort()`/`exit()` are not usually appropriate in C++ applications (unlike C). To this end you **MUST** catch exceptions in `main()`; it is implementation defined if the stack is unwound if an exception escapes the `main()` function, so catch the exception in `main()`, this forces the stack to be correctly unwound, generate any appropriate messages and logging then re-throw the exceptions. Re-throwing the exception allows the OS to take any appropriate actions it needs to do when an application exits with an exception.
+
+### Socket Code
+
+The socket code is all C code (and thus in the global namespace). So you will see in my code that all C code is prefixed by `::`. Eg creating a server end socket I call `::socket()`, `::bind()`, `::listen()` and `::accept()` this is to make sure there is no accidents in calling similar named methods.
+
+A lot of the code in this example is simply creating and handling sockets and doing a rudimentary job of checking and handling basic errors that could be generated by these functions; `class [Server](https://github.com/Loki-Astari/NisseBlogCode/blob/master/NisseOrigins/NisseV1.cpp#L230-L280)` is 50 lines and `class [Socket](https://github.com/Loki-Astari/NisseBlogCode/blob/master/NisseOrigins/NisseV1.cpp#L282-L470)` is another 200 lines and represents at least a third of the code. I bring this up because there are many C++ wrapper libraries that wrap this C interface and provide a much simpler and cleaner interface and have much better error handling than I have hacked together for this example.
+
+### So What is Missing?
+
+Though the WebServer can handle a limited number of simultaneous requests they will all be processed sequentially. The problem here is that sending data over a network is orders of magnitude slower than most other operations that the server could be doing. Thus most of the time the server is blocked waiting for confirmation that its writes have succeeded when it could use this time to start working on another request.
+
