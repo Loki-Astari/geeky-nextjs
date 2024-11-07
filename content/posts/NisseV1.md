@@ -25,13 +25,13 @@ disqusId: "http://lokiastari.com/blog/2024/11/06/Nisse/"
 
 # [Nisse](https://github.com/Loki-Astari/Nisse)
 
-Before I start describing the different parts of Nisse I want to start out with the simplest Web Application that I can build. This is a WebServer. A WebServer maintains no state between calls and the interface is trivial, an [HTTP message](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#http_requests) is sent by client and in return receives an [HTTP response](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#http_responses).
+Before I describe the different parts of Nisse, I want to start with the simplest web application I can build: a web server. A web server maintains no state between calls, and the interface is straightforward. The client sends an [HTTP message](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#http_requests) and, in return, receives an [HTTP response](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#http_responses).
 
-Even nicer is that we already have applications (browsers) that do all the hard parts of interacting with a web server so we don't need to write the client side.
+Even better, we already have applications (browsers) that handle all the difficult aspects of interacting with a web server, so we don’t need to write a client-side application.
 
 ## NisseV1
 
-All the code for this article is in a single [file](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp). It uses only the standard libraries should be easy to build by anybody.
+All the code for this article is in a single [file](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/). It uses only the standard libraries, which should be easy to build for anybody. A “Makefile” is provided just as an example.
 
 ### Build & Run
 
@@ -43,7 +43,6 @@ All the code for this article is in a single [file](https://github.com/Loki-Asta
 ```
 
 I will go over a couple of things in the file that I believe are worth explicitly pointing out:
-
 
 ### `int main()` function
 
@@ -78,21 +77,20 @@ int main(int argc, char* argv[])
 }
 ```
 
-The `main()` entry point to the application simply gets (and validates) input from the user to initialize the server. If everything looks good then a `WebServer` object is created and the application dispatch loop is started by calling `run()`.
+The `main()` function obtains and validates user input to initialize the server. If everything is in order, it creates a `WebServer` object and starts the application dispatch loop by calling `run()`.
 
-Two main things to notice.
+Here are two main points to note:
 
-1. Web Applications, unlike most beginner tutorials, are event driven and will have a "dispatch loop" that calls user code when things happen rather than executing a sequential list of commands (we will get more into events later). In this example we represent the "dispatch loop" with the function `run()` and it hides all the details. Normally frameworks allow you to register user code to be executed on specific events (we will get there but this is still a simple app). Just imagine that we have user code that executes when a connection is made to the server.
+1. Unlike most beginner tutorials, web applications are event-driven. They operate with a "dispatch loop" that executes user code when events occur, rather than following a sequential list of commands. In this example, the `run()` function represents the dispatch loop and manages all the underlying details. Typically, frameworks allow you to register user code for specific events, but since this is a simple application, it simply handles an HTTP request.
 
-2. I use exceptions for critical error handling. I know a lot of engineers think exceptions are bad because they hide the flow of control (and I agree to an extent). But I like to use exceptions (judiciously) as they reduce the amount of error handling code that is explicitly needed when critical issues forces you to shut down the application. In my opinion it is important to correctly unwind the stack and make sure that all appropriate destructors are called to release any resources, thus `abort()`/`exit()` are not usually appropriate in C++ applications (unlike C). To this end you **MUST** catch exceptions in `main()`; it is implementation defined if the stack is unwound if an exception escapes the `main()` function, so catch the exception in `main()`, this forces the stack to be correctly unwound, generate any appropriate messages and logging then re-throw the exceptions. Re-throwing the exception allows the OS to take any appropriate actions it needs to do when an application exits with an exception.
+2. I use exceptions to handle critical errors. Many engineers believe exceptions are problematic because they obscure control flow (and I partially agree). However, I prefer using exceptions judiciously, as they reduce the amount of explicit error-handling code required for serious issues that necessitate application shutdown. It is essential to unwind the stack correctly and ensure all relevant destructors are called to release resources; therefore, `abort()` and `exit()` are usually inappropriate in C++ applications (unlike in C). For this reason, you **MUST** catch exceptions in `main()`, as it is implementation-defined whether the stack unwinds if an exception escapes the `main()` function. By catching the exception in `main()`, you ensure the stack unwinds correctly, and all destructors are called. Then, you can generate appropriate messages and logs before rethrowing the exceptions. Rethrowing allows the OS to take necessary actions when the application exits abnormally.
 
 ### Socket Code
 
-The socket code is all C code (and thus in the global namespace). So you will see in my code that all C code is prefixed by `::`. Eg creating a server end socket I call `::socket()`, `::bind()`, `::listen()` and `::accept()` this is to make sure there is no accidents in calling similar named methods.
+The socket code is all C code (and thus in the global namespace). You will see in my code that all C code is prefixed by `::`. For example, when creating a server-end socket, I call `::socket(),` `::bind(),` `::listen()`, and `::accept()`. This ensures that I do not accidentally call similarly named methods.
 
-A lot of the code in this example is simply creating and handling sockets and doing a rudimentary job of checking and handling basic errors that could be generated by these functions; class [Server](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L230-L280) is 50 lines and class [Socket](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L282-L470) is another 200 lines and represents at least a third of the code. I bring this up because there are many C++ wrapper libraries that wrap this C interface and provide a much simpler and cleaner interface and have much better error handling than I have hacked together for this example.
+A lot of the code in this example is simply creating and handling sockets and doing a rudimentary job of checking and handling basic errors that these functions could generate; class [Server](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L230-L280) is 50 lines and class [Socket](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L282-L470) is another 200 lines and represents at least a third of the code. I bring this up because many C++ wrapper libraries exist that wrap this C interface and provide a much simpler and cleaner interface and have much better error handling than I have hacked together for this example.
 
 ### So What is Missing?
 
-Though the WebServer can handle a limited number of simultaneous requests they will all be processed sequentially. The problem here is that sending data over a network is orders of magnitude slower than most other operations that the server could be doing. Thus most of the time the server is blocked waiting for confirmation that its writes have succeeded when it could use this time to start working on another request.
-
+Though the web-server can handle a limited number of simultaneous requests, they will all be processed sequentially. The problem is that sending data over a network is orders of magnitude slower than most other operations the server could perform; therefore, when handling a request, the server is usually blocked, waiting for confirmation that its writes have succeeded, when it could utilize this time to work on another request.
