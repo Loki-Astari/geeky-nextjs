@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "A WebServer"
+title: "A Web Server"
 date: 2024-11-06T12:48:31-0800
 author: Loki Astari, (C)2024
 comments: true
@@ -83,7 +83,7 @@ Here are two main points to note:
 
 1. Unlike most beginner tutorials, web applications are event-driven. They operate with a "dispatch loop" that executes user code when events occur, rather than following a sequential list of commands. In this example, the `run()` function represents the dispatch loop and manages all the underlying details. Typically, frameworks allow you to register user code for specific events, but since this is a simple application, it simply handles an HTTP request.
 
-2. I use exceptions to handle critical errors. Many engineers believe exceptions are problematic because they obscure control flow (and I partially agree). However, I prefer using exceptions, judiciously, as they reduce the amount of explicit error-handling code required for serious issues that necessitate application shutdown. It is essential to unwind the stack correctly and ensure all relevant destructors are called to release resources; therefore, `abort()` and `exit()` are usually inappropriate in C++ applications (unlike in C). For this reason, you **MUST** catch exceptions in `main()`, as it is implementation-defined whether the stack unwinds if an exception escapes the `main()` function. By catching the exception in `main()`, you ensure the stack unwinds correctly, and all destructors are called. Then, you can generate appropriate messages and logs before rethrowing the exceptions. Rethrowing allows the OS to take necessary actions when the application exits abnormally.
+2. I use exceptions to handle critical errors. Many engineers believe exceptions are problematic because they obscure control flow (and I partially agree). However, I prefer using exceptions, judiciously, as they reduce the amount of explicit error-handling code required for serious issues that necessitate application shutdown. It is essential to unwind the stack correctly and ensure all relevant destructors are called to release resources; therefore, `abort()` and `exit()` are usually inappropriate in C++ applications (unlike in C). For this reason, you **MUST** catch exceptions in `main()`, as it is implementation-defined whether the stack unwinds if an exception escapes the `main()` function. By catching the exception in `main()`, you ensure the stack unwinds correctly, and all destructors are called. Then, you can generate appropriate messages and logs before re-throwing the exceptions. Re-throwing allows the OS to take necessary actions when the application exits abnormally.
 
 ### Socket Code
 
