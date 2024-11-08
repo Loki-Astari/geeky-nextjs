@@ -20,7 +20,7 @@ imageInfo:
     AttributionLink:    https://unsplash.com/@oscrse
 featured: true
 draft: false
-disqusId: "http://lokiastari.com/blog/2024/11/06/Nisse/"
+disqusId: "http://lokiastari.com/blog/2024/11/08/Nisse/"
 ---
 
 # [Nisse](https://github.com/Loki-Astari/Nisse)

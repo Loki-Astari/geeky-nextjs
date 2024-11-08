@@ -42,3 +42,6 @@ Nisse is built on some standard libraries ([libEvent](https://libevent.org/), [B
 ## Plan
 
 Create a set of posts explaining how Nisse works while providing a mini tutorial on C++ coding and how web applications work as I go. Once this initial series is complete, use Nisse as a platform to build little applications that demonstrate C++ coding and provide some lessons in modern C++ techniques that are fun and easy to understand for beginners.
+
+* [Nisse V1](https://lokiastari.com/posts/NisseV1): A Web Server: A very basic C++ Web Server
+* [Nisse V2](https://lokiastari.com/posts/NisseV2): C++ Sockets:  A C++ wrapper around C Sockets and SSL.
