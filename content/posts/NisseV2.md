@@ -11,7 +11,7 @@ sharing: true
 footer: true
 subtitle: Nisse
 description: Nisse. The step by step creation of a C++ Server architecture.
-image: /images/post/post-3.png
+image: /images/post/post-4.png
 imageInfo:
     original:           https://unsplash.com/photos/W-oqNwbmin0
     License:            Unsplash License
