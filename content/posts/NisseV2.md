@@ -27,7 +27,7 @@ disqusId: "http://lokiastari.com/blog/2024/11/08/Nisse/"
  
 In the previous article "A Web Server," I created the simplest web server possible.
 
-This article covers the next stage by addressing the issues related to low-level socket programming. To be honest, we are going to take a shortcut. Dealing with ‘*nix’ variants is complex enough, but adding Windows systems makes the process exceedingly complicated (and thus beyond the scope of this article). Here, we are going to introduce a C++ library to abstract the socket layer and provide a higher-level interface.
+This article covers the next stage by addressing the issues related to low-level socket programming. To be honest, we are going to take a shortcut. Dealing with ‘＊nix’ variants is complex enough, but adding Windows systems makes the process exceedingly complicated (and thus beyond the scope of this article). Here, we are going to introduce a C++ library to abstract the socket layer and provide a higher-level interface.
  
 ## NisseV2
  
