@@ -1,4 +1,4 @@
-—--
+---
 layout: post
 title: "A Web Server"
 date: 2024-11-06T12:48:31-0800
@@ -10,14 +10,13 @@ tags: Nisse
 sharing: true
 footer: true
 subtitle: Nisse
-description: Nisse. The step by step creation of a C++ Server architecture.
 image: /images/post/post-3.png
 imageInfo:
-    original:           https://unsplash.com/photos/W-oqNwbmin0
-    License:            Unsplash License
-    LicenseLink:        https://unsplash.com/license
-    Attribution:        Oscar Nilsson
-    AttributionLink:    https://unsplash.com/@oscrse
+    original:           https://unsplash.com/photos/W-oqNwbmin0
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Oscar Nilsson
+    AttributionLink:    https://unsplash.com/@oscrse
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2024/11/06/Nisse/"
