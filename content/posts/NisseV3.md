@@ -44,9 +44,9 @@ Once a certificate has been validated, the browser knows it is communicating wit
 
 ### Where can you get a certificate
 
-If you are a large company that is trusted by the internet, you can create your own root certificate. While creating your own root certificate is not difficult, it holds little value if no one trusts you.
+If you are a large company trusted by the Internet, you can create your own root certificate. While this is not difficult, it is of little value if no one trusts you. Therefore, the crucial step for a root certificate holder is becoming trusted by tools that validate certificates. Losing trust would mean having your root certificate removed from the list people use to validate certificates (i.e., the Chrome browser team would remove your certificate from the list of root certificates it trusts). This loss of trust would affect the root certificate authority and all downstream companies that hold certificates based on that root certificate; a browser would mark any sites using an untrusted root certificate as not being trusted.
 
-Getting a certificate from a trusted root authority is expensive and is only usually done by other companies that issue certificates. But for normal people, you can get relatively cheap SSL certificates from most domain providers `GoDaddy` that will create and manage your SSL Certificate for your domain.
+Obtaining a certificate from a trusted root authority can be expensive and is typically only done by companies that issue certificates. However, you don't necessarily need a certificate from a root authority; you can get a certificate from a vendor that has a certificate issued by a root authority. Every trusted certificate authority has a process to validate that you own a domain, which allows them to create and deliver a signed certificate to you, but each authority's process is different. But for normal people (and small companies), you can get relatively cheap SSL certificates from most domain providers (like `GoDaddy`) that will create and manage your SSL Certificate for your domain.
 
 ### Free Certificates
 
