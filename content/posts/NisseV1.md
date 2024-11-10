@@ -32,7 +32,7 @@ Even better, we already have applications (browsers) that handle all the difficu
  
 ## NisseV1
  
-All the code for this article is in a single [file](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V1). It uses only the standard libraries, which should be easy to build for anybody. A “Makefile” is provided just as an example.
+All the code for this article is in a single file in the [V1](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V1) directory. It uses only the standard libraries, which should be easy to build for anybody. A “Makefile” is provided just as an example.
  
 ### Build & Run
  

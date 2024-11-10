@@ -1,4 +1,4 @@
----
+-
 layout: post
 title: "C++ Sockets"
 date: 2024-11-08T18:48:31-0800
@@ -31,7 +31,7 @@ This article covers the next stage by addressing the issues related to low-level
  
 ## NisseV2
  
-All the code for this article is in a single [file](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V2). It uses standard libraries and [thors-mongo](https://github.com/Loki-Astari/ThorsMongo). If you have a Unix-like environment, this should be easy to build; if you use Windows, you may need to do some extra work. A “Makefile” is provided just as an example.
+All the code for this article is in a single source file in the [V2](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V2) directory. It uses standard libraries and [thors-mongo](https://github.com/Loki-Astari/ThorsMongo). If you have a Unix-like environment, this should be easy to build; if you use Windows, you may need to do some extra work. A “Makefile” is provided just as an example.
  
 ### Build & Run
  
@@ -47,9 +47,9 @@ All the code for this article is in a single [file](https://github.com/Loki-Asta
  
 I am going to add [ThorsSocket](https://github.com/Loki-Astari/ThorsSocket), a C++ wrapper around 'File Descriptors' (FD), to simplify the web server. ThorsSocket provides a [`std::iostream`](https://en.cppreference.com/w/cpp/io/basic_iostream) interface for FD and is designed to work with the [Boost Co-Routine](https://www.boost.org/doc/libs/1_86_0/libs/coroutine2/doc/html/index.html) library to enable cooperative multitasking.
  
-Because FDs are a very low-level OS resource, ThorsSocket provides a `std::iostream` interface to several important OS resources, such as pipes, files, sockets, and SSL sockets (ssockets). Note that the standard library already provides access to files through `std::fstream` but only allows blocking read/write access; in contrast, ThorsSocket provides non-blocking read/write access, allowing the executing thread to cooperatively switch to another task when an I/O operation would block and transparently resuming the I/O operation when the FD becomes available.
+Because FDs are a very low-level OS resource, ThorsSocket provides a [`std::iostream`](https://en.cppreference.com/w/cpp/io/basic_iostream) interface to several important OS resources, such as pipes, files, sockets, and SSL sockets (ssockets). Note that the standard library already provides access to files through [`std::fstream`](https://en.cppreference.com/w/cpp/io/basic_fstream) but only allows blocking read/write access; in contrast, ThorsSocket provides non-blocking read/write access, allowing the executing thread to cooperatively switch to another task when an I/O operation would block and transparently resuming the I/O operation when the FD becomes available.
  
-Another advantage of ThorsSocket is that it wraps both the C socket and Open SSL libraries, allowing the use of the secure socket layer as if it were a normal `std::iostream` object. Apart from the initial creation of the socket, its usage is entirely transparent and no different from using a normal socket (or even a file).
+Another advantage of ThorsSocket is that it wraps both the C socket and Open SSL libraries, allowing the use of the secure socket layer as if it were a normal [`std::iostream`]((https://en.cppreference.com/w/cpp/io/basic_iostream) object. Apart from the initial creation of the socket, its usage is entirely transparent and no different from using a normal socket (or even a file).
 
 This small change halves the number of lines of code that need to be written.
  
@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 }
 ```
 
-The first change is adding `certDir`; this is a `std::optional<>` type that, if provided, takes the directory where the SSL certificate and key files are located. We then use the `port` and `certDir` to create a `ServerInit` object, which is passed to the Web Server to initialize its internal listening socket. Previously, it only used a port.
+The first change is adding `certDir`; this is a [`std::optional<>`](https://en.cppreference.com/w/cpp/utility/optional) type that, if provided, takes the directory where the SSL certificate and key files are located. We then use the `port` and `certDir` to create a `ServerInit` object, which is passed to the Web Server to initialize its internal listening socket. Previously, it only used a port.
  
 ```C++
 ThorsAnvil::ThorsSocket::ServerInit getServerInit(int port, std::optional<std::filesystem::path> certPath)
@@ -108,7 +108,7 @@ ThorsAnvil::ThorsSocket::ServerInit getServerInit(int port, std::optional<std::f
 }
 ```
  
-It is worth noting that `ServerInfo` and `SServerInfo` are distinct types, and the `ServerInit` type is a `std::variant<>` that can accept either type. The `std::variant` is C++ type safe version of a `union` and allows you to store one of multiple compile-time specified types in an object safely.
+It is worth noting that `ServerInfo` and `SServerInfo` are distinct types, and the `ServerInit` type is a [`std::variant<>`](https://en.cppreference.com/w/cpp/utility/variant) that can accept either type. The `std::variant` is C++ type safe version of a `union` and allows you to store one of multiple compile-time specified types in an object safely.
  
 ### What is the next step
  
