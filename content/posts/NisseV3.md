@@ -27,7 +27,6 @@ disqusId: "http://lokiastari.com/blog/2024/11/10/Nisse/"
 
 In the previous article, "C++ Sockets," I discussed the addition of support for SSL certificates. But what is an SSL certificate, and how do you obtain one?
 
-
 ## SSL Certificates
 
 The SSL certificate has two main purposes.
@@ -51,7 +50,7 @@ Getting a certificate from a trusted root authority is expensive and is only usu
 
 ### Free Certificates
 
-You can get Free SSL Certificates from a company called [Let’s Encrypt](https://letsencrypt.org/). 
+You can get Free SSL Certificates from a company called [Let’s Encrypt](https://letsencrypt.org/).
 
 ## How to Use ThorsSocket With an SSL Certificate
 
@@ -59,16 +58,16 @@ In ThorsSocket a normal socket is created with the following code:
 
 ```C++
     ThorsAnvil::ThorsSocket::Server   server(ServerInit{port});
-
+    
     ThorsAnvil::ThorsSocket::Socket   socket = server.accept();          // A normal bi-direconal socket.
 ```
 
 To create a secure connection, specify the location of the SSL certificate file on the host file system. If you use [Let’s Encrypt](https://letsencrypt.org/), the default location for the SSL certificate is `/etc/letsencrypt/live/<domainName>/fullchain.pem`, and the private key is located at `/etc/letsencrypt/live/<domainName>/privkey.pem`. You can then create a secure SSL connection with:
 
 ```C++
-    // The path where the certificates for “thorsanvil.dev” are stored. 
+    // The path where the certificates for “thorsanvil.dev” are stored.
     std::string   certPath = "/etc/letsencrypt/live/thorsanvil.dev”;
-
+    
     // Create a certificate object that contains the SSL Certificate and private key.
     // Note: Some files require you to provide a password to access the certificate, please see the documentation
     // on how to add appropriate lambda’s to retrieve the password from secure storage (as they should not be in the code)
@@ -77,7 +76,7 @@ To create a secure connection, specify the location of the SSL certificate file 
                                                             };
     ThorsAnvil::ThorsSocket::SSLctx              ctx{ThorsAnvil::ThorsSocket::SSLMethodType::Server, certificate};
     ThorsAnvil::ThorsSocket::Server              server(SServerInit{port, std::move(ctx)});
-
+    
     ThorsAnvil::ThorsSocket::Socket   socket = server.accept();          // A secure bi-direconal SSL socket.
 ```
 

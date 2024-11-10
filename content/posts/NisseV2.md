@@ -22,19 +22,19 @@ featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2024/11/08/Nisse/"
 ---
- 
+
 # [Nisse](https://github.com/Loki-Astari/Nisse)
- 
+
 In the previous article "A Web Server," I created the simplest web server possible.
 
 This article covers the next stage by addressing the issues related to low-level socket programming. To be honest, we are going to take a shortcut. Dealing with ‘＊nix’ variants is complex enough, but adding Windows systems makes the process exceedingly complicated (and thus beyond the scope of this article). Here, we are going to introduce a C++ library to abstract the socket layer and provide a higher-level interface.
- 
+
 ## NisseV2
- 
+
 All the code for this article is in a single source file in the [V2](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V2) directory. It uses standard libraries and [thors-mongo](https://github.com/Loki-Astari/ThorsMongo). If you have a Unix-like environment, this should be easy to build; if you use Windows, you may need to do some extra work. A “Makefile” is provided just as an example.
- 
+
 ### Build & Run
- 
+
 ```bash
   > brew install thors-mongo              # A header-only version of thors-mongo can be alternatively installed.
   > git clone https://github.com/Loki-Astari/NisseBlogCode.git
@@ -42,25 +42,24 @@ All the code for this article is in a single source file in the [V2](https://git
   > make
   > ./NisseV2 8080 /Directory/You/Want/To/Server/On/Port/8080
 ```
- 
+
 ## ThorsSocket
- 
+
 I am going to add [ThorsSocket](https://github.com/Loki-Astari/ThorsSocket), a C++ wrapper around 'File Descriptors' (FD), to simplify the web server. ThorsSocket provides a [`std::iostream`](https://en.cppreference.com/w/cpp/io/basic_iostream) interface for FD and is designed to work with the [Boost Co-Routine](https://www.boost.org/doc/libs/1_86_0/libs/coroutine2/doc/html/index.html) library to enable cooperative multitasking.
- 
+
 Because FDs are a very low-level OS resource, ThorsSocket provides a [`std::iostream`](https://en.cppreference.com/w/cpp/io/basic_iostream) interface to several important OS resources, such as pipes, files, sockets, and SSL sockets (ssockets). Note that the standard library already provides access to files through [`std::fstream`](https://en.cppreference.com/w/cpp/io/basic_fstream) but only allows blocking read/write access; in contrast, ThorsSocket provides non-blocking read/write access, allowing the executing thread to cooperatively switch to another task when an I/O operation would block and transparently resuming the I/O operation when the FD becomes available.
- 
+
 Another advantage of ThorsSocket is that it wraps both the C socket and Open SSL libraries, allowing the use of the secure socket layer as if it were a normal [`std::iostream`]((https://en.cppreference.com/w/cpp/io/basic_iostream) object. Apart from the initial creation of the socket, its usage is entirely transparent and no different from using a normal socket (or even a file).
 
 This small change halves the number of lines of code that need to be written.
- 
+
 ## SSL Socket
- 
+
 The only change in Nisse’s API from V1 is that it allows the user to provide a certificate and key file.
- 
+
 ```C++
 int main(int argc, char* argv[])
 {
- 
     if (argc != 4 && argc != 3)
     {
         std::cerr << "Usage: NisseV1 <port> <documentPath> [<SSL Certificate Path>]" << "\n";
@@ -72,14 +71,13 @@ int main(int argc, char* argv[])
             certDir = std::filesystem::canonical(argv[3]);
         }
     ...
- 
         WebServer   server(getServerInit(port, certDir), contentDir);
     ...
 }
 ```
 
 The first change is adding `certDir`; this is a [`std::optional<>`](https://en.cppreference.com/w/cpp/utility/optional) type that, if provided, takes the directory where the SSL certificate and key files are located. We then use the `port` and `certDir` to create a `ServerInit` object, which is passed to the Web Server to initialize its internal listening socket. Previously, it only used a port.
- 
+
 ```C++
 ThorsAnvil::ThorsSocket::ServerInit getServerInit(int port, std::optional<std::filesystem::path> certPath)
 {
@@ -89,7 +87,7 @@ ThorsAnvil::ThorsSocket::ServerInit getServerInit(int port, std::optional<std::f
     if (!certPath.has_value()) {
         return ThorsAnvil::ThorsSocket::ServerInfo{port};
     }
- 
+    
     // If we have a certificate path.
     // Use this to create a certificate objext.
     // This assumes the standard names for these files as provided by "Let's encrypt".
@@ -97,20 +95,20 @@ ThorsAnvil::ThorsSocket::ServerInit getServerInit(int port, std::optional<std::f
                                                              std::filesystem::canonical(std::filesystem::path(*certPath) /= "privkey.pem")
                                                             };
     ThorsAnvil::ThorsSocket::SSLctx              ctx{ThorsAnvil::ThorsSocket::SSLMethodType::Server, certificate};
- 
+    
     // Now that we have created the approporiate SSL objects needed.
     // We return an SServierInfo object.
     // Please Note: This is a different type to the ServerInfo returned above (one less S in the name).
     return ThorsAnvil::ThorsSocket::SServerInfo{port, std::move(ctx)};
- 
+    
     // We can return these two two different types becuase
     // ServerInit is actually a std::variant<ServerInfo, SServerInfo>
 }
 ```
- 
+
 It is worth noting that `ServerInfo` and `SServerInfo` are distinct types, and the `ServerInit` type is a [`std::variant<>`](https://en.cppreference.com/w/cpp/utility/variant) that can accept either type. The `std::variant` is C++ type safe version of a `union` and allows you to store one of multiple compile-time specified types in an object safely.
- 
+
 ### What is the next step
- 
+
 Now that we can trivially initialize the Web Server to use a socket or an SSL socket, we need an SSL certificate.
 
