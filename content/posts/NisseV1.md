@@ -12,11 +12,11 @@ footer: true
 subtitle: Nisse
 image: /images/post/post-3.png
 imageInfo:
-    original:           https://unsplash.com/photos/W-oqNwbmin0
+    original:           https://unsplash.com/photos/d6dxQwmxV2Q
     License:            Unsplash License
     LicenseLink:        https://unsplash.com/license
-    Attribution:        Oscar Nilsson
-    AttributionLink:    https://unsplash.com/@oscrse
+    Attribution:        Ken Blode
+    AttributionLink:    https://unsplash.com/@benkolde
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2024/11/06/Nisse/"
@@ -89,7 +89,7 @@ Here are two main points to note:
 
 A minor call out. The socket code is all C code (and thus in the global namespace). You will see in my code that all C code is prefixed by `::` to make sure I explicitly call the C version of these functions. For example, when creating a server-end socket, I call `::socket(),` `::bind(),` `::listen()`, and `::accept()`. This ensures that I do not accidentally call similarly named methods.
 
-A lot of the code in this example is simply creating and handling sockets and doing a rudimentary job of checking and handling basic errors that these functions could generate; class [Server](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L230-L280) is 50 lines and class [Socket](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L282-L470) is another 200 lines and represents at least a third of the code.
+A lot of the code in this example is simply creating and handling sockets and doing a rudimentary job of checking and handling basic errors that these functions could generate; class [Server](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L230-L280) is 50 lines and class [Socket](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L282-L482) is another 200 lines and represents at least a third of the code.
 
 ### Errors
 

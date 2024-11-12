@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Multi Threading"
-date: 2024-11-12T12:48:30-0800
+date: 2024-11-12T07:48:30-0800
 author: Loki Astari, (C)2024
 comments: true
 categories: ["C++", "Nisse", "Server", "C++-By-Example", "Coding"]
@@ -13,11 +13,11 @@ subtitle: Nisse
 description: Nisse. The step by step creation of a C++ Server architecture.
 image: /images/post/post-2.png
 imageInfo:
-    original:           https://unsplash.com/photos/W-oqNwbmin0
+    original:           https://unsplash.com/photos/oSvR0wGYUBs
     License:            Unsplash License
     LicenseLink:        https://unsplash.com/license
-    Attribution:        Oscar Nilsson
-    AttributionLink:    https://unsplash.com/@oscrse
+    Attribution:        Matthew Brodeur
+    AttributionLink:    https://unsplash.com/@mrbrodeur
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2024/11/12/Nisse/"

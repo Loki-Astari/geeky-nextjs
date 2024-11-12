@@ -13,11 +13,11 @@ subtitle: Nisse
 description: Nisse. The step by step creation of a C++ Server architecture.
 image: /images/post/post-1.png
 imageInfo:
-    original:           https://unsplash.com/photos/W-oqNwbmin0
+    original:           https://unsplash.com/photos/g29arbbvPjo
     License:            Unsplash License
     LicenseLink:        https://unsplash.com/license
-    Attribution:        Oscar Nilsson
-    AttributionLink:    https://unsplash.com/@oscrse
+    Attribution:        Possessed Photography
+    AttributionLink:    https://unsplash.com/@possessedphotography
 featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2024/11/10/Nisse/"
@@ -79,4 +79,9 @@ To create a secure connection, specify the location of the SSL certificate file 
     
     ThorsAnvil::ThorsSocket::Socket   socket = server.accept();          // A secure bi-direconal SSL socket.
 ```
+
+### What is the next step
+
+We have a Web Server that can connect over SSL. But the server only handles request serially. So the next article looks at how to add some basic parallelism to support multiple simultaneous connections.
+
 
