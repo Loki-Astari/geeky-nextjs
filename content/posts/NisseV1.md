@@ -10,6 +10,7 @@ tags: Nisse
 sharing: true
 footer: true
 subtitle: Nisse
+description: Nisse. The step by step creation of a C++ Server architecture.
 image: /images/post/post-3.png
 imageInfo:
     original:           https://unsplash.com/photos/d6dxQwmxV2Q
@@ -32,7 +33,7 @@ Even better, we already have applications (browsers) that handle all the difficu
 
 ## NisseV1
 
-All the code for this article is in a single file in the [V1](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V1) directory. It uses only the standard libraries, which should be easy to build for anybody. A “Makefile” is provided just as an example.
+All the code for this article is in [directory](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V1). It uses only the standard libraries, so it should be easy for anybody to build. A “Makefile” is provided as an example.
 
 ### Build & Run
 
@@ -45,8 +46,16 @@ All the code for this article is in a single file in the [V1](https://github.com
 
 I will go over a couple of things in the file that I believe are worth explicitly pointing out:
 
-### int main()
+###  [HTTPStuff.cpp](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/HTTPStuff.cpp)
 
+The code in this file is just enough to parse an HTTP Get request and provide a file in the HTTP Response object. It is provided here solely so that all examples can be compiled. Note: this is not part of Nisse, I will come back and address the code in a subsequent article on HTTP and expand this to be more comprehensive.
+
+### [Stream.h](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/Stream.h)
+
+This is the interface between the server code and the HTTPStuff. For these articles, I wanted to keep the interface as simple as possible, and again, this is not part of Nissa.
+
+### [NisseV1.cpp](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp)
+ 
 ```C++
 int main(int argc, char* argv[])
 {
@@ -83,17 +92,17 @@ The `main()` function obtains and validates user input to initialize the server.
 Here are two main points to note:
 1. Unlike most beginner tutorials, web applications are event-driven. They operate with a "dispatch loop" that executes user code when events occur rather than following a sequential list of commands. In this example, the `run()` function represents the dispatch loop and manages all the underlying details. Typically, frameworks allow you to register user code for specific events, but since this is a simple application, it simply handles an HTTP request.
 
-2. I use exceptions to handle critical errors. Many engineers believe exceptions are problematic because they obscure control flow (I partially agree). However, I prefer using exceptions, judiciously, as they reduce the amount of explicit error-handling code required for serious issues that necessitate application shutdown. When shutting down a C++ application it is essential to unwind the stack correctly and ensure all relevant destructors are called to release resources; therefore, `abort()`, `terminate()` and `exit()` are usually inappropriate (unless there is corruption) in C++ applications (unlike in C). You **MUST** catch exceptions in `main()`, as it is implementation defined whether the stack unwinds if an exception escapes the `main()` function. By catching the exception in `main()`, you ensure the stack unwinds correctly, and all destructors are called. Then, you can generate appropriate messages and logs before re-throwing the exceptions. Re-throwing allows the OS to take necessary actions when the application exits abnormally.
+2. I use exceptions to handle critical errors. Many engineers believe exceptions are problematic because they obscure control flow (I partially agree). However, I prefer using exceptions, judiciously, as they reduce the amount of explicit error-handling code required for serious issues that necessitate application shutdown. When shutting down a C++ application, it is essential to unwind the stack correctly and ensure all relevant destructors are called to release resources; therefore, `abort()`, `terminate()`, and `exit()` are usually inappropriate (unless there is corruption) in C++ applications (unlike in C). You **MUST** catch exceptions in `main(),` as it is implementation-defined whether the stack unwinds if an exception escapes the `main()` function. By catching the exception in `main()`, you ensure the stack unwinds correctly, and all destructors are called. Then, you can generate appropriate messages and logs before re-throwing the exceptions. Re-throwing allows the OS to take necessary actions when the application exits abnormally.
 
 ### Socket Code
 
 A minor call out. The socket code is all C code (and thus in the global namespace). You will see in my code that all C code is prefixed by `::` to make sure I explicitly call the C version of these functions. For example, when creating a server-end socket, I call `::socket(),` `::bind(),` `::listen()`, and `::accept()`. This ensures that I do not accidentally call similarly named methods.
-
-A lot of the code in this example is simply creating and handling sockets and doing a rudimentary job of checking and handling basic errors that these functions could generate; class [Server](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L230-L280) is 50 lines and class [Socket](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L282-L482) is another 200 lines and represents at least a third of the code.
+ 
+A lot of the code in this example is simply creating and handling sockets and doing a rudimentary job of checking and handling basic errors that these functions could generate; class [Server](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L140-L190) is 50 lines and class [Socket](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V1/NisseV1.cpp#L192-L391) is another 200 lines and represents more than half the code.
 
 ### Errors
 
-The C socket code has a simple interface and returns `-1` when there is an error. An error when creating sockets usually means programming issues, but in all these cases, the error is unrecoverable, so we simply throw an exception to exit the application (and cleanup any connections).
+The C socket code has a simple interface and returns `-1` when there is an error. An error when creating sockets usually means programming issues, but in all these cases, the error is unrecoverable, so we simply throw an exception to exit the application (and clean up any connections).
 
 ```C++
 Server::Server(int port)
@@ -167,5 +176,5 @@ I want to emphasize that I have done the bare minimum in error checking here. Th
 
 ## Next Step
 
-Address inconsistencies between ‘＊nix’ and `Windows` platforms to enhance readability.
+Address inconsistencies between ‘＊nix’ and `Windows` platforms.
 
