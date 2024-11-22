@@ -1,3 +1,4 @@
+Nisse V3
 ---
 layout: post
 title: "SSL Certificates"
@@ -25,7 +26,7 @@ disqusId: "http://lokiastari.com/blog/2024/11/10/Nisse/"
 
 # [Nisse](https://github.com/Loki-Astari/Nisse)
 
-In the previous article, "C++ Sockets," I discussed the addition of support for SSL certificates. But what is an SSL certificate, and how do you obtain one?
+In the previous article, "C++ Sockets," I mentioned that thors-mongo had built-in support for SLL connections but glossed over the details. In this article, we will go over the additions needed. From the server side, you need an SSL certificate. But what is an SSL certificate, and how do you obtain one?
 
 ## SSL Certificates
 
@@ -80,8 +81,67 @@ To create a secure connection, specify the location of the SSL certificate file 
     ThorsAnvil::ThorsSocket::Socket   socket = server.accept();          // A secure bi-direconal SSL socket.
 ```
 
+## How to handle SSL or normal connections
+
+The `ThorsAnvil::ThorsSocket::Socket` class can be constructed with `ServerInit` or `SServerInit` object. To simplify this, the constructor also takes a `std::varient` (ServerInit) that can contain either of these objects. This allows us to write a function like this to initialize a server connection to initialize either type.
+
+```C++
+namespace TASock = ThorsAnvil::ThorsSocket;
+
+// Always need a port to listen on.
+// If we have an SSL certificate then pass its location in `certPath` (which may be empty)
+TASock::ServerInit getServerInit(int port, std::optional<std::filesystem::path> certPath)
+{
+    // If there is only a port.
+    // i.e. The user did not provide a certificate path return a `ServerInfo` object.
+    // This will create a normal listening socket.
+    if (!certPath.has_value()) {
+        return TASock::ServerInfo{port};
+    }
+    
+    // If we have a certificate path.
+    // Use this to create a certificate object.
+    // This assumes the standard names for these files as provided by "Let's encrypt".
+    TASock::CertificateInfo     certificate{std::filesystem::canonical(std::filesystem::path(*certPath) /= "fullchain.pem"),
+                                            std::filesystem::canonical(std::filesystem::path(*certPath) /= "privkey.pem")
+                                           };
+    TASock::SSLctx              ctx{TASock::SSLMethodType::Server, certificate};
+    
+    // Now that we have created the appropriate SSL objects needed.
+    // We return an SServierInfo object.
+    // Please Note: This is a different type to the ServerInfo returned above (one less S in the name).
+    return TASock::SServerInfo{port, std::move(ctx)};
+    
+    // We can return these two two different types because
+    // ServerInit is actually a std::variant<ServerInfo, SServerInfo>
+}
+```
+
+To use this we just need to adjust `main()` slightly.
+
+```C++
+The only change in Nisse’s API from V1 is that it allows the user to provide a certificate and key file.
+
+```C++
+int main(int argc, char* argv[])
+{
+    if (argc != 4 && argc != 3)
+    {
+        std::cerr << "Usage: NisseV3 <port> <documentPath> [<SSL Certificate Path>]" << "\n";
+        return 1;
+    }
+    ...
+        std::optional<std::filesystem::path>    certDir;
+        if (argc == 4) {
+            certDir = std::filesystem::canonical(argv[3]);
+        }
+    ...
+        WebServer   server(getServerInit(port, certDir), contentDir);
+    ...
+}
+```
+
 ### What is the next step
 
 We have a Web Server that can connect over SSL. But the server only handles request serially. So the next article looks at how to add some basic parallelism to support multiple simultaneous connections.
-
 

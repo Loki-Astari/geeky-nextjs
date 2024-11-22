@@ -31,7 +31,7 @@ This article covers the next stage by addressing the issues related to low-level
 
 ## NisseV2
 
-All the code for this article is in a single source file in the [V2](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V2) directory. It uses standard libraries and [thors-mongo](https://github.com/Loki-Astari/ThorsMongo). If you have a Unix-like environment, this should be easy to build; if you use Windows, you may need to do some extra work. A “Makefile” is provided just as an example.
+All new code for this article is in the directory [V2](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V2). It re-uses HTTPStuff.cpp and Stream.h from [V1](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V1). It uses standard libraries and [thors-mongo](https://github.com/Loki-Astari/ThorsMongo). If you have a Unix-like environment, this should be easy to build; if you use Windows, you may need to do some extra work. A “Makefile” is provided just as an example.
 
 ### Build & Run
 
@@ -51,64 +51,38 @@ Because FDs are a very low-level OS resource, ThorsSocket provides a [`std::iost
 
 Another advantage of ThorsSocket is that it wraps both the C socket and Open SSL libraries, allowing the use of the secure socket layer as if it were a normal [`std::iostream`](https://en.cppreference.com/w/cpp/io/basic_iostream) object. Apart from the initial creation of the socket, its usage is entirely transparent and no different from using a normal socket (or even a file).
 
-This small change halves the number of lines of code that need to be written.
+### [NisseV2.cpp](https://github.com/Loki-Astari/NisseBlogCode/blob/master/V2/NisseV2.cpp)
 
-## SSL Socket
-
-The only change in Nisse’s API from V1 is that it allows the user to provide a certificate and key file.
+ThorsSocket provides the class `ThorsAnvil::ThorsSocket::SocketStream` that wraps a FD and implements the `std::iostream` interface. But the HTTPStuff interface uses a `Stream` interface as defined in the file `Stream.h`. So we must provide a simple wrapper.
 
 ```C++
-int main(int argc, char* argv[])
+class Socket: public Stream
 {
-    if (argc != 4 && argc != 3)
-    {
-        std::cerr << "Usage: NisseV1 <port> <documentPath> [<SSL Certificate Path>]" << "\n";
-        return 1;
-    }
-    ...
-        std::optional<std::filesystem::path>    certDir;
-        if (argc == 4) {
-            certDir = std::filesystem::canonical(argv[3]);
-        }
-    ...
-        WebServer   server(getServerInit(port, certDir), contentDir);
-    ...
-}
+    ThorsAnvil::ThorsSocket::SocketStream    stream;
+    public:
+        Socket(ThorsAnvil::ThorsSocket::SocketStream&& stream)
+            : stream(std::move(stream))
+        {}
+
+        virtual std::string_view    getNextLine()               override
+        {
+            static std::string line;
+            std::getline(stream, line);
+            return line;
+        }
+        virtual void ignore(std::size_t size)                   override {stream.ignore(size);}
+        virtual void sendMessage(std::string const& message)    override {stream << message;}
+        virtual void sync()                                     override {stream.sync();}
+        virtual bool hasData()  const                           override {return static_cast<bool>(stream);}
+        virtual void close()                                    override {stream.close();}
+};
 ```
 
-The first change is adding `certDir`; this is a [`std::optional<>`](https://en.cppreference.com/w/cpp/utility/optional) type that, if provided, takes the directory where the SSL certificate and key files are located. We then use the `port` and `certDir` to create a `ServerInit` object, which is passed to the Web Server to initialize its internal listening socket. Previously, it only used a port.
+The previous `Server` class in V1 is simply replaced by the class `ThorsAnvil::ThorsSocket::Server`.
 
-```C++
-ThorsAnvil::ThorsSocket::ServerInit getServerInit(int port, std::optional<std::filesystem::path> certPath)
-{
-    // If there is only a port.
-    // i.e. The user did not provide a certificate path return a `ServerInfo` object.
-    // This will create a normal listening socket.
-    if (!certPath.has_value()) {
-        return ThorsAnvil::ThorsSocket::ServerInfo{port};
-    }
-    
-    // If we have a certificate path.
-    // Use this to create a certificate objext.
-    // This assumes the standard names for these files as provided by "Let's encrypt".
-    ThorsAnvil::ThorsSocket::CertificateInfo     certificate{std::filesystem::canonical(std::filesystem::path(*certPath) /= "fullchain.pem"),
-                                                             std::filesystem::canonical(std::filesystem::path(*certPath) /= "privkey.pem")
-                                                            };
-    ThorsAnvil::ThorsSocket::SSLctx              ctx{ThorsAnvil::ThorsSocket::SSLMethodType::Server, certificate};
-    
-    // Now that we have created the approporiate SSL objects needed.
-    // We return an SServierInfo object.
-    // Please Note: This is a different type to the ServerInfo returned above (one less S in the name).
-    return ThorsAnvil::ThorsSocket::SServerInfo{port, std::move(ctx)};
-    
-    // We can return these two two different types becuase
-    // ServerInit is actually a std::variant<ServerInfo, SServerInfo>
-}
-```
+Replacing these two classes has removed the majority of the complexity of the server code. Note: I am using a library I am very familiar with (and the author of), but there are several C++ libraries that would provide similar functionality and could be used in a similar way. My point (I think) is that the C interface to FD, though very flexible, is on the complex side, and this, complexity can be abstracted by using an appropriate C++ library.
 
-It is worth noting that `ServerInfo` and `SServerInfo` are distinct types, and the `ServerInit` type is a [`std::variant<>`](https://en.cppreference.com/w/cpp/utility/variant) that can accept either type. The `std::variant` is C++ type safe version of a `union` and allows you to store one of multiple compile-time specified types in an object safely.
+### Next Steps
 
-### What is the next step
-
-Now that we can trivially initialize the Web Server to use a socket or an SSL socket, we need an SSL certificate.
+Thus far, we have only used simple sockets. But for modern servers, we also need to handle SSL connections. In the next article, I will explain what is needed to set up a server to accept an correctly authenticate an SSL connection.
 
