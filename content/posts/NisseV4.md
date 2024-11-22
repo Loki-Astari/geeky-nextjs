@@ -25,11 +25,11 @@ disqusId: "http://lokiastari.com/blog/2024/11/12/Nisse/"
 
 # [Nisse](https://github.com/Loki-Astari/Nisse)
 
-In the first two articles, we created a very basic Web Server. A major issue with this simplistic server is that it can only handle connections serially. In this article, we introduce a thread pool that will handle the actual requests. The main thread will accept new requests and create the work items to be handled by the thread pool.
+In the first three articles, we created a very basic Web Server. A major issue with this simplistic server is that it can only handle connections serially. This article introduces a thread pool that will handle the actual requests. The main thread will accept new requests and create the work items to be handled by the thread pool.
 
 ## NisseV4
 
-All the code for this article is in two source files in the [V4](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V4) directory. It uses standard libraries and [thors-mongo](https://github.com/Loki-Astari/ThorsMongo). If you have a Unix-like environment, this should be easy to build; if you use Windows, you may need to do some extra work. A “Makefile” is provided just as an example.
+All the code for this article is in the directory [V4](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V4) directory. It uses standard libraries and [thors-mongo](https://github.com/Loki-Astari/ThorsMongo). If you have a Unix-like environment, this should be easy to build; if you use Windows, you may need to do some extra work. A “Makefile” is provided just as an example.
 
 ### Build & Run
 
@@ -60,26 +60,20 @@ We have added a class [JobQueue](https://github.com/Loki-Astari/NisseBlogCode/tr
 ```C++
 class WebServer
 {
-
-    ThorsAnvil::ThorsSocket::Server     connection;
+    TASock::Server                      connection;
     bool                                finished;
     std::filesystem::path const&        contentDir;
-
-    // Store JobState in a way where it will not move and can be accessed easily.
-    // A std::map does not move its members (once inserted), only invalidating
-    // an object when it is removed from the map.
-    std::mutex openSocketMutex;
-    std::map<int, ThorsAnvil::ThorsSocket::SocketStream>         openSockets;
-    // Simply added a JobQueue object to the WebServer class.
-    ThorsAnvil::Nisse::Server::JobQueue jobQueue;
+    // State information that can be used by the threads.
+    // Objects placed in a std::map are not moved once inserted so taking
+    // a reference to them is safe and can be used by another thread.
+    std::mutex                          openSocketMutex;
+    std::map<int, Socket>               openSockets;
+    // A JobQueue that holds a pool of threads to execute inserted jobs asynchronously.
+    JobQueue                            jobQueue;
     public:
-        // The constructor now takes an extra parameter to initialize the number of worker threads
-        // that will be created in the pool, this parameter is simply passed to the JobQueue constructor.
-        WebServer(std::size_t workerCount, ThorsAnvil::ThorsSocket::ServerInit&& serverInit, std::filesystem::path const& contentDir);
+        WebServer(std::size_t workerCount, TASock::ServerInit&& serverInit, std::filesystem::path const& contentDir);
 
         void run();
-    private:
-        void handleConnection(ThorsAnvil::ThorsSocket::SocketStream& socket);
 };
 ```
 
@@ -105,10 +99,11 @@ void WebServer::run()
     while (!finished)
     {
         // Main thread waits for a new connection.
-        ThorsAnvil::ThorsSocket::SocketStream newSocket = connection.accept();
+        TASock::SocketStream socketStream = connection.accept();
+        int fd = socketStream.getSocket().socketId();
+        Socket newSocket(std::move(socketStream));
 
         // Add the “newSocket” into the std::map object “openSockets”
-        int fd = newSocket.getSocket().socketId();
         std::unique_lock<std::mutex>    lock(openSocketMutex);
         auto [iter, ok] = openSockets.insert_or_assign(fd, std::move(newSocket));
 
@@ -121,9 +116,9 @@ void WebServer::run()
             // Get a reference to the socket.
             auto& socket = iterator->second;
             // Handle the reference as before.
-            handleConnection(socket);
+            handleConnection(socket, contentDir);
             // Once processing is complete remove the storage for Socket
-            // and clean up any associated storage.
+            // and cleanup any associated storage.
             std::unique_lock<std::mutex>    lock(openSocketMutex);
             openSockets.erase(iterator);
         });
@@ -292,6 +287,4 @@ void JobQueue::processWork()
 ## Next Step
 
 This article explains how we can use threads to potentially parallelize responses to multiple requests. Each thread sequentially runs only one request at a time and may be blocked while processing a request. In a subsequent article, I will detail how we can utilize cooperative multitasking to switch I/O-blocked threads to another request, improving parallelism without using additional resources.
-
-
 

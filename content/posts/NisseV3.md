@@ -53,6 +53,20 @@ Obtaining a certificate from a trusted root authority can be expensive and is ty
 
 You can get Free SSL Certificates from a company called [Let’s Encrypt](https://letsencrypt.org/).
 
+## Code
+
+All the code for this article is in the directory [V3](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V3) directory. It uses standard libraries and [thors-mongo](https://github.com/Loki-Astari/ThorsMongo). If you have a Unix-like environment, this should be easy to build; if you use Windows, you may need to do some extra work. A “Makefile” is provided just as an example.
+
+### Build & Run
+
+```bash
+  > brew install thors-mongo              # A header-only version of thors-mongo can be alternatively installed.
+  > git clone https://github.com/Loki-Astari/NisseBlogCode.git
+  > cd NisseBlogCode/V3
+  > make
+  > ./NisseV3 8080 /Directory/You/Want/To/Server/On/Port/8080 /etc/letsencrypt/live/<MySite.com>/
+```
+
 ## How to Use ThorsSocket With an SSL Certificate
 
 In ThorsSocket a normal socket is created with the following code:
