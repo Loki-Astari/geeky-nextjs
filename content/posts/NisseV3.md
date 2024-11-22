@@ -1,4 +1,3 @@
-Nisse V3
 ---
 layout: post
 title: "SSL Certificates"
