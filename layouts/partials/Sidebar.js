@@ -38,9 +38,6 @@ const Sidebar = ({ posts, categories, className }) => {
             className="socials sidebar-socials mt-6 justify-center"
             source={social}
           />
-          <div style="height:30px;border:1px solid red">
-            Ko-Fi
-          </div>
         </div>
       )}
 
