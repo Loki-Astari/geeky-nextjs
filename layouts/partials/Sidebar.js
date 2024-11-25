@@ -38,8 +38,9 @@ const Sidebar = ({ posts, categories, className }) => {
             className="socials sidebar-socials mt-6 justify-center"
             source={social}
           />
-          <div>
-            Ko-Fi
+          <div style="height:100px;border:1px solid red">
+            <script type="text/javascript" src="https://storage.ko-fi.com/cdn/widget/Widget_2.js"></script>
+            <script type="text/javascript">kofiwidget2.init("Support me on Ko-fi", "#2a67d1", "G2G216KZR3");kofiwidget2.draw();</script>
           </div>
         </div>
       )}
