@@ -10,7 +10,7 @@ tags: Vector
 sharing: true
 footer: true
 subtitle: C++ By Example
-description: C++ By Example. The Vector Part 2. In the previous article I went over basic allocation for a `Vector` like class. In this article I want to put some detail around the copy assignment operator and resizing the underlying `Vector`. Unlike the other methods previously discussed these methods have to deal with both construction and destruction of elements and the potential of exceptions interrupting the processes. The goal is to provide exception safe methods that provide the strong exception guarantee for the object and do not leak resources.
+description: C++ By Example. The Vector Part 2. In the previous article, I went over basic allocation for a `Vector` like class. In this article, I want to put some detail around the copy assignment operator and resizing the underlying `Vector`. Unlike the other methods previously discussed, these methods have to deal with both construction and destruction of elements and the potential of exceptions interrupting the processes. The goal is to provide exception safe methods that provide the strong exception guarantee for the object and do not leak resources.
 image: /images/post/post-6.png
 imageInfo:
     original:           https://unsplash.com/photos/Bj6ENZDMSDY
@@ -23,14 +23,14 @@ draft: false
 disqusId: "http://lokiastari.com/blog/2016/02/29/vector-resource-management-ii-copy-assignment/"
 ---
 
-In the previous article I went over basic allocation for a `Vector` like class. In this article I want to put some detail around the copy assignment operator and resizing the underlying `Vector`. Unlike the other methods previously discussed these methods have to deal with both construction and destruction of elements and the potential of exceptions interrupting the processes. The goal is to provide exception safe methods that provide the strong exception guarantee for the object and do not leak resources.
+In the previous article, I went over basic allocation for a `Vector` like class. In this article, I want to put some detail around the copy assignment operator and resizing the underlying `Vector`. Unlike the other methods previously discussed, these methods have to deal with both construction and destruction of elements and the potential of exceptions interrupting the processes. The goal is to provide exception safe methods that provide the strong exception guarantee for the object and do not leak resources.
 
 # Copy Assignment
 ## First Try
 This is a very common first attempt at a copy constructor.
-It simply calls the destructor on all elements currently in the object. Then uses the existing `push_back()` method to copy member elements from the source object, thus allowing the object to automatically resize if required.
+It simply calls the destructor on all elements currently in the object. Then uses the existing `push_back()` method to copy member elements from the source object, thus allowing the object to automatically resize as required.
 
-Copy Assignment (Try 1)
+#### Copy Assignment (Try 1)
 ```c
 class Vector
 {
@@ -45,7 +45,7 @@ class Vector
             // Early exit for self assignment
             return *this;
         }
-        // First we have to destroy all the current elements.
+        // First, we have to destroy all the current elements.
         for(int loop = 0; loop < length; ++loop)
         {
             // Destroy in reverse order
@@ -65,9 +65,9 @@ class Vector
 ```
 
 ## Strong Exception Guarantee
-The obvious problems about efficiency when a resize is required is a minor issue here. The real problem is that this does not provide the strong exception guarantee. If any of the constructors/destructor throw then the object will be left in an inconsistent state with no way to restore the original state. The strong exception guarantee basically means that the operation works or does not change the state of the object. The easiest technique to achieve this is to create a copy in a new temporary buffer that can be thrown away if things go wrong (leaving the current object untouched). If the copy succeeds then we use it and throw away the original data.
+The obvious problems about efficiency when a resize is required is a minor issue here. The real problem is that this does not provide the strong exception guarantee. If any of the constructors/destructor throw, then the object will be left in an inconsistent state with no way to restore the original state. The strong exception guarantee basically means that the operation works or does not change the state of the object. The most straightforward technique to achieve this is to create a copy in a new temporary buffer that can be thrown away if things go wrong (leaving the current object untouched). If the copy succeeds, then we use it and throw away the original data.
 
-Copy Assignment (Try 2)
+#### Copy Assignment (Try 2)
 ```c
 class Vector
 {
@@ -115,11 +115,11 @@ class Vector
 ```
 
 ## Copy and Swap
-This second attempt is a better attempt. But it still leaks if an exception is throw. But before we add exception handling, let us take a closer look at the three sections of the assignment operator.
+This second attempt is better. But it still leaks if an exception is thrown. But before we add exception handling, let us take a closer look at the three sections of the assignment operator.
 
 Part-1 looks exactly like the copy constructor of Vector.
 
-Copy Assignment Part 1
+#### Copy Assignment Part-1
 ```c
         std::size_t tmpCap    = copy.length;
         std::size_t tmpSize   = 0;
@@ -134,9 +134,9 @@ Copy Assignment Part 1
         }
 ```
 
-Part-3 looks exactly like destructor of Vector.
+Part-3 looks exactly like the destructor of Vector.
 
-Copy Assignment Part 3
+#### Copy Assignment Part-3
 ```c
         // Now we have to delete the old state.
         for(int loop = 0; loop < tmpSize; ++loop)
@@ -146,9 +146,9 @@ Copy Assignment Part 3
         ::operator delete(tmpBuffer);
 ```
 
-Using these two observations we have a rewrite of the copy assignment operator.
+Using these two observations, we have a rewrite of the copy assignment operator.
 
-Copy Assignment (Try 3)
+#### Copy Assignment (Try 3)
 ```c
 class Vector
 {
@@ -181,9 +181,9 @@ class Vector
 
 The copy and swap idiom is about dealing with replacing an object state from another object. It is very commonly used in the copy assignment operator but has application whenever state is being changed and the [strong exception guarantee](https://en.wikipedia.org/wiki/Exception_safety) is required.
 
-The above code works perfectly. But in Part-2 the swap looks like a normal swap operation so let's use that rather than doing it manually. Also self assignment now works without the need for a test (because we are copying into a temporary). So we can remove the check for self assignment. Yes this does make the performance for self assignment worse, but it makes the normal operation even more efficient. Since the occurrence of self assignment is extremely rare I would not prematurely optimize for it but rather make the most common case the best optimized. So one final re-factor of the copy constructor leaves us with this.
+The above code works perfectly. But in Part-2, the swap looks like a regular swap operation, so let's use that rather than doing it manually. Also, self-assignment now works without the need for a test (because we are copying into a temporary). So we can remove the check for self-assessment. Yes, this does make the performance for self-assignment worse, but it makes the normal operation even more efficient. Since the occurrence of self assignment is extremely rare I would not prematurely optimize for it but rather make the most common case the best optimized. So one final re-factor of the copy constructor leaves us with this.
 
-Copy Assignment (Try 4)
+#### Copy Assignment (Try 4)
 ```c
 class Vector
 {
@@ -208,12 +208,12 @@ class Vector
 
 # Resizing Underlying buffer
 
-When pushing data into the array we need to verify that capacity has not been exceeded. If it has then we need to allocate more capacity then copy the current content into the new buffer and destroy the old buffer after calling the destructor on all elements.
+When pushing data into the array, we need to verify that capacity has not been exceeded. If it has, then we need to allocate more capacity, then copy the current content into the new buffer and destroy the old buffer after calling the destructor on all elements.
 
 ## Using Copy and Swap
-This operation is exceedingly similar to the description of the copy assignment operator. As a result the best solution looks very similar and uses the Copy and Swap idiom.
+This operation is exceedingly similar to the description of the copy assignment operator. As a result, the best solution looks very similar and uses the Copy and Swap idiom.
 
-Vector Reallocating Buffer
+#### Vector Reallocating Buffer
 ```c
 class Vector
 {
@@ -245,7 +245,7 @@ class Vector
 
 # Final Version <a id="VectorVersion-2"></a>
 
-Vector Final Version
+#### Vector Final Version
 ```c
 template<typename T>
 class Vector
@@ -381,4 +381,4 @@ This article has gone over the design of the Copy and Swap idiom and shown how i
 
 * Separation Of Concerns
 * Copy and Swap Idiom
-* Exception Gurantees
+* Exception Guarantees

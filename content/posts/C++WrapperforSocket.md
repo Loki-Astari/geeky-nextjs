@@ -22,7 +22,7 @@ featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2016/05/26/c-plus-plus-wrapper-for-socket/"
 ---
-The last two articles examined the "C Socket" interface provided by OS. In this article, I wrap this functionality in a simple C++ class to provide guaranteed closing and apply a consistent exception strategy. The first step is to rewrite the client/server code with all the low-level socket code removed. This will help identify the interface that the wrapper class needs to implement.
+The last two articles examined the "C Socket" interface provided by the OS. In this article, I wrap this functionality in a simple C++ class to provide guaranteed closing and apply a consistent exception strategy. The first step is to rewrite the client/server code with all the low-level socket code removed. This will help identify the interface that the wrapper class needs to implement.
 
 The client code becomes trivial. Create a `ConnectSocket` specifying the host and a port. Then, communicate with the server using the `putMessage()` and `getMessage()`. Note: I am continuing to use the trivial protocol that was defined in the last article: `putMessage()` writes a string to the socket then closes the connection; `getMessage()` reads a socket until it is closed by the other end (I will cover more sophisticated protocols in a subsequent article).
 
@@ -38,7 +38,7 @@ std::cout << message << "\n";
 ```
 
 
-For the server end, this is nearly as trivial as the client. Create a `ServerSocket` and wait for incoming connections from clients. When we get a connection, we return a `SocketData` object. The reason for returning a new socket-like object is that this mimics the behavior of the underlying `::accept()` call, which opens a new port for the client to interact with the server. The additional benefit of separating this from the `ServerSocket` is that a subsequent version may allow multiple connections, and we want to interact with each connection independently without sharing state, potentially across threads, so modelling it with an object makes sense in an OO world.
+For the server end, this is nearly as trivial as the client. Create a `ServerSocket` and wait for incoming connections from clients. When we get a connection, we return a `DataSocket` object. The reason for returning a new socket-like object is that this mimics the behavior of the underlying `::accept()` call, which opens a new port for the client to interact with the server. The additional benefit of separating this from the `ServerSocket` is that a subsequent version may allow multiple connections, and we want to interact with each connection independently without sharing state, potentially across threads, so modelling it with an object makes sense in an OO world.
 
 #### [server.cpp](https://github.com/Loki-Astari/Examples/blob/master/Version2/server.cpp)
 ```c
@@ -62,7 +62,7 @@ Surprisingly, this gives us three types of socket interface (not the two most pe
 * The ConnectSocket class connects and can be used to read/write
 * The DataSocket class is an already connected socket that can be used to read/write
 
-Since a socket is a resource we don't want duplicated, it can be moved but not copied.
+Since a socket is a resource we don't want to be able to duplicated it, but it can be moved .
 
 This lets me define a very simple interface like this:
 

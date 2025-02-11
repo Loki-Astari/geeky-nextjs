@@ -27,9 +27,9 @@ So now that we have used `std::is_nothrow_move_constructible` we can also look a
 
 # Optimized Destruction
 
-Since we have to manually call the destructor on all objects in the container (because we are using placement new) we can look to see if we can optimize that. The type `std::is_trivially_destructible` detects if the type is **Trivially** destructible. This basically means that there will be no side effects from the destructor (See: Section 12.4 Paragraph 5 of the standard). For types we don't need to call the destructor of the object. For the `Vector` class this means we can eliminate the call to the destructor but more importantly the loop.
+Since we have to manually call the destructor on all objects in the container (because we are using placement new), we can look to see if we can optimize that. The type `std::is_trivially_destructible` detects if the type is **Trivially** destructible. This basically means that there will be no side effects from the destructor (See: Section 12.4 Paragraph 5 of the standard). For types we don't need to call the destructor of the object. For the `Vector` class, this means we can eliminate the call to the destructor but, more importantly, the loop.
 
-Destroying Elements
+#### Destroying Elements
 ```c
 ~Vector()
 {
@@ -106,14 +106,14 @@ template<typename X>
 typename std::enable_if<std::std::is_trivially_destructible<X>::value == true>::type
 clearElements()
 {
-    // Trivially destructible objects can be re-used without using the destructor.
+    // Trivially destructible objects can be reused without using the destructor.
 }
 ```
 
 # Optimized Assignment Operator
-The final optimization is because resource allocation is expensive. So if we can avoid the resource allocation completely and just reuse the space we currently have.
+The final optimization is because resource allocation is expensive, if we can avoid the resource allocation altogether and reuse the space we currently have.
 
-Copy Assignment
+#### Copy Assignment
 ```c
 Vector& operator=(Vector const& copy)
 {
@@ -124,9 +124,9 @@ Vector& operator=(Vector const& copy)
 }
 ```
 
-The copy and swap idiom is perfect for providing the strong exception guarantee in the presence of exceptions. **But** if there are no exceptions during destruction or construction then we can potentially just reuse the available memory. So if we rewrote the assignment operator with the assumption that there were no exceptions it would look like the following (Note in the real code use SFINAE to do the optimization only when necessary).
+The copy and swap idiom is perfect for providing the strong exception guarantee in the presence of exceptions. **But** if there are no exceptions during destruction or construction, then we can potentially reuse the available memory. So if we rewrote the assignment operator with the assumption that there were no exceptions, it would look like the following (Note: In the real code, use SFINAE to do the optimization only when necessary).
 
-Copy the easy way
+#### Copy the easy way
 ```c
 Vector& operator=(Vector const& copy)
 {
@@ -167,7 +167,7 @@ Vector& operator=(Vector const& copy)
 
 The final version
 
-Vector Final Version
+#### Vector Final Version
 ```c
 template<typename T>
 class Vector
