@@ -21,13 +21,13 @@ draft: false
 disqusId: "http://lokiastari.com/blog/2016/03/25/resizemaths/"
 ---
 
-So I never really considered why the resize of vector used a constant expansion of 1.5 or 2 (in some popular implementations). That was until I did my previous article Xseries ["Vector"]({{config.site}}/blog/2016/02/27/vector/) where I concentrated a lot on resource management and did a section on [resizing the vector]({{config.site}}/blog/2016/03/12/vector-resize/). Originally in the code I tried to be clever, a mistake. I used a resize value of 1.62 (an approximation of `Phi`), because I vaguely remembered reading an article that this was the optimum resize factor. When I put this out for code review it was pointed out to me that this value was too large, the optimum value must be less than or equal to `Phi` (1.6180339887) and that exceeding this limit actually made things a lot worse.
+So I never really considered why the resize of vector used a constant expansion of 1.5 or 2 (in some popular implementations). That was until I did my previous article series ["Vector"]({{config.site}}/blog/2016/02/27/vector/) where I concentrated a lot on resource management and did a section on [resizing the vector]({{config.site}}/blog/2016/03/12/vector-resize/). Initially, I tried to be clever in the code, a mistake. I used a resize value of 1.62 (an approximation of `Phi`) because I vaguely remembered reading an article that this was the optimum resize factor. When I put this out for code review, it was pointed out that this value was too large, the optimum value must be less than or equal to `Phi` (1.6180339887), and that exceeding this limit made things much worse.
 
-So I had to know why....
+So, I had to know why....
 
-So the theory goes: You have a memory resource of size `B`. If you resize this resource by a constant factor `r` by re-allocating a new block then releasing the old block. Then if the value of `r` is smaller than or equal to `Phi` you will eventually be able to reuse memory that has previously been released; otherwise the new block of memory being allocated will always be larger than the previously released memory.
+The theory goes: You have a memory resource of size `B`. If you resize this resource by a constant factor `r` by re-allocating a new block and then releasing the old block, if the value of `r` is smaller than or equal to `Phi`, you will eventually be able to reuse memory that has previously been released; otherwise, the new block of memory being allocated will always be larger than the previously released memory.
 
-So I thought lets try that:
+So, I thought, let's try that:
 Test one `r > Phi`:
 
 ```
@@ -43,7 +43,7 @@ Test one `r > Phi`:
     Resize 4       150           160             320                170
 ```
 
-OK. That seems to be holding (at least in the short term). Lo lets try a smaller value.
+OK. That seems to be holding (at least in the short term), so let's try a smaller value.
 Test two `r < Phi`:
 
 ```
@@ -59,7 +59,7 @@ Test two `r < Phi`:
     Resize 4        80            48              72                 -8 // Reuse released memory next iteration
 ```
 
-OK. That also seems to be holding. But can we show that holds for all values of B? Also this is a bit anecdotal can we actually show this relationship actually hold? Time to break out some maths (not math as my American cousins seem to insist on for the shortening of mathematics).
+OK. That also seems to be holding. But can we show that holds for all values of B? Also, this is a bit anecdotal. Can we show this relationship holds? Time to break out some maths (not math as my American cousins seem to insist on for the shortening of mathematics).
 
 
 So the size `S` of any block after `n` resize operations will be:
@@ -67,11 +67,11 @@ So the size `S` of any block after `n` resize operations will be:
 <MathJaxContext>
 <ThorMath content="S   = Br^n" />
 
-Thus the size of `Released Memory` can be expressed as:
+Thus, the size of `Released Memory` can be expressed as:
 
 <ThorMath content="\sum_&#123;k=0&#125;^&#123;n-1&#125;\ Br^k" />
 
-Also the size of the next block will be:
+Also, the size of the next block will be:
 
 <ThorMath content="Br^&#123;n+1&#125;" />
 
@@ -95,14 +95,14 @@ So if the amount of `Released Memory` >= the amount required for the next block,
 
 <ThorMath content="1 + r^n (r^2 - r - 1) &gt;= 0" />
 
-This is were my maths broke down. So after talking to some smart people. They noticed that:
+This is where my maths broke down. So after talking to some smart people. They noticed that:
 
 <ThorMath content="\sqrt&#123;(r^2 - r - 1)&#125; . when . r = \Phi" />
 
-We find that the first root of the equation is 1. The second root of the equation depends on `n`, as `n` tends to `infinity` the other root tends towards `Phi`. From this we can infer the following:
+We find that the first root of the equation is 1. The second root of the equation depends on `n`, as `n` tends to `infinity`, and the other root tends towards `Phi`. From this, we can infer the following:
 
 <ThorMath content="1 < r < = \Phi" />
 </MathJaxContext>
 
-Thus if `r` remains in the above range then the above theory holds.
+Thus, if `r` remains in the above range, then the theory holds.
 

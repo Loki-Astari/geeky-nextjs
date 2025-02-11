@@ -10,7 +10,7 @@ tags: Vector
 sharing: true
 footer: true
 subtitle: C++ By Example
-description: C++ By Example. The Vector - Part 1. A lot of new developers to C++ attempt to build a `Vector` like container as a learning processes. Getting a simple version of this working for POD types (like int) is not that complicated. The next step in getting this working for arbitrary data types takes a significant leap forward in thinking in C++ especially when you start looking at efficiency and exception safety. This set of five articles looks at building an efficient `Vector` implementation. I show some of the common mistakes and explain why and how to resolve the problems.
+description: C++ By Example. The Vector - Part 1. Many new developers of C++ attempt to build a `Vector'- like container as a learning process. Getting a simple version of this working for POD types (like int) is not that complicated. The next step in getting this working for arbitrary data types takes a significant leap forward in thinking in C++, especially when you start looking at efficiency and exception safety. This set of five articles looks at building an efficient `Vector` implementation. I show some common mistakes and explain why and how to resolve the problems.
 image: /images/post/post-5.png
 imageInfo:
     original:           https://unsplash.com/photos/W-oqNwbmin0
@@ -23,15 +23,15 @@ draft: false
 disqusId: "http://lokiastari.com/blog/2016/02/27/vector/"
 ---
 
-A lot of new developers to C++ attempt to build a `Vector` like container as a learning processes. Getting a simple version of this working for POD types (like int) is not that complicated. The next step in getting this working for arbitrary data types takes a significant leap forward in thinking in C++ especially when you start looking at efficiency and exception safety. This set of five articles looks at building an efficient `Vector` implementation. I show some of the common mistakes and explain why and how to resolve the problems:
+Many new developers of C++ attempt to build a `Vector'- like container as a learning process. Getting a simple version of this working for POD types (like int) is not that complicated. The next step in getting this working for arbitrary data types takes a significant leap forward in thinking in C++, especially when you start looking at efficiency and exception safety. This set of five articles looks at building an efficient `Vector` implementation. I show some of the common mistakes and explain why and how to resolve the problems:
 
-Note: This is not meant to replace `std::vector<>` this is simply meant as a teaching process.
+Note: This is not meant to replace `std::vector<>`; this is intended as a teaching process.
 
 # Rule of Zero
 
-You will notice that half the attempts below [Sources](#Sources) are Vector implementations the other half are for Matrix implementations. I mention both because I want to emphasize the [Separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns). An object should be responsible for either business logic or resource management (not both). A lot of the Matrix implementations are trying to mix resource management (memory management) with the business logic of how matrices interact. So if you want to write a matrix class you should delegate resource management to a separate class (In a first pass `std::vector<int>` would be a good choice).
+You will notice that half the attempts below [Sources](#Sources) are Vector implementations, and the other half are for Matrix implementations. I mention both to emphasize the [Separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns). An object should be responsible for either business logic or resource management (not both). Many Matrix implementations try to mix resource management (memory management) with the business logic of how matrices interact. So if you want to write a matrix class, you should delegate resource management to a separate class (In a first pass, `std::vector<int>` would be a good choice).
 
-In C++ the compiler generates a couple of methods for free.
+In C++, the compiler generates a couple of methods for free.
 
 * Destructor
 * Copy Constructor
@@ -39,18 +39,18 @@ In C++ the compiler generates a couple of methods for free.
 * Move Constructor
 * Move Assignment Operator
 
-These methods usually work perfectly well; **unless** your class contains a pointer (or a pointer like resource object). But if your class is doing business logic then it should not contain a pointer. So classes that handle business logic therefore should not be defining any of these compiler generated methods (just let the compiler generated ones work for you). Occasionally you want to delete them, to prevent copying or movement, but it is very unusual for these to need specialized implementations.
+These methods usually work perfectly well; **unless** your class contains a pointer (or a pointer like resource object). But if your class is doing business logic, it should not contain a pointer. So classes that handle business logic, therefore, should not be defining any of these compiler-generated methods (just let the compiler-generated ones work for you). Occasionally, you want to delete them to prevent copying or movement, but it is very unusual for these to need specialized implementations.
 
-Conversely, classes that do resource management usually contain a pointer (or pointer like resource object). These classes should define all the above methods to correctly handle the resource. This is where ownership semantics of the resource are defined. The owner of the resource is responsible for destroying the resource when its lifespan is over (in terms of pointers this means the owner is responsible for calling `delete` on the pointer, usually in the destructor). If you are not the owner of a resource you should not have access to the resource object directly, as it may be destroyed by the owner without other objects knowing.
+Conversely, resource management classes usually contain a pointer (or pointer-like resource object). These classes should define all the above methods to handle the resource correctly. This is where ownership semantics of the resource are defined. The resource owner is responsible for destroying the resource when its lifespan is over (in terms of pointers, the owner is responsible for calling `delete` on the pointer, usually in the destructor). If you are not the owner of a resource, you should not have access to the resource object directly, as the owner may destroy it without other objects knowing.
 
 # [Rule of three](https://stackoverflow.com/q/4172722/14065)
 
-The rule of three comes from C++03 where we only had copy semantics.
+The rule of three comes from C++03, where we only had copy semantics.
 
 ## Version-1 Simple Resource Management
-When creating a class to manage resources; the first version created by beginner usually looks like this:
+When creating a class to manage resources, the first version created by beginners usually looks like this:
 
-Rule of three first pass
+#### Rule of three first pass
 ```c
 template<typename T>
 class Vector
@@ -69,17 +69,17 @@ class Vector
 ```
 The trouble here is that this version has a fundamental flaw because of the way the [compiler generated](https://stackoverflow.com/a/4044360/14065) copy constructor and copy assignment operator work with pointers (commonly referred to as the [shallow copy problem](https://stackoverflow.com/q/2344664/14065)).
 
-Shallow copy problem.
+#### Shallow copy problem.
 ```c
 int main()
 {
     Vector<int>   x;
-    Vector<int>   y(x);     // Compiler generate copy constructure does
+    Vector<int>   y(x);     // Compiler generate copy constructor does
                             // an element wise shallow copy of each element.
                             // This means both `x` and `y` have a buffer
                             // member that points at the same area in memory.
                             //
-                            // When the objects go out of scope both will
+                            // When the objects go out of scope, both will
                             // try and call delete on the memory resulting
                             // in a double delete of the memory.
 
@@ -89,11 +89,11 @@ int main()
 ```
 
 ## Version-2 Rule of Three
-The rule of three simply stated is: If you define any of the methods Destructor/Copy Constructor/Copy Assignment Operator then you should define all three. When done correctly this resolves the shallow copy problem. `Vector` defines the destructor so we also need to define the copy constructor and copy assignment operator.
+The rule of three simply stated is: If you define any of the methods Destructor/Copy Constructor/Copy Assignment Operator, then you should define all three. When done correctly, this resolves the shallow copy problem. `Vector` defines the destructor, so we also need to define the copy constructor and copy assignment operator.
 
-I see this as an initial attempt at defining the rule of three for vectors very often.
+I often see this as an initial attempt at defining the rule of three for vectors.
 
-Rule of three second pass
+#### Rule of three second pass
 ```c
 template<typename T>
 class Vector
@@ -120,7 +120,7 @@ class Vector
     Vector& operator=(Vector const& copy)
     {
         // Copy Object
-        // This is relatively easy. But I want to cover this in detail in a subsquent post.
+        // This is relatively easy. But I want to cover this in detail in a subsequent post.
         return *this;
     }
 };
@@ -128,19 +128,19 @@ class Vector
 
 ## Version-3 Lazy Construction of elements.
 
-The problem with the previous version is that it forces initialization of all elements in the buffer immediately. This forces the requirement that members of the `Vector` (i.e. type `T`) must be default constructable. It also has two efficiency constraints imposed on the Vector:
+The problem with the previous version is that it immediately forces the initialization of all elements in the buffer. This forces the requirement that members of the `Vector` (i.e. type `T`) must be default constructable. It also has two efficiency constraints imposed on the Vector:
 
 * You can't pre-allocate space for future members.
-    + So resizing (larger or smaller) becomes very expensive as each resize requires copy all the elements to the newly re-sized buffer.
-    + Alternatively pre-creating all the elements you need can also be expensive especially if construction of `T` is expensive.
+    + Resizing (larger or smaller) becomes very expensive, as each resize requires copying all the elements to the newly resized buffer.
+    + Alternatively, pre-creating all the elements you need can also be expensive, especially if construction of `T` is expensive.
 * The copy constructor is twice as expensive as it should be. Each element must be:
     + Default constructed (when the buffer is created).
     + Then copy constructed with the value from the source vector.
 
 
-This attempt improves on that by allowing efficient pre-allocating of space (`capacity`) for the buffer. New members are then added by constructing in-place using [placement new](https://stackoverflow.com/questions/362953/what-are-uses-of-the-c-construct-placement-new).
+This attempt improves that by allowing efficient pre-allocating of space (`capacity`) for the buffer. New members are added by constructing in-place using [placement new](https://stackoverflow.com/questions/362953/what-are-uses-of-the-c-construct-placement-new).
 
-Rule of three third pass
+#### Rule of three third pass
 ```c
 template<typename T>
 class Vector
@@ -154,7 +154,7 @@ class Vector
         // Allocates space but does not call the constructor
         , buffer(static_cast<T*>(::operator new(sizeof(T) * capacity)))
         // Useful if the type T has an expensive constructor
-        // We preallocate space without initializing it giving
+        // We preallocate space without initializing it, giving
         // room to grow and shrink the buffer without re-allocating.
     {}
     ~Vector()
@@ -176,7 +176,7 @@ class Vector
     {
         // Copy constructor is simple.
         // We create a new resource area of the required length.
-        // But these elements are not initialized so we use push_back to copy them
+        // But these elements are not initialized, so we use push_back to copy them
         // into the new object. This is an improvement because we
         // only construct the members of the vector once.
         for(int loop = 0; loop < copy.length; ++loop)
@@ -187,7 +187,7 @@ class Vector
     Vector& operator=(Vector const& copy)
     {
         // Copy Object
-        // This is relatively easy. But I want to cover this in detail in a subsquent post.
+        // This is relatively easy. But I want to cover this in detail in a subsequent post.
         return *this;
     }
     void push_back(T const& value)
@@ -210,11 +210,13 @@ class Vector
 
 # Rule of Five
 
-In C++11 the language added the concept of "Move Semantics". Rather than having to copy an object (especially on return from a function) we could "move" an object. The concept here is that movement is supposed to be much cheaper than copying because you move the internal data structure of an object rather than all the elements. A good example is a std::vector. Before C++11 a return by value meant copying the object. The constructor of the new object allocates a new internal buffer and then copies all the elements from the original object's buffer to the new object's buffer. On the other hand a move simply gives the new object the internal buffer of the old object (we just move the pointer to the internal buffer). When an object is moved to another object the old object should be left in a valid state, but for efficiency the standard rarely specifies the state of an object after it has been the source of a move. Thus using an object after a move is a bad idea unless you are setting it to a specific state.
+In C++11, the language added the concept of "Move Semantics". Rather than having to copy an object (especially on return from a function), we could "move" an object. The concept here is that movement is supposed to be much cheaper than copying because you move the internal data structure of an object rather than all the elements. A good example is a std::vector. Before C++11, a return by value meant copying the object. The constructor of the new object allocates a new internal buffer and then copies all the elements from the original object's buffer to the new object's buffer.
+
+On the other hand, a move simply gives the new object the internal buffer of the old object (we move the pointer to the internal buffer). When an object is moved to another object, the old object should be left in a valid state, but for efficiency, the standard rarely specifies the state of an object after it has been the source of a move. Thus, using an object after a move is a bad idea unless you are setting it to a specific state.
 
 There are two new methods that allow us to specify move semantics on a class.
 
-Vector Move Semantics.
+#### Vector Move Semantics.
 ```c
 class Vector
 {
@@ -231,11 +233,11 @@ class Vector
 };
 ```
 
-Notice the `&&` operator. This donates an r-value reference and means that your object is the destination of a move operation. The parameter passed is the source object and the state you should use to define your new object's state. After the move the source object must be left in a valid (but can be undefined state). For a vector this means it must no longer be the owner of the internal buffer that you are now using in your buffer.
+Notice the `&&` operator. This donates an r-value reference and means that your object is the destination of a move operation. The parameter passed is the source object and the state you should use to define your new object's state. After the move, the source object must be left in a valid (but can be undefined state). For a vector, this means it must no longer be the owner of the internal buffer that you are now using in your buffer.
 
 The simplest way to achieve this goal is to set up the object in a valid (but very cheap to achieve state) and then swap the current object with the destination object.
 
-Vector Move Semantics Implementation
+#### Vector Move Semantics Implementation
 ```c
 class Vector
 {
@@ -266,11 +268,11 @@ class Vector
 };
 ```
 
-Note I marked both move operators `noexcept`. Assuming the operations are guaranteed not to throw you should mark them as `noexcept`. If we know that certain operations are exception safe, then we can optimize resize operations and maintain the strong exception guarantee. This and some other optimizations will be documented in a subsequent post.
+Note: I marked both move operators `noexcept`. Assuming the operations are guaranteed not to throw you should mark them as `noexcept`. If we know that certain operations are exception safe, we can optimize resize operations and maintain the strong exception guarantee. This and some other optimizations will be documented in a subsequent post.
 
 # Final Version <a id="VectorVersion-1"></a>
 
-Vector Final Version
+#### Vector Final Version
 ```c
 template<typename T>
 class Vector
@@ -380,7 +382,7 @@ class Vector
 };
 ```
 # Summary
-This article has shown how to handle the basic resource management required by a vector. It has covered several important principles for C++ programmers.
+This article shows how to handle the basic resource management required by a vector and covers several important principles for C++ programmers.
 
 * Separation Of Concerns
 * Rule of Zero

@@ -23,15 +23,15 @@ draft: false
 disqusId: "http://lokiastari.com/blog/2016/05/29/socket-protocols/"
 ---
 
-In the previous articles I have used a very simplistic protocol. In real world situations this simple protocol is not sufficient. To provide a more robust connection between client and server a communications protocol is required so that we can validate messages are sent correctly and generate appropriate responses that can also be validated.
+In the previous articles, I used a very simplistic protocol. In real-world situations, this protocol is not sufficient. A communications protocol is required to provide a more robust connection between client and server. This protocol allows us to validate that messages are sent correctly and generate appropriate responses that can also be validated.
 
-Designing a communication protocol is a non trivial task and personally I would look for an existing protocol that matches your use case rather than trying to create protocol from scratch.
+Designing a communication protocol is a nontrivial task. Rather than creating a new protocol from scratch, I would look for an existing protocol that matches your use case.
 
 #### Example Protocols
 * HTTP&#x003A; &nbsp;https://tools.ietf.org/html/rfc2616.txt
 * IRC&#x003A; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;https://tools.ietf.org/html/rfc1490.txt
 
-Rather than go through all the different protocols I am simply going to pick the HTTP(S) protocol and use that for further discussion. HTTP(S) is relatively well known; It is simple to implement the basics; There are well known server implementations that support it; There are well known client libraries that can be used in application development.
+Rather than reviewing all the different protocols, I will use the HTTP(S) protocol for further discussion. HTTP(S) is relatively well-known, and the basics are simple to implement. Well-known server implementations support it, and well-known client libraries can be used in application development.
 
 #### Example HTTP(S) servers
 * [Apache](https://httpd.apache.org/)
@@ -45,7 +45,7 @@ Rather than go through all the different protocols I am simply going to pick the
 
 
 ## HTTP(S)
-Basically HTTP(S) defines two object. A request object is sent from the client to the server and response object is sent back as a result of a request. The only difference between the two is the start-line. Both HTTP objects can be broken down into three pieces.
+HTTP(S) defines two objects: a request object sent from the client to the server and a response object sent back as a result of a request. The only difference between the two is the start line. Both HTTP objects can be broken down into three pieces.
 
 1. Start-Line
 2. Header-Section
@@ -53,7 +53,7 @@ Basically HTTP(S) defines two object. A request object is sent from the client t
 
 ### Start-Line
 
-For a request object this is:
+For a request object, this is:
 <table><tbody>
 <tr><td>&#8226;&nbsp;</td><td style={{width:'300px'}}>Method:</td><td>HEAD/GET/PUT/POST/DELETE</td></tr>
 <tr><td>&#8226;&nbsp;</td><td style={{width:'300px'}}>Space:</td><td>One Space character</td></tr>
@@ -68,7 +68,7 @@ For a request object this is:
 GET https://google.com/maps?id=456 HTTP/1.1\r\n
 ```
 
-For a response object this is:
+For a response object, this is:
 <table><tbody>
 <tr><td>&#8226;&nbsp;</td><td style={{width:'300px'}}>HTTP-Version:</td><td>Usually HTTP/1.1</td></tr>
 <tr><td>&#8226;&nbsp;</td><td style={{width:'300px'}}>Space:</td><td>One Space character</td></tr>
@@ -85,7 +85,7 @@ HTTP/1.1 200 OK\r\n
 
 ### Header-Section
 
-This is a set of key/value pairs one per line separated by a colon. Each Line is terminated by CR/LF and the end of the header section is marked by an empty line.
+This is a set of key/value pairs, one per line separated by a colon. Each Line is terminated by CR/LF, and the end of the header section is marked by an empty line.
 
 <table><tbody>
 <tr><td>&#8226;&nbsp;</td><td style={{width:'300px'}}>Key:</td><td>A text string representing the keys.</td></tr>
@@ -104,14 +104,14 @@ Content-Type: text/text\r\n
 
 ### Body
 
-The payload of the object should be in the body. Its size is defined by the headers defined in [rfc-2616 section 4.4 Message Length](https://tools.ietf.org/html/rfc2616#section-4.4).
+The object's payload should be in the body. Its size is defined by the headers in [rfc-2616 section 4.4 Message Length](https://tools.ietf.org/html/rfc2616#section-4.4).
 
 ### Required Headers
 
-According to the rfc(s) [7230](https://tools.ietf.org/html/rfc7230), [7231](https://tools.ietf.org/html/rfc7231), [7232](https://tools.ietf.org/html/rfc7232), [7233](https://tools.ietf.org/html/rfc7233), [7234](https://tools.ietf.org/html/rfc7234) or [7235](https://tools.ietf.org/html/rfc7235) there are no header fields there are actually required header fields.
+According to the rfc(s) [7230](https://tools.ietf.org/html/rfc7230), [7231](https://tools.ietf.org/html/rfc7231), [7232](https://tools.ietf.org/html/rfc7232), [7233](https://tools.ietf.org/html/rfc7233), [7234](https://tools.ietf.org/html/rfc7234) or [7235](https://tools.ietf.org/html/rfc7235) there are no header fields there are required header fields.
 
 #### Request Object
-But real world implementations need some headers to work efficiently, so you probably should send the following headers when making a request to a server:
+But real-world implementations need some headers to work efficiently, so you probably should send the following headers when making a request to a server:
 
 * [Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5):
 * [Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2):   // Or use one of the other techniques to specify length
@@ -123,7 +123,7 @@ It is also polite to send the following.
 * [Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2):
 
 #### Response Object
-A server implementation "Must" send a `Date:` header field if it is a reasonable approximation of UTC. But that means servers may not supply the `Date:` field so you can't say it is a requirement of the standard. But you will usually see the following headers returned from a server:
+A server implementation "Must" send a `Date:` header field if it is a reasonable approximation of UTC. But that means servers may not supply the `Date:` field, so you can't say it is a requirement of the standard. But you will usually see the following headers returned from a server:
 
 * [Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2):
 * [Server](https://tools.ietf.org/html/rfc7231#section-7.4.2):
@@ -132,11 +132,11 @@ A server implementation "Must" send a `Date:` header field if it is a reasonable
 
 ## Implementation
 
-Given this very basic protocol; it seems like the implementation of these requirements should be quite trivial. To be honest the implementation of creating the objects to send is relatively trivial, the hard part is reading objects from the stream in an efficiently and correctly validated manner. You can find my attempt [here](https://github.com/Loki-Astari/Examples/tree/master/Version3): It works but its 500 lines long and only covers the most basics parts of the protocol and does not do any of the hard parts (like authentication or HTTPS).
+Given this very basic protocol, it seems like implementing these requirements should be quite trivial. To be honest, the implementation of creating the objects to send is relatively trivial; the hard part is reading objects from the stream in an efficiently and correctly validated manner. You can find my attempt [here](https://github.com/Loki-Astari/Examples/tree/master/Version3): It works, but it's 500 lines long and only covers the most basic parts of the protocol and does not do any of the complex parts (like authentication or HTTPS).
 
-To use this protocol correctly you really need to use one of the existing libraries. Here I have re-implemented the client using libcurl.
+To use this protocol correctly, you really need to use one of the existing libraries. Here, I have re-implemented the client using libcurl.
 
-[Client uses libcurl wrapper](https://github.com/Loki-Astari/Examples/blob/master/Version4/client.cpp)
+#### [Client uses libcurl wrapper](https://github.com/Loki-Astari/Examples/blob/master/Version4/client.cpp)
 ```c
 int main(int argc, char* argv[])
 {
@@ -159,7 +159,7 @@ int main(int argc, char* argv[])
 ```
 
 
-[libCurl simple wrapper](https://github.com/Loki-Astari/Examples/blob/master/Version4/client.cpp)
+#### [libCurl simple wrapper](https://github.com/Loki-Astari/Examples/blob/master/Version4/client.cpp)
 ```c
 #include "Utility.h"
 #include <curl/curl.h>

@@ -10,7 +10,7 @@ tags: Smart-Pointer
 sharing: true
 footer: true
 subtitle: C++ By Example
-description: C++ By Example. Part 2 Shared Pointer. In this article we cover some of the common implementation techniques used for a smart pointer that provides shared ownership of a resource.
+description: C++ By Example. Part 2 Shared Pointer. This article covers some of the common implementation techniques used for a smart pointer that provides shared ownership of a resource.
 image: /images/post/post-3.png
 imageInfo:
     original:           https://unsplash.com/photos/d6dxQwmxV2Q
@@ -22,11 +22,11 @@ featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2015/01/15/c-plus-plus-by-example-smart-pointer-part-ii/"
 ---
-So in [the previous article](https://lokiastari.com/posts/Smart-Pointer-UniquePointer) I covered a basic `unique` pointer where the smart pointer retained sole ownership of the pointer. The other common smart pointer we encounter is the `shared` pointer (SP). In this case the ownership of the pointer is shared across multiple instances of SP and the pointer is only released (deleted) when all SP instances have been destroyed.
+So in [the previous article](https://lokiastari.com/posts/Smart-Pointer-UniquePointer), I covered a basic `unique` pointer where the smart pointer retained sole ownership of the pointer. The `shared` pointer (SP) is the other common smart pointer we encounter. In this case, the ownership of the pointer is shared across multiple instances of SP, and the pointer is only released (deleted) when all SP instances have been destroyed.
 
-So not only do we have to store the pointer but we need a mechanism for keeping track of all the SP instances that are sharing ownership of the pointer. When the last SP instance is destroyed it also deletes the pointer (The last owner cleans up. A similar principle to the last one to leave the room turns out the lights).
+So, not only do we have to store the pointer, but we also need a mechanism to keep track of all the SP instances that share ownership of the pointer. When the last SP instance is destroyed, it also deletes the pointer (The last owner cleans up., A similar principle to the last one to leave the room turns out the lights).
 
-Shared Pointer contextual destructor
+#### Shared Pointer contextual destructor
 ```c
 namespace ThorsAnvil
 {
@@ -51,25 +51,25 @@ There are two major techniques for tracking the shared owners of a pointer:
   <li>Keep a count:</li>
   <ul>
     <li>When the count is 1 you are the last owner.</li>
-    <li>This is a very simple and logical technique. You have a shared counter that is incremented/decrement as SP instances take/release ownership of the pointer. The disadvantages are that you need dynamically allocated memory that must be managed and in a threaded environment you need to serialize accesses to counter.</li>
+    <li>This is a straightforward and logical technique. You have a shared counter that is incremented/decremented as SP instances take/release ownership of the pointer. The disadvantages are that you need dynamically allocated memory that must be managed, and in a threaded environment, you need to serialize accesses to counter.</li>
   </ul>
   <li>Use a linked list of the owners:</li>
   <ul>
-    <li>When you are the only member of the list you are the last owner.</li>
-    <li>When a SP instance take/releases ownership of the pointer they are added/removed to/from the linked list. This is slightly more complex as you need to maintain a circular linked list (for O(1)). The advantage is that you do not need to manage any separate memory for the count (A SP instance simply points at the next SP instance in the chain) and in a threaded environment adding/removing a shared pointer need not always be serialized (though you will still need to lock your neighbors to enforce integrity).</li>
+    <li>When you are the only list member, you are the last owner.</li>
+    <li>When an SP instance takes/releases ownership of the pointer, they are added/removed to/from the linked list. This is slightly more complex as you must maintain a circular linked list (for O(1)). The advantage is that you do not need to manage any separate memory for the count (A SP instance points at the next SP instance in the chain) and in a threaded environment adding/removing a shared pointer need not always be serialized (though you will still need to lock your neighbors to enforce integrity).</li>
   </ul>
 </ol>
 
 ## Shared Count
-The easier of the two to implement correctly is the list version. There are no real gotchas (that I have seen). Though people do struggle with insertion and removal of a link from a circular list. I have another article planned for that at some point so I will cover it then.
+The list version is easier to implement correctly. There are no real gotchas (that I have seen), though people do struggle with inserting and removing a link from a circular list. I have another article planned for that at some point so that I will cover it then.
 
-The *Shared Count* is basically the technique used by the [`std::shared_ptr`](https://en.cppreference.com/w/cpp/memory/shared_ptr) (though they store slightly more than the count to try and improve efficiency see [`std::make_shared`](https://en.cppreference.com/w/cpp/memory/shared_ptr/make_shared)).
+The Shared Count is the technique used by the [`std::shared_ptr`](https://en.cppreference.com/w/cpp/memory/shared_ptr), though they store slightly more than the count to try to improve efficiency (see [`std::make_shared`](https://en.cppreference.com/w/cpp/memory/shared_ptr/make_shared)).
 
-The main mistake I see from beginners is not using dynamically allocated counter (i.e. they keep the counter in the SP object). You **must** dynamically allocate memory for the counter so that it can be shared by all SP instances (you can not tell how many there will be or the order in which they will be deleted).
+The main mistake I see from beginners is not using dynamically allocated counter (i.e., they keep the counter in the SP object). You **must** dynamically allocate memory for the counter so that it can be shared by all SP instances (you can not tell how many there will be or the order in which they will be deleted).
 
-You must also serialize access to this counter to make sure that in a threaded environment the count is correctly maintained. In the first version for simplicity I will only consider single threaded environments and thus synchronization is not required.
+You must also serialize access to this counter to ensure the count is correctly maintained in a threaded environment. In the first version, I will only consider single-threaded environments for simplicity, so synchronization is unnecessary.
 
-First Try
+#### First Try
 ```c
 namespace ThorsAnvil
 {
@@ -134,13 +134,13 @@ namespace ThorsAnvil
 }
 ```
 ### Problem 1: Potential Constructor Failure
-When a developer (attempts) to create a SP they are handing over ownership of the pointer to the SP instance. Once the constructor starts there is an expectation by the developer that no further checks are needed. But there is a problem with the code as written.
+When a developer (attempts) to create an SP, they are handing over ownership of the pointer to the SP instance. Once the constructor starts, there is an expectation by the developer that no further checks are needed. But there is a problem with the code as written.
 
-In C++ memory allocation through new does not fail (unlike C where `malloc()` can return a Null on failure). In C++ a failure to allocate memory via the standard new generates a `std::bad_alloc` exception. Additionally if we throw an exception out of a constructor the destructor will never be called (the destructor is only called on fully formed objects) when the instance's lifespan ends.
+In C++, memory allocation through new does not fail (unlike C where `malloc()` can return a Null on failure). In C++, a failure to allocate memory via the standard new generates a `std::bad_alloc` exception. Additionally, if we throw an exception out of a constructor, the destructor will never be called (the destructor is only called on fully formed objects) when the instance's lifespan ends.
 
-So if an exception is thrown during construction (and thus the destructor will not be called) we must assume responsibility for making sure that pointer is deleted before the exception escapes the constructor, otherwise there will be a resultant leak of the pointer.
+So if an exception is thrown during construction (and thus the destructor will not be called), we must assume responsibility for ensuring that the pointer is deleted before the exception escapes the constructor. Otherwise, there will be a resultant leak of the pointer.
 
-Constructor takes responsibility for pointer
+#### Constructor takes responsibility for pointer
 ```c
 namespace ThorsAnvil
 {
@@ -149,10 +149,10 @@ namespace ThorsAnvil
                 : data(data)
                 , count(new (std::nothorw) int(1)) // use the no throw version of new.
             {
-                // Check if the pointer correctly allocated
+                // Check if the pointer is correctly allocated
                 if (count == nullptr)
                 {
-                    // If we failed then delete the pointer
+                    // If we failed, then delete the pointer
                     // and manually throw the exception.
                     delete data;
                     throw std::bad_alloc();
@@ -176,9 +176,9 @@ namespace ThorsAnvil
 }
 ```
 ### Problem 2: DRY up the Assignment
-Currently the assignment operator is exception safe and conforms to the strong exception guarantee so there is no real problem here. **But** there seems to be a lot of duplicated code in the class.
+Currently, the assignment operator is exception-safe and conforms to the strong exception guarantee, so there is no real problem here. **But** there seems to be a lot of duplicated code in the class.
 
-Closer look at assignment
+#### Closer look at assignment
 ```c
 namespace ThorsAnvil
 {
@@ -200,7 +200,7 @@ namespace ThorsAnvil
             }
 }
 ```
-Two portions of this look like other code pieces of code that have already been written:
+Two portions of this look like other pieces of code that have already been written:
 
 ```c
     // This looks like the SP copy constructor.
@@ -217,7 +217,7 @@ Two portions of this look like other code pieces of code that have already been 
 ```
 This observation is commonly referred to as the **[Copy and Swap Idiom](https://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom)**. I will not go through all the details of the transformation here. But we can re-write the assignment operator as:
 
-Copy and Swap Idiom
+#### Copy and Swap Idiom
 ```c
 SP& operator=(SP const& rhs)
 {
@@ -239,9 +239,9 @@ SP& operator=(SP rhs) // Note implicit copy because of pass by value.
 ```
 
 ## Fixed First Try
-So given the problems described above we can update our implementation to compensate for these issues:
+So, given the problems described above, we can update our implementation to compensate for these issues:
 
-Fixed First Try
+#### Fixed First Try
 ```c
 namespace ThorsAnvil
 {
@@ -309,4 +309,4 @@ namespace ThorsAnvil
 }
 ```
 ## Summary
-So in this second post we have looked SP and mentioned the two main implementation techniques commonly used. We specifically looked in detail at some common problems usually overlooked in the counted implementation of SP. In the next article I want to look at a couple of other issues common to both types of smart pointers.
+So, in this second post, we have looked at SP and mentioned the two main implementation techniques commonly used. We specifically looked in detail at some common problems usually overlooked in the counted implementation of SP. In the following article, I want to examine a couple of other issues common to both types of smart pointers.

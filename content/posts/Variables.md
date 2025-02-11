@@ -10,7 +10,7 @@ tags: So-You-Want-To-Learn-C++
 sharing: true
 footer: true
 subtitle: So you want to learn C++
-description: C++ for beginners. Part 3 Variables. In most programming languages you have the concept of variables. These are simply named objects that hold a value (more formerly refereed to as state). By manipulating a variable you manipulate the state of the object that the variable referees too.
+description: C++ for beginners. Part 3 Variables. In most programming languages you have the concept of variables. These are named objects that hold a value (more formerly referred to as state). By manipulating a variable, you manipulate the state of the object the variable referees to.
 image: /images/post/post-5.png
 imageInfo:
     original:           https://unsplash.com/photos/W-oqNwbmin0
@@ -25,9 +25,9 @@ disqusId: "http://lokiastari.com/blog/2013/11/19/so-you-want-to-learn-c-plus-plu
 
 ## Variables
 
-In most programming languages you have the concept of variables. These are simply named objects that hold a value (more formerly refereed to as state). By manipulating a variable you manipulate the state of the object that the variable referees too.
+In most programming languages you have the concept of variables. These are named objects that hold a value (more formerly referred to as state). By manipulating a variable, you manipulate the state of the object the variable referees to.
 
-add.cpp
+#### add.cpp
 ```c
 void addFunction()
 {
@@ -42,9 +42,9 @@ void addFunction()
 }
 ```
 
-C++ is a strongly typed language. This means that each variable has a specific type that does not change (above that type is **int**). The operations that can be performed on an object are dependent on the type of the object and the result of the operation can depend on the types involved. C++ has several built in types (listed below) but allows the definition of new user defined types (which will be described in a later article). The standard library provides a set of commonly used user defined types (listed below).
+C++ is a strongly typed language. This means each variable has a specific type that does not change (above that type is **int**). The operations that can be performed on an object depend on the object's type, and the operation's result can depend on the types involved. C++ has several built-in types (listed below) but allows the definition of new user-defined types (which will be described in a later article). The standard library provides a set of commonly used container types (listed below).
 
-Built in Types
+#### Built-in Types
 ```c
 char                    // Represents a character.
 bool                    // Represents a boolean true/false value.
@@ -56,7 +56,7 @@ float                   // Represents a floating point number
 double                  // Represents a double precision floating point number
 ```
 
-Standard Types
+#### Container Types
 ```c
 // This is a list of the most commonly used types (there are many more)
 std::string             // Represents a string of characters.
@@ -71,13 +71,13 @@ std::map<Key, Value>    // Represents a dictionary of key, value pairs (index by
 std::set<Key>           // Represents a set of keys of type 'Key'
 ```
 
-The list may seem a bit daunting at first, but while you are learning if you restrict yourselves to three built in types (**bool**, **int** and **double**) and two standard types (**std::string** and **std::vector&lt;T&gt;**) you will be able to solve most beginner/training problems.
+The list may seem a bit daunting at first, but while you are learning if you restrict yourselves to three built-in types (**bool**, **int** and **double**) and two standard types (**std::string** and **std::vector&lt;T&gt;**) you will be able to solve most beginner/training problems.
 
-The other built in types are usually used when you need larger range of values or need to save space. The additional standard type (shown above) are different types of container and provide different accesses characteristics (which will be explained later). We will cover all these types in due course.
+The other built-in types are usually used when you need a wider range of values or need to save space. The additional standard types (shown above) are different types of containers that provide different access characteristics (which will be explained later). We will eventually cover all these types.
 
-So an example of usage of the most common types is:
+So, an example of usage of the most common types is:
 
-variables.cpp
+#### variables.cpp
 ```c
 #include <string>
 #include <vector>

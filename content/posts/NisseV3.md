@@ -25,22 +25,22 @@ disqusId: "http://lokiastari.com/blog/2024/11/10/Nisse/"
 
 # [Nisse](https://github.com/Loki-Astari/Nisse)
 
-In the previous article, "C++ Sockets," I mentioned that thors-mongo had built-in support for SLL connections but glossed over the details. In this article, we will go over the additions needed. From the server side, you need an SSL certificate. But what is an SSL certificate, and how do you obtain one?
+In the previous article, "C++ Sockets," I mentioned that Thors-mongo had built-in support for SLL connections but glossed over the details. In this article, we will review the necessary additions. From the server side, you need an SSL certificate. But what is an SSL certificate, and how do you obtain one?
 
 ## SSL Certificates
 
-The SSL certificate has two main purposes.
+The SSL certificate has two primary purposes.
 
 1. Securely encrypt all traffic between the client and server.
 2. Provides trust that you are talking to a server on the requested domain.
 
 ### The Basics
 
-SSL certificates are issued by trusted certificate authorities and contain information that validates the certificate cryptographically. When a browser connects to a website, the server returns the certificate, which includes crucial information such as the issuing company. Before establishing a secure connection, the browser validates the certificate against the issuing company’s SSL certificate to ensure it is not forged. If the issuing company is a subsidiary, it recursively looks up the parent company that issued the certificate and validates their certificates until it reaches a root certificate. This process creates a chain of trust leading to a known trusted root certificate.
+Trusted certificate authorities issue SSL certificates and contain information that validates the certificate cryptographically. When a browser connects to a website, the server returns the certificate, which includes crucial information such as the issuing company. Before establishing a secure connection, the browser validates the certificate against the issuing company’s SSL certificate to ensure it is not forged. If the issuing company is a subsidiary, it recursively looks up the parent company that issued the certificate and validates their certificates until it reaches a root certificate. This process creates a chain of trust leading to a known trusted root certificate.
 
-All modern browsers know how to find and validate root certificates. They also have information about compromised certificate authorities whose certificates should no longer be trusted. Therefore, it is important to download only trusted browsers and keep them up to date.
+All modern browsers can find and validate root certificates. They also provide information about compromised certificate authorities whose certificates should no longer be trusted. Therefore, it is essential to download only trusted browsers and keep them current.
 
-Once a certificate has been validated, the browser knows it is communicating with a server for a specific domain (as the domain information is included in the certificate). Modern browsers indicate a secure connection, usually with a green padlock next to the URL. The browser can then use the public key in the certificate to establish a secure connection with the domain you are connecting to.
+Once a certificate has been validated, the browser knows it is communicating with a server for a specific domain (as the domain information is included in the certificate). Modern browsers indicate a secure connection, usually with a green padlock beside the URL. The browser can then use the public key in the certificate to establish a secure connection with the domain you are connecting to.
 
 ### Where can you get a certificate
 
@@ -68,7 +68,7 @@ All the code for this article is in the directory [V3](https://github.com/Loki-A
 
 ## How to Use ThorsSocket With an SSL Certificate
 
-In ThorsSocket a normal socket is created with the following code:
+In ThorsSocket, a normal socket is created with the following code:
 
 ```C++
     ThorsAnvil::ThorsSocket::Server   server(ServerInit{port});
@@ -79,11 +79,11 @@ In ThorsSocket a normal socket is created with the following code:
 To create a secure connection, specify the location of the SSL certificate file on the host file system. If you use [Let’s Encrypt](https://letsencrypt.org/), the default location for the SSL certificate is `/etc/letsencrypt/live/<domainName>/fullchain.pem`, and the private key is located at `/etc/letsencrypt/live/<domainName>/privkey.pem`. You can then create a secure SSL connection with:
 
 ```C++
-    // The path where the certificates for “thorsanvil.dev” are stored.
+    // The path where the “thorsanvil.dev” certificates are stored.
     std::string   certPath = "/etc/letsencrypt/live/thorsanvil.dev”;
     
     // Create a certificate object that contains the SSL Certificate and private key.
-    // Note: Some files require you to provide a password to access the certificate, please see the documentation
+    // Note: Some files require you to provide a password to access the certificate; please see the documentation
     // on how to add appropriate lambda’s to retrieve the password from secure storage (as they should not be in the code)
     ThorsAnvil::ThorsSocket::CertificateInfo     certificate{std::filesystem::canonical(std::filesystem::path(certPath) /= "fullchain.pem”,
                                                              std::filesystem::canonical(std::filesystem::path(certPath) /= "privkey.pem”
@@ -94,19 +94,19 @@ To create a secure connection, specify the location of the SSL certificate file 
     ThorsAnvil::ThorsSocket::Socket   socket = server.accept();          // A secure bi-direconal SSL socket.
 ```
 
-## How to handle SSL or normal connections
+## How to handle SSL or regular connections
 
-The `ThorsAnvil::ThorsSocket::Socket` class can be constructed with `ServerInit` or `SServerInit` object. To simplify this, the constructor also takes a `std::varient` (ServerInit) that can contain either of these objects. This allows us to write a function like this to initialize a server connection to initialize either type.
+The `ThorsAnvil::ThorsSocket::Socket` class can be constructed with `ServerInit` or `SServerInit` object. To simplify this, the constructor also takes a `std::varient` (ServerInit) that can contain either of these objects. This allows us to write a function to initialize a server connection to initialize either type.
 
 ```C++
 namespace TASock = ThorsAnvil::ThorsSocket;
 
 // Always need a port to listen on.
-// If we have an SSL certificate then pass its location in `certPath` (which may be empty)
+// If we have an SSL certificate, then pass its location in `certPath` (which may be empty)
 TASock::ServerInit getServerInit(int port, std::optional<std::filesystem::path> certPath)
 {
     // If there is only a port.
-    // i.e. The user did not provide a certificate path return a `ServerInfo` object.
+    // i.e., the user did not provide a certificate path return a `ServerInfo` object.
     // This will create a normal listening socket.
     if (!certPath.has_value()) {
         return TASock::ServerInfo{port};
@@ -125,15 +125,14 @@ TASock::ServerInit getServerInit(int port, std::optional<std::filesystem::path> 
     // Please Note: This is a different type to the ServerInfo returned above (one less S in the name).
     return TASock::SServerInfo{port, std::move(ctx)};
     
-    // We can return these two two different types because
+    // We can return these two different types because
     // ServerInit is actually a std::variant<ServerInfo, SServerInfo>
 }
 ```
 
-To use this we just need to adjust `main()` slightly.
+We need to adjust `main()` slightly to use this.
 
-```C++
-The only change in Nisse’s API from V1 is that it allows the user to provide a certificate and key file.
+The only change in Nisse's API from V1 is that it allows the user to provide a certificate and key file.
 
 ```C++
 int main(int argc, char* argv[])
@@ -156,5 +155,7 @@ int main(int argc, char* argv[])
 
 ### What is the next step
 
-We have a Web Server that can connect over SSL. But the server only handles request serially. So the next article looks at how to add some basic parallelism to support multiple simultaneous connections.
+We have a Web Server that can connect over SSL. However, the server only handles requests serially. The following article will look at how to add some basic parallelism to support multiple simultaneous connections.
+
+
 

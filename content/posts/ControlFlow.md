@@ -10,7 +10,7 @@ tags: So-You-Want-To-Learn-C++
 sharing: true
 footer: true
 subtitle: So you want to learn C++
-description: C++ for beginners. Part 5 Control Flow. So far we have demonstrated basic programs that just do a single task without making any decisions. Most (all but the most trivial) programming languages provide constructs for decision making (Conditional Branching).
+description: C++ for beginners. Part 5 Control Flow. So far, we have demonstrated basic programs that do a single task without making any decisions. Most (all but the most trivial) programming languages provide decision-making constructs (Conditional Branching).
 image: /images/post/post-8.png
 imageInfo:
     original:           https://unsplash.com/photos/oSvR0wGYUBs
@@ -23,7 +23,7 @@ draft: false
 disqusId: "http://lokiastari.com/blog/2013/12/02/so-you-want-to-learn-c-plus-plus-part-5/"
 ---
 
-So far we have demonstrated basic programs that just do a single task without making any decisions. Most (all but the most trivial) programming languages provide constructs for decision making (Conditional Branching).
+So far, we have demonstrated basic programs that perform a single task without making any decisions. Most (all but the most trivial) programming languages provide decision-making constructs (Conditional Branching).
 
 C++ provides two forms of branching. The **"If Statement"** and the **"Switch Statement"** .
 
@@ -31,11 +31,11 @@ Note: Looping is also a form of branching. The looping concept is extensive enou
 
 ### If Statement
 
-The **"If Statement"** allows code to be executed when a certain condition is fulfilled and optionally an alternative piece of code otherwise.
+The **"If Statement"** allows code to be executed when a specific condition is fulfilled and optionally an alternative piece of code otherwise.
 
-ifstatement.cpp
+#### ifstatement.cpp
 ```c
-// First versin of "If Statement"
+// First version of "If Statement"
 // Execute code if <Condition> is true.
 //
 if (<Condition>)
@@ -57,23 +57,23 @@ else
 }
 ```
 
-The standard comparison operators that you find in most languages can be used. These operators are defined for all the built-in types. On user defined types in the standard library they are defined in ways that makes their usage obvious. When you define these for your user defined types you should also make sure that they behave in the logical manner described below; the language does not enforce this, **BUT** if you don't follow this suggestion your types will scare people and they will not be used, so follow the expected behavior.
+The standard comparison operators that you find in most languages can be used. These operators are defined for all the built-in types. User-defined types in the standard library are defined in ways that make their usage obvious. When you define these for your user-defined types, you should also make sure that they behave in the logical manner described below; the language does not enforce this, **BUT** if you don't follow this suggestion, your types will scare people, and they will not be used, so follow the expected behavior.
 
-Standard Comparison Operators
+#### Standard Comparison Operators
 ```
 /*
 | Operator  | Usage   | Result Type | Meaning                                                           |
 | ----------|---------|-------------|-------------------------------------------------------------------|
-|    !      |  !A     |  bool       | Not A. If A is true then false, if A is false then true.          |
-|           |         |             | If A us not a bool type it is converted (see below)               |
-|    ==     |  A == B |  bool       | true if A and B logically equivalent, otherwise false.            |
+|    !      |  !A     |  bool       | Not A. If A is true, then false; if A is false, then true.          |
+|           |         |             | If A is not a bool type, it is converted (see below)               |
+|    ==     |  A == B |  bool       | true if A and B are logically equivalent; otherwise, false.            |
 |    !=     |  A != B |  bool       | Should mean !(A == B)                                             |
 |    <      |  A <  B |  bool       | true if A is logically less than B.                               |
 |    <=     |  A <= B |  bool       | true if A is logically less than or equal to B.                   |
 |    >      |  A >  B |  bool       | true if A is logically greater than B.                            |
 |    >=     |  a >= B |  bool       | true if A is logically greater than or equal to B.                |
 |    &&     |  A && B |  bool       | true if A is true **AND** B is true.                              |
-|           |         |             | If the expressions A or B are not actually bool then              |
+|           |         |             | If the expressions A or B are not bool, then              |
 |           |         |             | it is converted (see below). Also worth noting is that            |
 |           |         |             | if A is **false** then the expression for B is not evaluated.     |
 |           |         |             | This is known as a shortcut operator we will describe this later. |
@@ -86,9 +86,9 @@ Standard Comparison Operators
 */
 ```
 
-If the expression you use in &lt;Condition&gt; does not actually result in a bool value the compiler will insert a conversion that will result in a bool (true/false) value. If no conversion is possible it results in a compile time error.
+If the expression you use in &lt;Condition&gt; does not result in a bool value, the compiler will insert a conversion that will result in a bool (true/false) value. If no conversion is possible, it results in a compile-time error.
 
-Type conversion
+#### Type conversion
 ```
 /*
 | Type             | false      | true            | Notes                                               |
@@ -104,7 +104,7 @@ Type conversion
 
 An example of using an **If Statement**:
 
-itest.cpp
+#### itest.cpp
 ```c
 #include <iostream>
 #include <string>
@@ -126,19 +126,19 @@ int main()
 
     int   value;
     std::cin >> value;
-    std::cout << "Please enter a non zero integer value\n";
+    std::cout << "Please enter a non-zero integer value.\n";
     if (value) // integer value converted to bool
     {
-        std::cout << "You got it correct. Must use a non zero value.\n";
+        std::cout << "You got it correct. Must use a non-zero value.\n";
     }
 }
 ```
 
 ### Switch Statement
 
-The **"Switch Statement"** is an alternative to the **"If Statement"**. Prefer the switch when you have lots of options derived from the same expression. Unlike other high level language C++ can only use **Integer** types in a switch statement; thus in all `Case &lt;Value&gt; the &lt;Value&gt; must be an integer **literal** value.
+The **"Switch Statement"** is an alternative to the **"If Statement"**. Prefer the switch when you have many options derived from the same expression. Unlike other high-level languages, C++ can only use **Integer** types in a switch statement; thus, in all `case &lt;Value&gt; the &lt;Value&gt; must be an integer **literal** value.
 
-switch.cpp
+#### switch.cpp
 ```c
 switch(<Test Expression>)
 {
@@ -192,9 +192,9 @@ else
 }
 ```
 
-If you use a non Integer expression in the switch statement the compiler will try and convert the value to an integer. If this is not possible it generates a compile time error.
+If you use a non-integer expression in the switch statement, the compiler will try to convert the value to an integer. If this is not possible, it generates a compile-time error.
 
-switch.cpp
+#### switch.cpp
 ```c
     #include <iostream>
 
@@ -217,9 +217,9 @@ switch.cpp
     }
 ```
 
-Note I: The language does not require you to use a **Break Statement** in each block. **BUT** you should and compilers will warn you when you don't.
-Note II: You should always use a **Default Statement** . If the value does not hit a value specified in a **Case Statement** then the **Default Statement** is used; If the **Default Statement** is not defined in this situation it results in undefined behavior. To avoid problems you should always define the **Default Statement**, even if all this does is generate an error. This will avoid maintenance issues down the road.
+Note I: The language does not require you to use a **Break Statement** in each block. **BUT** you should; compilers will warn you when you don't.
 
+Note II: You should always use a **Default Statement** . If the value does not hit a value specified in a **Case Statement**, then the **Default Statement** is used; If the **Default Statement** is not defined in this situation, it results in undefined behavior. To avoid problems, you should always define the **Default Statement**, even if all this does is generate an error. This will avoid maintenance issues down the road.
 
 
 

@@ -25,11 +25,11 @@ disqusId: "http://lokiastari.com/blog/2024/11/12/Nisse/"
 
 # [Nisse](https://github.com/Loki-Astari/Nisse)
 
-In the first three articles, we created a very basic Web Server. A major issue with this simplistic server is that it can only handle connections serially. This article introduces a thread pool that will handle the actual requests. The main thread will accept new requests and create the work items to be handled by the thread pool.
+In the first three articles, we created a very basic Web Server. A significant issue with this simplistic server is that it can only handle connections serially. This article introduces a thread pool that will handle the actual requests. The main thread will accept new requests and create the work items to be handled by the thread pool.
 
 ## NisseV4
 
-All the code for this article is in the directory [V4](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V4) directory. It uses standard libraries and [thors-mongo](https://github.com/Loki-Astari/ThorsMongo). If you have a Unix-like environment, this should be easy to build; if you use Windows, you may need to do some extra work. A “Makefile” is provided just as an example.
+All the code for this article is in the directory [V4](https://github.com/Loki-Astari/NisseBlogCode/tree/master/V4) directory. It uses standard libraries and [thors-mongo](https://github.com/Loki-Astari/ThorsMongo). If you have a Unix-like environment, this should be easy to build; if you use Windows, you may need extra work. A “Makefile” is provided just as an example.
 
 ### Build & Run
 
@@ -41,15 +41,15 @@ All the code for this article is in the directory [V4](https://github.com/Loki-A
   > ./NisseV4 8080 /Directory/You/Want/To/Server/On/Port/8080 /etc/letsencrypt/live/<MySite.com>/
 ```
 
-## Threading Potential concerns
+## Threading Potential Concerns
 
 In some previous code reviews I have done, I have seen beginners create a new thread for each new connection that is created. The thread will handle the request and complete (thread exiting and being killed). This is acceptable for a Web Server that handles a very low volume of calls and will keep the code simple, but it is a problematic design for high-volume or general servers.
 
 Creating a thread is a resource-intensive process, so it's generally discouraged to create and destroy a large number of threads. Additionally, the CPU can typically handle only one thread per core at any time; therefore, making a vast number of threads may lead to [thrashing](https://en.wikipedia.org/wiki/Thrashing_(computer_science)#) as the scheduler attempts to allocate time slices for each thread to perform active work.
 
-The best practice is generally to create a thread pool in which threads are assigned “Work Items” from a queue. Upon completion, they are reused to handle subsequent “Work Items” but suspended when no “Work Items” are available.
+The best practice is to create a thread pool in which threads are assigned “Work Items” from a queue. Upon completion, they are reused to handle subsequent “Work Items” but suspended when no “Work Items” are available.
 
-The C++ standard tried to indirectly address thread pools via the standard library `async()` function. This function abstracts the concept of threads and allows the implementation to provide its own internal thread pool. However, we are not going to use this feature in this project; in a subsequent article, I want to explore the concepts of cooperative multitasking using CoRoutines.
+The C++ standard tried to indirectly address thread pools via the standard library `async()` function. This function abstracts the concept of threads and allows the implementation to provide its own internal thread pool. However, we will not use this feature in this project; in a subsequent article, I want to explore the concepts of cooperative multitasking using CoRoutines.
 
 ##  What has Changed
 
@@ -64,7 +64,7 @@ class WebServer
     bool                                finished;
     std::filesystem::path const&        contentDir;
     // State information that can be used by the threads.
-    // Objects placed in a std::map are not moved once inserted so taking
+    // Objects placed in a std::map are not moved once inserted, so taking
     // a reference to them is safe and can be used by another thread.
     std::mutex                          openSocketMutex;
     std::map<int, Socket>               openSockets;
@@ -77,7 +77,7 @@ class WebServer
 };
 ```
 
-The main code change is within the `run()` method. Previously, this method simply accepted a connection and called `handleConnection()` to process the incoming request. Thus, it blocked the main thread from accepting another connection until the current connection had been fully handled.
+The main code change is within the `run()` method. Previously, this method accepted a connection and called `handleConnection()` to process the incoming request. Thus, it blocked the main thread from accepting another connection until the current connection had been entirely handled.
 
 ```C++
 void WebServer::run()
@@ -109,7 +109,7 @@ void WebServer::run()
 
         // Add a lambda to the JobQueue to handle the newly created socket.
         // Note: A copy of the “iter” is placed in the object “iterator” so we can use
-        //       this to extract a reference to the socket object. This is thread safe
+        //       this to extract a reference to the socket object. This is thread-safe
         //       as iterators to std::map are not invalidated by operations on the map
         //       (as long as the object is not deleted).
         jobQueue.addJob([&, iterator = iter](){
@@ -117,8 +117,8 @@ void WebServer::run()
             auto& socket = iterator->second;
             // Handle the reference as before.
             handleConnection(socket, contentDir);
-            // Once processing is complete remove the storage for Socket
-            // and cleanup any associated storage.
+            // Once processing is complete, remove the storage for Socket
+            // and clean up any associated storage.
             std::unique_lock<std::mutex>    lock(openSocketMutex);
             openSockets.erase(iterator);
         });
@@ -130,7 +130,7 @@ void WebServer::run()
 
 In C++20 the standard library added a new thread type, `std::jthread`. Quote: [indi](https://codereview.stackexchange.com/users/170106/indi) `std::jthread is what std::thread should have been. It is superior in every way, with no drawbacks`.
 
-Unfortunately, my platform does not currently support `std::jthread` in its implementation of the C++20 standard library. Therefore, the following code must navigate some extra hoops to ensure that `std::thread` behaves correctly in all corner cases. One major difference is that with `std::thread`, you must explicitly `join()` the thread of execution before the `std::thread` object is destroyed. In contrast, the `std::jthread` destructor will automatically `join()` the thread of execution if not already done.
+Unfortunately, my platform does not currently support `std::jthread` in its implementation of the C++20 standard library. Therefore, the following code must navigate some extra hoops to ensure that `std::thread` behaves correctly in all corner cases. One significant difference is that with `std::thread`, you must explicitly `join()` the thread of execution before the `std::thread` object is destroyed. In contrast, the `std::jthread` destructor will automatically `join()` the thread of execution if not already done.
 
 #### Construction
 
@@ -148,7 +148,7 @@ JobQueue::JobQueue(std::size_t workerCount)
     {
         // because `std::thread` may potentially throw during construction.
         // We must ensure we correctly clean up any constructed `std::thread` objects
-        // otherwise the thread of execution will not be correctly joined, and the application
+        // otherwise, the thread of execution will not be correctly joined, and the application
         // terminated. 
         stop();
 
@@ -164,7 +164,7 @@ JobQueue::~JobQueue()
 }
 ```
 
-The `stop()` method is actually relatively simple to implement.
+The `stop()` method is relatively simple to implement.
 
 ```C++
 void JobQueue::markFinished()
@@ -180,7 +180,7 @@ void JobQueue::stop()
     // thus completing.
     markFinished();
 
-    // Some threads may be waiting on a condition variable; this will release them to go check for the next job.
+    // Some threads may be waiting on a condition variable; this will release them to check for the next job.
     workCV.notify_all();
 
     // Wait for all threads of execution to complete by execution `join()` on them.
@@ -201,6 +201,7 @@ Finally, we can look at the methods run by the threads.
 If you are new to threading, the only challenging concept is the `std::condition_variable`. This type allows you to suspend a thread's execution until a specific condition is met. While a thread is suspended, it consumes no resources, which makes it an effective way to ensure that the CPU isn’t used when there is no work for the thread to perform. You suspend a thread by calling `wait()` on the condition variable. Another thread can wake up suspended threads by calling `notify_one()` (which wakes up one suspended thread) or `notify_all()` (which wakes up all suspended threads).
 
 Code typically follows this pattern:
+
 ```C++
     std::mutex               mutex;
     std::condition_variable  cv;
@@ -213,7 +214,7 @@ Code typically follows this pattern:
     while (!resourceIWantIsAvailable())  // Notice the ! at the beginning of the test.
     {
         cv.wait(lock);
-        // The wait function will release the lock and then suspend the thread.
+        // The wait function will release the lock and suspend the thread.
         // When a thread is woken up, it must first reacquire the lock before it returns from wait()
         // So when the wait() function exists, it still has the lock it established above.
     }
@@ -221,7 +222,7 @@ Code typically follows this pattern:
     // If the thread reaches here, we know the resource is available for the thread.
 ```
 
-The first question most beginners ask is: `Why is the wait() function called inside a loop?`. This is because between the time a thread calls `notify_one()` to wake up a waiting thread and the point a waiting thread exists the wait() function, another thread may have already consumed the resource. Therefore, you need to validate that the resource is still available, and if not, go back into the wait().
+The first question most beginners ask is: `Why is the wait() function called inside a loop?`. This is because when a thread calls `notify_one()` to wake up a waiting thread and the point a waiting thread exists the wait() function, another thread may have already consumed the resource. Therefore, you need to validate that the resource is still available, and if not, go back into the wait().
 
 This loop is essential, so the C++ `std::conditional_variable` actually builds it into the wait interface. You can pass a lambda to the test as a second parameter.
 
@@ -258,7 +259,7 @@ std::optional<Work> JobQueue::getNextJob()
 
 void JobQueue::processWork()
 {
-    // While the server is running loop.
+    // While the server is running a loop.
     while (!finished)
     {
         // Get a piece of work from the queue.
@@ -271,7 +272,7 @@ void JobQueue::processWork()
             }
         }
         // If there is an exception, we log it, but DO NOT exit.
-        // An exception in “User Code” should not affect the stability of the server itself.
+        // An exception in “User Code” should not affect the server's stability.
         catch (std::exception const& e)
         {
             ThorsLogWarning("ThorsAnvil::Nissa::JobQueue", "processWork", "Work Exception: ",  e.what());
@@ -286,5 +287,5 @@ void JobQueue::processWork()
 
 ## Next Step
 
-This article explains how we can use threads to potentially parallelize responses to multiple requests. Each thread sequentially runs only one request at a time and may be blocked while processing a request. In a subsequent article, I will detail how we can utilize cooperative multitasking to switch I/O-blocked threads to another request, improving parallelism without using additional resources.
+This article explains how we can use threads to potentially parallelize responses to multiple requests. Each thread sequentially runs only one request at a time and may be blocked while processing a request. In a subsequent article, I will detail how we can utilize cooperative multitasking to switch I/O-blocked threads to another request, improving parallelism without additional resources.
 

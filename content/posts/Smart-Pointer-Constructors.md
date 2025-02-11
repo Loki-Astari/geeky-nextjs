@@ -10,7 +10,7 @@ tags: Smart-Pointer
 sharing: true
 footer: true
 subtitle: C++ By Example
-description: C++ By Example. Part 3 Smart Pointer Constructors. In this article we examine constructors that are often missed or overlooked. This article looks at the use cases for these constructors and explains why the added functionality provides a meaningful addition in relation to smart pointers.
+description: C++ By Example. Part 3 Smart Pointer Constructors. In this article, we examine constructors that are often missed or overlooked. This article looks at the use cases for these constructors and explains why the added functionality provides a meaningful addition to smart pointers.
 image: /images/post/post-4.png
 imageInfo:
     original:           https://unsplash.com/photos/wX2L8L-fGeA
@@ -22,16 +22,16 @@ featured: true
 draft: false
 disqusId: "http://lokiastari.com/blog/2015/01/23/c-plus-plus-by-example-smart-pointer-part-iii/"
 ---
-In this article we examine constructors that are often missed or overlooked. This article looks at the use cases for these constructors and explains why the added functionality provides a meaningful addition in relation to smart pointers.
+This article examines constructors that are often overlooked. It examines their use cases and explains why the added functionality is meaningful in relation to smart pointers.
 
 ## Default Constructor
-Most people remember the default constructor (a zero argument constructor), but every now and then it gets missed.
+Most people remember the default constructor (a zero-argument constructor), but it is sometimes overlooked.
 
 The default constructor is useful when the type is used in a context where objects of the type need to be instantiated dynamically by another library (an example is a container resized; when a container is made larger by a resize, new members will need to be constructed, it is the default constructor that will provide these extra instances).
 
 The default constructor is usually very trivial and thus worth the investment.
 
-Smart Pointer Default Constructor
+#### Smart Pointer Default Constructor
 ```c
 namespace ThorsAnvil
 {
@@ -48,17 +48,17 @@ namespace ThorsAnvil
 }
 ```
 ## The nullptr
-In C++11 the `nullptr` was introduced to replace the old broken `NULL` and/or the even more broken `0` for use in contexts where you want a pointer that points at nothing. The `nullptr` is automatically convert to any pointer type or a boolean; but fixed the previous bug (or bad feature) and will not convert to a numeric type.
+In C++11, the `nullptr` was introduced to replace the old, broken `NULL` and/or the even more broken `0` in contexts where you want a pointer that points at nothing. The `nullptr` is automatically converted to any pointer type or a boolean, but it fixed the previous bug (or bad feature) and will not convert to a numeric type.
 
-nullptr Usage Example
+#### nullptr Usage Example
 ```c
 #include <string>
 int main()
 {
     char*           tmp = nullptr;   // converts the nullptr (type std::nullptr_t) to char*
-    std::string*    str = nullptr;   // hopefully you never do that! but it works.
+    std::string*    str = nullptr;   // hopefully you never do that! But it works.
 
-    bool            tst = nullptr;   // False. Yes I know it does not look that useful.
+    bool            tst = nullptr;   // False. Yes, I know it does not look that useful.
                                      //        But when you consider all the funny things
                                      //        that can happen with templates this can
                                      //        be very useful.
@@ -66,13 +66,13 @@ int main()
     int             val = nullptr;   // Fails to compile.
     int             val = NULL;      // Pointer assigned to integer value.
                                      // Works just fine. But very rarely was this a useful
-                                     // feature (more usually an over-site that was not
+                                     // feature (more usually an oversight that was not
                                      // reported by the compiler).
 }
 ```
-The `nullptr` provides some opportunities to make the code shorter/cleaner when initializing smart pointers to be empty. Because we are using explicit one argument constructors the compiler can not convert a `nullptr` into a smart pointer automatically, it must be done explicitly by the developer.
+The `nullptr` provides some opportunities to make the code shorter/cleaner when initializing smart pointers to be empty. Because we are using explicit one-argument constructors, the compiler can not automatically convert a `nullptr` into a smart pointer; it must be done explicitly by the developer.
 
-nullptr failing on Smart Pointer
+#### nullptr failing on Smart Pointer
 ```c
 void workWithSP(ThorsAnvil::UP<int>&& sp)
 { /* STUFF*/ }
@@ -86,9 +86,9 @@ int main()
     workWithSP(ThorsAnvil::UP<int>(nullptr));
 }
 ```
-This is overly verbose, there is no danger involved in forming a smart pointer around a `nullptr` automatically. Because `nullptr` has its own type `std::nullptr_t` we can add a constructor to explicitly simplify this case, which makes it easier to read.
+This is overly verbose. There is no danger involved in automatically forming a smart pointer around a `nullptr`. Because `nullptr` has its own type, `std::nullptr_t,` we can add a constructor to explicitly simplify this case, making it easier to read.
 
-Smart Pointer with std::nullptr_t constructor
+#### Smart Pointer with std::nullptr_t constructor
 ```c
 namespace ThorsAnvil
 {
@@ -118,17 +118,17 @@ int main()
                           // constructor that binds `nullptr` then
                           // call the assignment operator.
                           //
-                          // That seems like a lot extra work. So we
+                          // That seems like a lot of extra work. So we
                           // may as well define the assignment operator
                           // to specifically user `nullptr`.
 }
 ```
 ## Move Semantics
-Move semantics were introduced with C++ 11. So though we can not copy the `ThorsAnvil::UP` object it can be moved. The compiler will generate a default move constructor for a class under certain situations; but because we have defined a destructor for `ThorsAnvil::UP` we must manually define the move constructor.
+Move semantics were introduced with C++ 11. So though we can not copy the `ThorsAnvil::UP` object, it can be moved. The compiler will generate a default move constructor for a class under certain situations, but because we have defined a destructor for `ThorsAnvil::UP`, we must manually define the move constructor.
 
-Move semantics say that the source object may be left in an undefined (but must be valid) state. So the easiest way to implement this is simply to swap the state of the current object with the source object (we know our state is valid so just swap it with the incoming object state (its destructor will then take care of destroying the pointer we are holding)).
+Move semantics say that the source object may be left in an undefined (but must be valid) state. So the easiest way to implement this is to swap the state of the current object with the source object (we know our state is valid, so just swap it with the incoming object state (its destructor will then take care of destroying the pointer we are holding)).
 
-Smart Pointer Move Semantics
+#### Smart Pointer Move Semantics
 ```c
 namespace ThorsAnvil
 {
@@ -143,8 +143,8 @@ namespace ThorsAnvil
                 std::swap(data, src.data);
             }
             // It is a good idea to make your move constructor `noexcept`
-            // In this case it actually makes no difference (because there
-            // no copy constructor) but to maintain good practice I still
+            // In this case, it actually makes no difference (because there
+            // no copy constructor) but to maintain good practice, I still
             // think it is a good idea to mark it with `noexcept`.
             UP(UP&& moving) noexcept
             {
@@ -167,7 +167,7 @@ namespace ThorsAnvil
 ## Derived Type Assignment.
 Assigning derived class pointers to a base class pointer object is quite common feature in C++.
 
-Derived Example
+#### Derived Example
 ```c
 class Base
 {
@@ -194,9 +194,9 @@ int main(int argc, char* argv[])
     action->doAction();
 }
 ```
-If we try the same code with the constructors we currently have we will get compile errors.
+If we try the same code with our current constructors, we will get compile errors.
 
-Derived Example with Smart Pointers
+#### Derived Example with Smart Pointers
 ```c
 int main(int argc, char* argv[])
 {
@@ -207,11 +207,11 @@ int main(int argc, char* argv[])
     action->doAction();
 }
 ```
-This is because C++ considers `ThorsAnvil::UP<Derived1>`, `ThorsAnvil::UP<Derived2>` and `ThorsAnvil::UP<Base>` are three distinct classes that are unrelated. As this kind of pointer usage is rather inherent in how C++ is used the smart pointer needs to be designed for this use case.
+This is because C++ considers `ThorsAnvil::UP<Derived1>`, `ThorsAnvil::UP<Derived2>` and `ThorsAnvil::UP<Base>` are three distinct classes that are unrelated. As this kind of pointer usage is inherent in how C++ is used, the smart pointer must be designed for this use case.
 
-To solve this we need to allow different types of smart pointer be constructed from other types of smart pointer, but only where the inclosed types are related.
+To solve this, we need to allow different types of smart pointers to be constructed from other types of smart pointers, but only where the enclosed types are related.
 
-Derived Smart Pointer transfer
+#### Derived Smart Pointer transfer
 ```c
 namespace ThorsAnvil
 {
@@ -240,7 +240,7 @@ namespace ThorsAnvil
 
                 // Note: this is still exception safe.
                 //       The normal constructor will call delete even if it does
-                //       not finish constructing. So if release completes even
+                //       not finish constructing. So if the release completes even
                 //       starting the call to the constructor guarantees its safety.
                 UP<T>   tmp(moving.release());
                 tmp.swap(*this);
@@ -257,9 +257,9 @@ namespace ThorsAnvil
 }
 ```
 ## Updated Unique Pointer
-Combine the constructor/assignment operators discussed in this article with the `ThorsAnvil::UP` that we defined in the first article in the series: [Unique Pointer](https://lokiastari.com/posts/Smart-Pointer-UniquePointer) we obtain the following:
+Combining the constructor/assignment operators discussed in this article with the `ThorsAnvil::UP` that we defined in the first article in the series: [Unique Pointer](https://lokiastari.com/posts/Smart-Pointer-UniquePointer), we obtain the following:
 
-ThorsAnvil::UP Version 3
+#### ThorsAnvil::UP Version 3
 ```c
 namespace ThorsAnvil
 {
@@ -317,7 +317,7 @@ namespace ThorsAnvil
                 return *this;
             }
 
-            // Remove compiler generated copy semantics.
+            // Remove compiler-generated copy semantics.
             UP(UP const&)            = delete;
             UP& operator=(UP const&) = delete;
 
@@ -354,11 +354,11 @@ namespace ThorsAnvil
 }
 ```
 ## Summary
-In the last two articles ([Unique Pointer](https://lokiastari.com/posts/Smart-Pointer-UniquePointer) and [Shared Pointer](https://lokiastari.com/posts/Smart-Pointer-SharedPointer)) we covered some basic mistakes that I have often seen developers make when attempting to creating their own smart pointer. I also introduce four important C++ concepts:
+In the last two articles ([Unique Pointer](https://lokiastari.com/posts/Smart-Pointer-UniquePointer) and [Shared Pointer](https://lokiastari.com/posts/Smart-Pointer-SharedPointer)) we covered some basic mistakes that I have often seen developers make when attempting to create their own smart pointer. I also introduce four important C++ concepts:
 
  - [Rule of Three](https://stackoverflow.com/q/4172722/14065)
  - [Copy and Swap Idiom](https://stackoverflow.com/q/3279543/14065)
  - [Explicit One Argument Constructor](https://stackoverflow.com/a/121163/14065)
  - [Try/Catch on Initialization List](https://stackoverflow.com/q/12697625/14065)
 
-This article I focused on a couple of constructors/assignment operators that can be overlooked overlooked.
+In this article, I focused on several constructors/assignment operators that can be overlooked.
