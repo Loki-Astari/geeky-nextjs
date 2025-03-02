@@ -65,7 +65,7 @@ class Vector
 ```
 
 ## Strong Exception Guarantee
-The obvious problems about efficiency when a resize is required is a minor issue here. The real problem is that this does not provide the strong exception guarantee. If any of the constructors/destructor throw, then the object will be left in an inconsistent state with no way to restore the original state. The strong exception guarantee basically means that the operation works or does not change the state of the object. The most straightforward technique to achieve this is to create a copy in a new temporary buffer that can be thrown away if things go wrong (leaving the current object untouched). If the copy succeeds, then we use it and throw away the original data.
+The problem here is that this does not provide the strong exception guarantee. If any of the constructors/destructor throw, then the object will be left in an inconsistent state with no way to restore the original state. The strong exception guarantee basically means that the operation works or does not change the state of the object. The most straightforward technique to achieve this is to create a copy in a new temporary buffer that can be thrown away if things go wrong (leaving the current object untouched). If the copy succeeds, then we use it and throw away the original data.
 
 #### Copy Assignment (Try 2)
 ```c
@@ -179,9 +179,9 @@ class Vector
 ```
 ## [Copy And Swap Idiom](https://stackoverflow.com/q/3279543/14065)
 
-The copy and swap idiom is about dealing with replacing an object state from another object. It is very commonly used in the copy assignment operator but has application whenever state is being changed and the [strong exception guarantee](https://en.wikipedia.org/wiki/Exception_safety) is required.
+The copy and swap idiom is about dealing with replacing an object state from another object. It is very commonly used in the copy assignment operator but is usefull whenever state is being changed and the [strong exception guarantee](https://en.wikipedia.org/wiki/Exception_safety) is required.
 
-The above code works perfectly. But in Part-2, the swap looks like a regular swap operation, so let's use that rather than doing it manually. Also, self-assignment now works without the need for a test (because we are copying into a temporary). So we can remove the check for self-assessment. Yes, this does make the performance for self-assignment worse, but it makes the normal operation even more efficient. Since the occurrence of self assignment is extremely rare I would not prematurely optimize for it but rather make the most common case the best optimized. So one final re-factor of the copy constructor leaves us with this.
+The above code works perfectly. But in Part-2, the swap looks like a regular swap operation, so let's use that rather than doing it manually. Also, self-assignment now works without the need for a test (because we are copying into a temporary). So we can remove the check for self-assessment. Yes, this does make the performance for self-assignment worse, but it makes the normal operation more efficient. Since self assignment is extremely rare I optimize for the normal case. So one final re-factor of the copy constructor leaves us with this.
 
 #### Copy Assignment (Try 4)
 ```c
@@ -230,7 +230,9 @@ class Vector
             Vector<T>  tmpBuffer(newCapacity);
 
             // Copy the state of this object into the new object.
-            std::for_each(buffer, buffer + length, [&tmpBuffer](T const& item){tmpBuffer.push_back(item);});
+            std::for_each(buffer, buffer + length, [&tmpBuffer](T const& item){
+                tmpBuffer.push_back(item);
+            });
 
             // All the work has been successfully done. So swap
             // the state of the temporary and the current object.
@@ -369,7 +371,9 @@ class Vector
         void reserveCapacity(std::size_t newCapacity)
         {
             Vector<T>  tmpBuffer(newCapacity);
-            std::for_each(buffer, buffer + length, [&tmpBuffer](T const& v){tmpBuffer.pushBackInternal(v);});
+            std::for_each(buffer, buffer + length, [&tmpBuffer](T const& v){
+                tmpBuffer.pushBackInternal(v);
+            });
 
             tmpBuffer.swap(*this);
         }

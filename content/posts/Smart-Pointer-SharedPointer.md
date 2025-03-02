@@ -63,7 +63,7 @@ There are two major techniques for tracking the shared owners of a pointer:
 ## Shared Count
 The list version is easier to implement correctly. There are no real gotchas (that I have seen), though people do struggle with inserting and removing a link from a circular list. I have another article planned for that at some point so that I will cover it then.
 
-The Shared Count is the technique used by the [`std::shared_ptr`](https://en.cppreference.com/w/cpp/memory/shared_ptr), though they store slightly more than the count to try to improve efficiency (see [`std::make_shared`](https://en.cppreference.com/w/cpp/memory/shared_ptr/make_shared)).
+The Shared Count is the technique used by the [`std::shared_ptr`](https://en.cppreference.com/w/cpp/memory/shared_ptr), though the standard version stores slightly more than the count to try to improve efficiency (see [`std::make_shared`](https://en.cppreference.com/w/cpp/memory/shared_ptr/make_shared)).
 
 The main mistake I see from beginners is not using dynamically allocated counter (i.e., they keep the counter in the SP object). You **must** dynamically allocate memory for the counter so that it can be shared by all SP instances (you can not tell how many there will be or the order in which they will be deleted).
 
@@ -92,6 +92,7 @@ namespace ThorsAnvil
                 if (*count == 0)
                 {
                     delete data;
+                    delete count;
                 }
             }
             // Remember from ThorsAnvil::UP that we need to make sure we
@@ -121,6 +122,7 @@ namespace ThorsAnvil
                 if (*oldCount == 0)
                 {
                     delete oldData;
+                    delete oldCount;
                 }
             }
             // Const correct access owned object
@@ -136,9 +138,9 @@ namespace ThorsAnvil
 ### Problem 1: Potential Constructor Failure
 When a developer (attempts) to create an SP, they are handing over ownership of the pointer to the SP instance. Once the constructor starts, there is an expectation by the developer that no further checks are needed. But there is a problem with the code as written.
 
-In C++, memory allocation through new does not fail (unlike C where `malloc()` can return a Null on failure). In C++, a failure to allocate memory via the standard new generates a `std::bad_alloc` exception. Additionally, if we throw an exception out of a constructor, the destructor will never be called (the destructor is only called on fully formed objects) when the instance's lifespan ends.
+In C++, memory allocation through new does not fail (unlike C where `malloc()` can return a Null on failure). In C++, a failure to allocate memory via the standard new generates a `std::bad_alloc` exception. Additionally, if we throw an exception out of a constructor, the destructor will never be called (the destructor is only called on fully formed objects when the instance's lifespan ends).
 
-So if an exception is thrown during construction (and thus the destructor will not be called), we must assume responsibility for ensuring that the pointer is deleted before the exception escapes the constructor. Otherwise, there will be a resultant leak of the pointer.
+So if an exception is thrown during construction (and thus the destructor will not be called), we must assume responsibility for ensuring that the pointer is deleted before the exception escapes the constructor. Otherwise, there will be a resultant leak of the data pointer.
 
 #### Constructor takes responsibility for pointer
 ```c
@@ -196,6 +198,7 @@ namespace ThorsAnvil
                 if (*oldCount == 0)
                 {
                     delete oldData;
+                    delete oldCount;
                 }
             }
 }
@@ -213,6 +216,7 @@ Two portions of this look like other pieces of code that have already been writt
                     if (*oldCount == 0)
                     {
                         delete oldData;
+                        delete oldCount;
                     }
 ```
 This observation is commonly referred to as the **[Copy and Swap Idiom](https://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom)**. I will not go through all the details of the transformation here. But we can re-write the assignment operator as:
@@ -270,6 +274,7 @@ namespace ThorsAnvil
                 if (*count == 0)
                 {
                     delete data;
+                    delete count;
                 }
             }
             SP(SP const& copy)

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Switching to OctoPress"
+title: "Switching to OctoPress and GitHub"
 date: 2013-11-30T15:37:34-0800
 author: Loki Astari, (C)2013
 comments: true
@@ -18,8 +18,6 @@ draft: false
 disqusId: "http://lokiastari.com/blog/2013/11/30/switching-to-octopress/"
 ---
 
-## Switching to OctoPress and Github
-
 I have not blogged much, until recently, so I am not an HTML/CSS/Javascript expert. Thus, layout, or layout during writing an article, is not of supreme importance to me. I expect the framework to handle that all for me. But that was my issue with WordPress. As a normal blogger I am sure it is not an issue, but the tools for blogging about code are rudimentary and not well integrated in to WordPress; forcing me to write in HTML (see [Set up WordPress](https://lokiastari.com/posts/WanttosetupWordPresstowriteaboutProgramming)). I write a lot on other sites that specialize in coding and these sites have developed a style called &lt;MarkDown&gt;. The two most common versions are '[StackOverFlow markdown](https://stackoverflow.com/editing-help)' and '[GitHub markdown](https://daringfireball.net/projects/markdown/syntax)'.
 
 ### MarkDown
@@ -36,7 +34,7 @@ So the combination of these two issues has made me look for alternatives.
 
 ### OctoPress
 
-[OctoPress](https://octopress.org) was suggested by a colleague [Dan Lecocq](https://github.com/danlecocq). It is basically an off-line blogging system that takes your articles and creates a set of static pages. You can then use several systems to publish these static pages. As the pages are generated once (each time you create a new article) the requirements for the hosting system are minimal, and consequently, because there is no dynamic content, there are no attack vectors that can be used against the site. Note: This does not mean the site has to be simple or boring as the pages can still have dynamic content loaded from other sites (like twitter/github/facebook etc.) It is just that the dynamic content will be fetched by the browser from other sites.
+[OctoPress](https://octopress.org) was suggested by a colleague [Dan Lecocq](https://github.com/danlecocq). It is basically an off-line blogging system that takes your articles and creates a set of static pages. You can then use several systems to publish these static pages. As the pages are generated once (each time you create a new article) and there is no dynamic content, the requirements for the hosting system are minimal, and there are no attack vectors that can be used against the site. Note: This does not mean the site has to be simple or boring as the pages can still have dynamic content loaded from other sites (like twitter/github/facebook etc.) It is just that the dynamic content will be fetched by the browser from other sites.
 
 The other significant advantage is that it natively supports MarkDown. In fact, you can plug in your favorite MarkDown engine (I am currently stuck with the default 'GitHub Markdown'). Thus, you can write your article in MarkDown, which will be translated to the appropriate HTML.
 
@@ -46,7 +44,7 @@ Like WordPress it has multiple themes, unlike WordPress the user base is small s
 
 OctoPress also integrates with [GitHub Pages](https://pages.github.com/) a feature of the site designed to allow you to create documentation for your software.
 
-Though this is still not my perfect writing environment, OctoPress is a step up from using WordPress (for me, if you are not used to writing code, it will not be suitable for you, and I would stick to WordPress's Visual editor). There are a couple of tweaks I still need to iron out here and there. Once I have a basic system working perfectly, I will talk about precisely what I did. I have some ideas on how to improve the basics which may be down the road a bit (I need to perform more research how others are using this tool so I don't reinvent the wheel).
+Though this is still not my perfect writing environment, OctoPress is a step up from using WordPress (for me, if you 1are not used to writing code, it will not be suitable for you, and I would stick to WordPress's Visual editor). There are a couple of tweaks I still need to iron out here and there. Once I have a basic system working perfectly, I will talk about precisely what I did. I have some ideas on how to improve the basics which may be down the road a bit (I need to perform more research how others are using this tool so I don't reinvent the wheel).
 
 
 

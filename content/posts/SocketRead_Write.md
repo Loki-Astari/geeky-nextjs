@@ -70,11 +70,12 @@ This initial version treats all `read()` errors as unrecoverable, and `getMessag
 
 The following errors are the result of programming bugs and should not happen in production.
 
+```
     [EBADF]            fildes is not a valid file or socket descriptor open for reading.
-    [EFAULT]           Buf points outside the allocated address space.
+    [EFAULT]           Buf points outside the allocated address space.  
     [EINVAL]           The pointer associated with fildes was negative.
     [ENXIO]            A requested action cannot be performed by the device.
-
+```
 If they occur in production, they cannot be corrected pragmatically because the error occurred in a part of the code unassociated with this function.
 
 One could argue that the application can abort because these should never happen, but for now, we will settle for the read operation aborting with an error code. If we wrap this in a C++ class to control the state of the socket, exceptions may be more appropriate, and we will look into that approach in a subsequent article.
@@ -82,30 +83,34 @@ One could argue that the application can abort because these should never happen
 The following errors are potentially recoverable.
 {/* https://stackoverflow.com/questions/8471577/linux-tcp-connect-failure-with-etimedout */}
 
+```
     [EIO]              An I/O error occurred while reading from the file system.
     [ENOBUFS]          An attempt to allocate a memory buffer fails.
     [ENOMEM]           Insufficient memory is available.
     [ETIMEDOUT]        A transmission timeout occurs during a read attempt on a socket.
-
+```
 But in reality, recovering from them within the context of a read operation is not practical (you need to recover from these operations at a point where resources are controlled or user interaction is possible). So for now, we will abort the read operation with an error code (we will revisit this in a later article).
 
 The following error codes mean no more data will be available because the connection has been interrupted.
 {/* https://stackoverflow.com/questions/2974021/what-does-econnreset-mean-in-the-context-of-an-af-local-socket */}
 {/* https://stackoverflow.com/questions/900042/what-causes-the-enotconn-error */}
 
+```
     [ECONNRESET]       The connection is closed by the peer during a read attempt on a socket.
     [ENOTCONN]         A read is attempted on an unconnected socket.
-
+```
 How the application reacts to a broken connection depends on the communication protocol. For the simple protocol defined above, we can return any data retrieved from the socket and then indicate to the calling code that we have reached the end of the message (we will revisit this in a later article). This is probably the most iffy decision in handling error codes, and returning an error code could be more appropriate. Still, I want to illustrate that we can potentially continue depending on the situation.
 
 The following error codes are recoverable from.
 
+```
     [EAGAIN]           The file was marked for non-blocking I/O, and no data were ready to be read.
-
+```
 These error codes are generated when you have a non-blocking stream. In a future article, we will discuss taking advantage of non-blocking streams.
 
+```
     [EINTR]            A read from a slow device was interrupted before any data arrived by the delivery of a signal.
-
+```
 The exact action you take will depend on your application (e.g., doing useful work), but for our simple application, simply re-trying the read operation will be the standard action. Again, we will return to this, but taking advantage of timeouts will require a slightly more sophisticated approach than using the sockets API directly.
 
 > **EINTR:**
@@ -182,27 +187,30 @@ The `write()` has the same scenario as `read()`.
 
 The following errors are the result of programming bugs and should not happen in production.
 
+```
      [EINVAL]           The pointer associated with fildes is negative.
      [EBADF]            fildes is not a valid file descriptor open for writing.
      [ECONNRESET]       A write is attempted on a socket that is not connected.
      [ENXIO]            A request is made of a nonexistent device, or the request is outside the capabilities of the device.
      [EPIPE]            An attempt is made to write to a socket of type SOCK_STREAM that is not connected to a peer socket.
-
+```
 The following errors are potentially recoverable bugs. However, recovering from them requires some form of awareness of the context not provided at the read level. So, we must generate an error to stop reading and allow the caller to sort out the problem.
 
+```
      [EDQUOT]           The user's quota of disk blocks on the file system containing the file is exhausted.
      [EFBIG]            An attempt is made to write a file that exceeds the process's file size limit or the maximum file size.
      [EIO]              An I/O error occurs while reading from or writing to the file system.
      [ENETDOWN]         A write is attempted on a socket and the local network interface used to reach the destination is down.
      [ENETUNREACH]      A write is attempted on a socket and no route to the network is present.
      [ENOSPC]           There is no free space remaining on the file system containing the file.
-
+```
 
 The following error codes are recoverable, and we covered them above in the section on `read()`.
 
+```
      [EAGAIN]           The file is marked for non-blocking I/O, and no data could be written immediately.
      [EINTR]            A signal interrupts the write before it could be completed.
-
+```
 The resulting put function then looks like this.
 
 #### putMessage() Improved

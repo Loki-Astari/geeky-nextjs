@@ -23,7 +23,7 @@ draft: false
 disqusId: "http://lokiastari.com/blog/2016/02/27/vector/"
 ---
 
-Many new developers of C++ attempt to build a `Vector'- like container as a learning process. Getting a simple version of this working for POD types (like int) is not that complicated. The next step in getting this working for arbitrary data types takes a significant leap forward in thinking in C++, especially when you start looking at efficiency and exception safety. This set of five articles looks at building an efficient `Vector` implementation. I show some of the common mistakes and explain why and how to resolve the problems:
+Many new developers of C++ attempt to build a `Vector` like container as a learning process. Getting a simple version of this working for POD types (like int) is not that complicated. The next step in getting this working for arbitrary data types takes a significant leap forward in thinking in C++, especially when you start looking at efficiency and exception safety. This set of five articles looks at building an efficient `Vector` implementation. I show some of the common mistakes and explain why and how to resolve the problems:
 
 Note: This is not meant to replace `std::vector<>`; this is intended as a teaching process.
 
@@ -47,7 +47,7 @@ Conversely, resource management classes usually contain a pointer (or pointer-li
 
 The rule of three comes from C++03, where we only had copy semantics.
 
-## Version-1 Simple Resource Management
+## Version-1: Simple Resource Management
 When creating a class to manage resources, the first version created by beginners usually looks like this:
 
 #### Rule of three first pass
@@ -88,7 +88,7 @@ int main()
 }
 ```
 
-## Version-2 Rule of Three
+## Version-2: Rule of Three
 The rule of three simply stated is: If you define any of the methods Destructor/Copy Constructor/Copy Assignment Operator, then you should define all three. When done correctly, this resolves the shallow copy problem. `Vector` defines the destructor, so we also need to define the copy constructor and copy assignment operator.
 
 I often see this as an initial attempt at defining the rule of three for vectors.
@@ -126,7 +126,7 @@ class Vector
 };
 ```
 
-## Version-3 Lazy Construction of elements.
+## Version-3: Lazy Construction of elements.
 
 The problem with the previous version is that it immediately forces the initialization of all elements in the buffer. This forces the requirement that members of the `Vector` (i.e. type `T`) must be default constructable. It also has two efficiency constraints imposed on the Vector:
 

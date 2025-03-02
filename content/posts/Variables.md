@@ -23,8 +23,6 @@ draft: false
 disqusId: "http://lokiastari.com/blog/2013/11/19/so-you-want-to-learn-c-plus-plus-part-3/"
 ---
 
-## Variables
-
 In most programming languages you have the concept of variables. These are named objects that hold a value (more formerly referred to as state). By manipulating a variable, you manipulate the state of the object the variable referees to.
 
 #### add.cpp
@@ -42,7 +40,7 @@ void addFunction()
 }
 ```
 
-C++ is a strongly typed language. This means each variable has a specific type that does not change (above that type is **int**). The operations that can be performed on an object depend on the object's type, and the operation's result can depend on the types involved. C++ has several built-in types (listed below) but allows the definition of new user-defined types (which will be described in a later article). The standard library provides a set of commonly used container types (listed below).
+C++ is a strongly typed language. This means each variable has a specific type that does not change (above that type is **int**). The operations that can be performed on an object depend on the object's type, and the operation's result can depend on the types involved. C++ has several built-in types (listed below) but allows the definition of new user-defined types (which will be described in a later article). The standard library provides a set of commonly used standard types (listed below).
 
 #### Built-in Types
 ```c
@@ -56,7 +54,7 @@ float                   // Represents a floating point number
 double                  // Represents a double precision floating point number
 ```
 
-#### Container Types
+#### Standard Types
 ```c
 // This is a list of the most commonly used types (there are many more)
 std::string             // Represents a string of characters.

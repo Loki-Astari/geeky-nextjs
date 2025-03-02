@@ -116,9 +116,7 @@ Optionally, you can provide the other comparison operators.
 
 
 # Final
-**No idea why Jackal is adding all the blank lines to my source**
 
-#### Vector
 ```c
 #include <type_traits>
 #include <memory>

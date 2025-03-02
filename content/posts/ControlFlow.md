@@ -23,7 +23,7 @@ draft: false
 disqusId: "http://lokiastari.com/blog/2013/12/02/so-you-want-to-learn-c-plus-plus-part-5/"
 ---
 
-So far, we have demonstrated basic programs that perform a single task without making any decisions. Most (all but the most trivial) programming languages provide decision-making constructs (Conditional Branching).
+So far, we have created basic programs that perform a single task without making any decisions. Most (all but the most trivial) programming languages provide decision-making constructs (Conditional Branching).
 
 C++ provides two forms of branching. The **"If Statement"** and the **"Switch Statement"** .
 
@@ -136,7 +136,7 @@ int main()
 
 ### Switch Statement
 
-The **"Switch Statement"** is an alternative to the **"If Statement"**. Prefer the switch when you have many options derived from the same expression. Unlike other high-level languages, C++ can only use **Integer** types in a switch statement; thus, in all `case &lt;Value&gt; the &lt;Value&gt; must be an integer **literal** value.
+The **"Switch Statement"** is an alternative to the **"If Statement"**. Prefer the switch when you have many options derived from the same expression. Unlike other high-level languages, C++ can only use **Integer** types in a switch statement; thus, in all `case <Value>` the &lt;Value&gt; must be an integer **literal** value.
 
 #### switch.cpp
 ```c

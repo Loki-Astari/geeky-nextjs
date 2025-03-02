@@ -112,7 +112,7 @@ OK. We have seen an example, but what is the exact format of a function?
 //                         return theResultOfAFunctionCall("Get A Result");
 ```
 
-If a function has a `void` return type, you don't need to **Return Statement**. With any other return type, your function must exit using a **Return Statement**. The **Return Statement** determines the value returned to the caller from the function. The one exception to this rule (and there must be an exception to make it a rule) is `int main()`. If you don't explicitly have a **Return Statement** int `int main()`, the compiler will plant `return 0;` for you.
+If a function has a `void` return type, you don't need to **Return Statement**. With any other return type, your function must exit using a **Return Statement**. The **Return Statement** determines the value returned to the caller from the function. The one exception to this rule (and there must be an exception to make it a rule) is `int main()`. If you don't explicitly have a **Return Statement** in `int main()`, the compiler will plant `return 0;` for you.
 
 
 ### Forward Declaration

@@ -124,9 +124,9 @@ int main()
 }
 ```
 ## Move Semantics
-Move semantics were introduced with C++ 11. So though we can not copy the `ThorsAnvil::UP` object, it can be moved. The compiler will generate a default move constructor for a class under certain situations, but because we have defined a destructor for `ThorsAnvil::UP`, we must manually define the move constructor.
+Move semantics were introduced with C++ 11. So though we can not copy the `ThorsAnvil::UP` object, it should be movable. The compiler will generate a default move constructor for a class under certain situations, but because we have defined a destructor for `ThorsAnvil::UP`, we must manually define the move constructor.
 
-Move semantics say that the source object may be left in an undefined (but must be valid) state. So the easiest way to implement this is to swap the state of the current object with the source object (we know our state is valid, so just swap it with the incoming object state (its destructor will then take care of destroying the pointer we are holding)).
+Move semantics say that the source object may be left in an undefined (but must be valid) state. So the easiest way to implement this is to swap the state of the current object with the source object (we know our state is valid, so just swap it with the incoming object state), its destructor will then take care of destroying the pointer we are holding.
 
 #### Smart Pointer Move Semantics
 ```c

@@ -41,9 +41,9 @@ On [codereview.stackexchange.com](https://codereview.stackexchange.com) in the C
 
 Writing your own implementation of a smart pointer is a bad idea (IMO). The standardization and testing of smart pointers was a nine year process through [boost](https://www.boost.org/), with [boost::shared_ptr](https://www.boost.org/doc/libs/1_57_0/libs/smart_ptr/shared_ptr.htm) and [boost::scoped_ptr](https://www.boost.org/doc/libs/1_57_0/libs/smart_ptr/scoped_ptr.htm), finally resulting in the standardized versions being released in C++11: [std::shared_ptr](https://en.cppreference.com/w/cpp/memory/shared_ptr) and [std::unique_ptr](https://en.cppreference.com/w/cpp/memory/unique_ptr).
 
-I would even say that I dislike the smart pointer as a learning device; it seems like a very simple project for a newbie, but in reality (as indicated by the nine-year standardization processes), getting it working correctly in all contexts is rather a complex endeavor.
+I would even say that I dislike the smart pointer as a learning device; it seems like a straightforward project for a newbie, but in reality (as indicated by the nine-year standardization processes), getting it working correctly in all contexts is rather a complex endeavor.
 
-However, because it is such a frequent request for review, I want to look at smart pointers as a teaching exercise. In the next couple of articles, I will step through the processes of building a smart pointer and look at some of the common mistakes that I see (and probably make a few as I go).
+However, because smart pointers are frequently requested for review, I want to use them as a teaching exercise. In the next couple of articles, I will step through the process of building a smart pointer and examine some of the common mistakes that I see (and probably make a few as I go).
 
 ### Warning:
 This article is not for absolute beginners. I assume you already know the basics of C++.
@@ -185,7 +185,7 @@ takeOwner1(data);
 ```
 The problem is that when `tmp` goes out of scope, its destructor will call delete on the pointer. Thus, `data` now points to memory that has been destroyed (and therefore no longer belongs to the application). Any further use of `data` will potentially cause problems (and I am being generous using the word potentially).
 
-This feature can be quite useful (when you want this conversion to happen easily, see std::string). But you should definitely be aware of it and think carefully about creating single argument constructors.
+This feature can be pretty useful (when you want this conversion to happen easily, see std::string). But you should be aware of it and think carefully about creating single argument constructors.
 ### Problem 3: Null de-referencing
 I think it is obvious that `operator*` has an issue with de-referencing a Null pointer here:
 
@@ -201,9 +201,9 @@ T* operator->() {return data;}
 ```
 There are a couple of solutions to this problem. You can check `data` and throw an exception if it is a Null pointer, or alternatively, you can make it a precondition for using the smart pointer (i.e., it is the user's responsibility to either know or check the state of the smart pointer before using these methods).
 
-The standard has chosen to go with a pre-condition (a widespread C++ practice: do not impose an overhead on all your users (to spare problems for the beginner), but rather provide a mechanism to check the state for those that need to do so; so they can choose to pay the overhead when they need to and not every time). We can do the same here but have not provided any mechanism for the user to check the state of the smart pointer.
+The standard has chosen to go with a pre-condition (a widespread C++ practice: do not impose an overhead on all your users to make things easier for beginner (Also Know as: You should not pay for something you don't need!)), but rather provide a mechanism to check the state for those that need to do so; so they can choose to pay the overhead when they need to and not every time). We can do the same here but have not provided any mechanism for the user to check the state of the smart pointer.
 ### Problem 4: Const Correctness
-When accessing the owned object via a smart pointer, we are not affecting the state of our smart pointer, so any member that returns the object (without changing the state of the smart pointer) should be marked const.
+When accessing the owned object via a smart pointer, we do not affect its state, so any member that returns the object (without changing its state) should be marked const.
 
 #### Not const
 ```c
