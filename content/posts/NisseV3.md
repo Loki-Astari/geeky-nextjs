@@ -80,7 +80,7 @@ To create a secure connection, specify the location of the SSL certificate file 
 
 ```C++
     // The path where the “thorsanvil.dev” certificates are stored.
-    std::string   certPath = "/etc/letsencrypt/live/thorsanvil.dev”;
+    std::string   certPath = "/etc/letsencrypt/live/thorsanvil.dev";
     
     // Create a certificate object that contains the SSL Certificate and private key.
     // Note: Some files require you to provide a password to access the certificate; please see the documentation

@@ -25,7 +25,7 @@ disqusId: "http://lokiastari.com/blog/2024/11/04/Nisse/"
 
 # [Nisse](https://github.com/Loki-Astari/Nisse)
 
-[Nisse] (https://github.com/Loki-Astari/Nisse) is a C++ library that simplifies the creation of C++ web-based applications (https://github.com/Loki-Astari/Nisse/tree/master/src/Examples). It provides a framework for handling incoming requests and executing user-defined code asynchronously. To achieve this, Nisse creates managed socket connections that can be utilized by user code. It will automatically suspend the execution of user code and *RE-USE* the thread if the user code blocks during a read/write operation on a connection, thus offering easily accessible asynchronous functionality.
+[Nisse](https://github.com/Loki-Astari/Nisse) is a C++ library that simplifies the creation of [C++ web-based applications](https://github.com/Loki-Astari/Nisse/tree/master/src/Examples). It provides a framework for handling incoming requests and executing user-defined code asynchronously. To achieve this, Nisse creates managed socket connections that can be utilized by user code. It will automatically suspend the execution of user code and *RE-USE* the thread if the user code blocks during a read/write operation on a connection, thus offering easily accessible asynchronous functionality.
 
 The concept is to make it simple for beginner engineers to write regular, synchronous-looking C++ code that is easy to reason about and automatically provides the asynchronous processing that is inherently needed for web-based applications to function efficiently.
 
