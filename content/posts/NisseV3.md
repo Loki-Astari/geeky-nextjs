@@ -72,9 +72,14 @@ All the code for this article is in the directory [V3](https://github.com/Loki-A
 In ThorsSocket, a normal socket is created with the following code:
 
 ```C++
-    ThorsAnvil::ThorsSocket::Server   server(ServerInit{port});
+    // Make the code easier to read.
+    namespace TASock = ThorsAnvil::ThorsSocket;
+    namespace SFS = std::filesystem;
     
-    ThorsAnvil::ThorsSocket::Socket   socket = server.accept();          // A normal bi-direconal socket.
+    TASock::Server   server(ServerInit{port});
+    
+    // A normal bi-direconal socket.
+    TASock::Socket   socket = server.accept();
 ```
 
 To create a secure connection, specify the location of the SSL certificate file on the host file system. If you use [Let’s Encrypt](https://letsencrypt.org/), the default location for the SSL certificate is `/etc/letsencrypt/live/<domainName>/fullchain.pem`, and the private key is located at `/etc/letsencrypt/live/<domainName>/privkey.pem`. You can then create a secure SSL connection with:
@@ -83,16 +88,25 @@ To create a secure connection, specify the location of the SSL certificate file 
     // The path where the “thorsanvil.dev” certificates are stored.
     std::string   certPath = "/etc/letsencrypt/live/thorsanvil.dev";
     
-    // Create a certificate object that contains the SSL Certificate and private key.
-    // Note: Some files require you to provide a password to access the certificate; please see the documentation
-    // on how to add appropriate lambda’s to retrieve the password from secure storage (as they should not be in the code)
-    ThorsAnvil::ThorsSocket::CertificateInfo     certificate{std::filesystem::canonical(std::filesystem::path(certPath) /= "fullchain.pem",
-                                                             std::filesystem::canonical(std::filesystem::path(certPath) /= "privkey.pem"
-                                                            };
-    ThorsAnvil::ThorsSocket::SSLctx              ctx{ThorsAnvil::ThorsSocket::SSLMethodType::Server, certificate};
-    ThorsAnvil::ThorsSocket::Server              server(SServerInit{port, std::move(ctx)});
+    // Make the code easier to read.
+    namespace TASock = ThorsAnvil::ThorsSocket;
+    namespace SFS = std::filesystem;
+
     
-    ThorsAnvil::ThorsSocket::Socket   socket = server.accept();          // A secure bi-direconal SSL socket.
+    // Create a certificate object that contains the SSL Certificate and private key.
+    // Note: Some files require you to provide a password to access the certificate;
+    // please see the documentation on how to add appropriate lambda’s to retrieve the
+    // password from secure storage (as they should not be in the code)
+
+    TASock::CertificateInfo    certificate{
+    						          SFS::canonical(SFS::path(certPath) /= "fullchain.pem"),
+                                 SFS::canonical(SFS::path(certPath) /= "privkey.pem")
+                               };
+    TASock::SSLctx             ctx{TASock::SSLMethodType::Server, certificate};
+    TASock::Server             server(TASock::SServerInit{port, std::move(ctx)});
+    
+    // A secure bi-direconal SSL socket.
+    Socket   socket = server.accept();
 ```
 
 ## How to handle SSL or regular connections
@@ -106,6 +120,11 @@ namespace TASock = ThorsAnvil::ThorsSocket;
 // If we have an SSL certificate, then pass its location in `certPath` (which may be empty)
 TASock::ServerInit getServerInit(int port, std::optional<std::filesystem::path> certPath)
 {
+    // Make the code easier to read.
+    namespace TASock = ThorsAnvil::ThorsSocket;
+    namespace SFS = std::filesystem;
+
+    
     // If there is only a port.
     // i.e., the user did not provide a certificate path return a `ServerInfo` object.
     // This will create a normal listening socket.
@@ -116,8 +135,8 @@ TASock::ServerInit getServerInit(int port, std::optional<std::filesystem::path> 
     // If we have a certificate path.
     // Use this to create a certificate object.
     // This assumes the standard names for these files as provided by "Let's encrypt".
-    TASock::CertificateInfo     certificate{std::filesystem::canonical(std::filesystem::path(*certPath) /= "fullchain.pem"),
-                                            std::filesystem::canonical(std::filesystem::path(*certPath) /= "privkey.pem")
+    TASock::CertificateInfo     certificate{SFS::canonical(SFS::path(*certPath) /= "fullchain.pem"),
+                                            SFS::canonical(SFS::path(*certPath) /= "privkey.pem")
                                            };
     TASock::SSLctx              ctx{TASock::SSLMethodType::Server, certificate};
     
