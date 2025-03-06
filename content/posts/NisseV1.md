@@ -109,7 +109,10 @@ Server::Server(int port)
 {
     fd = ::socket(AF_INET, SOCK_STREAM, 0);
     if (fd == -1) {
-        throw std::runtime_error{Message{} << "Failed to create socket: " << errno << " " << strerror(errno)};
+        throw std::runtime_error{Message{} << "Failed to create socket: "
+                                           << errno 
+                                           << " " 
+                                           << strerror(errno)};
     }
     
     struct ::sockaddr_in        serverAddr{};
@@ -117,14 +120,22 @@ Server::Server(int port)
     serverAddr.sin_port         = htons(port);
     serverAddr.sin_addr.s_addr  = INADDR_ANY;
     
-    int bindStatus = ::bind(fd, reinterpret_cast<struct ::sockaddr*>(&serverAddr), sizeof(serverAddr));
+    int bindStatus = ::bind(fd,
+                            reinterpret_cast<struct ::sockaddr*>(&serverAddr),
+                            sizeof(serverAddr));
     if (bindStatus == -1) {
-        throw std::runtime_error{Message{} << "Failed to bind socket: " << errno << " " << strerror(errno)};
+        throw std::runtime_error{Message{} << "Failed to bind socket: "
+                                           << errno
+                                           << " "
+                                           << strerror(errno)};
     }
     
     int listenStatus = ::listen(fd, backlog);
     if (listenStatus == -1) {
-        throw std::runtime_error{Message{} << "Failed to listen socket: " << errno << " " << strerror(errno)};
+        throw std::runtime_error{Message{} << "Failed to listen socket: "
+                                           << errno
+                                           << " "
+                                           << strerror(errno)};
     }
 }
 ```
@@ -147,7 +158,9 @@ void Socket::readMoreData(std::size_t maxSize, bool required)
     
     while (readAvail && amountRead != maxSize)
     {
-        int nextChunk = ::read(fd, &buffer[0] + currentSize + amountRead, maxSize - amountRead);
+        int nextChunk = ::read(fd, 
+                               &buffer[0] + currentSize + amountRead,
+                               maxSize - amountRead);
         if (nextChunk == -1 && errno == EINTR) {
             continue;           // An interrupt can be ignored. Simply try again.
         }
@@ -157,7 +170,9 @@ void Socket::readMoreData(std::size_t maxSize, bool required)
         }
         if (nextChunk == -1) {
             buffer.resize(currentSize + amountRead);
-            throw std::runtime_error(Message{} << "Catastrophic read failure: " << errno << " " << strerror(errno));
+            throw std::runtime_error(Message{} << "Catastrophic read failure: "
+                                               << errno
+                                               << " " << strerror(errno));
         }
         if (nextChunk == 0) {   // The connection was closed gracefully.
             readAvail = false;  // OS handled all the niceties.
