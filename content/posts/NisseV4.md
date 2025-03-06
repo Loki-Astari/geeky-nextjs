@@ -72,7 +72,9 @@ class WebServer
     // A JobQueue that holds a pool of threads to execute inserted jobs asynchronously.
     JobQueue                            jobQueue;
     public:
-        WebServer(std::size_t workerCount, TASock::ServerInit&& serverInit, std::filesystem::path const& contentDir);
+        WebServer(std::size_t workerCount,
+                  TASock::ServerInit&& serverInit,
+                  std::filesystem::path const& contentDir);
 
         void run();
 };
@@ -282,11 +284,16 @@ void JobQueue::processWork()
         // An exception in “User Code” should not affect the server's stability.
         catch (std::exception const& e)
         {
-            ThorsLogWarning("ThorsAnvil::Nissa::JobQueue", "processWork", "Work Exception: ",  e.what());
+            ThorsLogWarning("ThorsAnvil::Nissa::JobQueue",
+                            "processWork",
+                            "Work Exception: ",
+                            e.what());
         }
         catch (...)
         {
-            ThorsLogWarning("ThorsAnvil::Nissa::JobQueue", "processWork", "Work Exception: Unknown");
+            ThorsLogWarning("ThorsAnvil::Nissa::JobQueue",
+                            "processWork",
+                            "Work Exception: Unknown");
         }
     }
 }
