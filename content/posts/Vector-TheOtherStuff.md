@@ -345,7 +345,8 @@ class Vector
 
         // Optimizations that use SFINAE to only instantiate one
         // of two versions of a function.
-        //      simpleCopy()        Moves when no exceptions are guaranteed; otherwise, copies.
+        //      simpleCopy()        Moves when no exceptions are guaranteed;
+        //                          otherwise, copies.
         //      clearElements()     When no destructor remove loop.
         //      copyAssign()        Avoid resource allocation when no exceptions guaranteed.
         //                          ie. When copying integers, reuse the buffer if we can
