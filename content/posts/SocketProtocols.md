@@ -179,8 +179,11 @@ class CurlGlobal
         {
             if (curl_global_init(CURL_GLOBAL_ALL) != 0)
             {
-                throw std::runtime_error(buildErrorMessage("CurlGlobal::", __func__,
-                ": curl_global_init: fail"));
+                throw std::runtime_error(
+                          buildErrorMessage("CurlGlobal::",
+                                            __func__,
+                                            ": curl_global_init: fail")
+                      );
             }
         }
         ~CurlGlobal()
@@ -226,7 +229,9 @@ class CurlConnector
             if (curl == NULL)
             {
                 throw std::runtime_error(
-                          buildErrorMessage("CurlConnector::", __func__, ": curl_easy_init: fail")
+                          buildErrorMessage("CurlConnector::",
+                                            __func__,
+                                            ": curl_easy_init: fail")
                       );
             }
         }
@@ -273,14 +278,22 @@ class CurlConnector
             std::unique_ptr<struct curl_slist, decltype(sListDeleter)> headers(nullptr, sListDeleter);
             headers = std::unique_ptr<struct curl_slist, decltype(sListDeleter)>(curl_slist_append(headers.get(), "Content-Type: text/text"), sListDeleter);
 
-            curlSetOptionWrapper(CURLOPT_HTTPHEADER,        headers.get(),          "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_HTTPHEADER:");
-            curlSetOptionWrapper(CURLOPT_ACCEPT_ENCODING,   "*/*",                  "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_ACCEPT_ENCODING:");
-            curlSetOptionWrapper(CURLOPT_USERAGENT,         "ThorsCurl-Client/0.1", "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_USERAGENT:");
-            curlSetOptionWrapper(CURLOPT_URL,               url.str().c_str(),      "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_URL:");
-            curlSetOptionWrapper(CURLOPT_POSTFIELDSIZE,     message.size(),         "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_POSTFIELDSIZE:");
-            curlSetOptionWrapper(CURLOPT_COPYPOSTFIELDS,    message.data(),         "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_COPYPOSTFIELDS:");
-            curlSetOptionWrapper(CURLOPT_WRITEFUNCTION,     curlConnectorGetData,   "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_WRITEFUNCTION:");
-            curlSetOptionWrapper(CURLOPT_WRITEDATA,         this,                   "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_WRITEDATA:");
+            curlSetOptionWrapper(CURLOPT_HTTPHEADER,        headers.get(),
+                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_HTTPHEADER:");
+            curlSetOptionWrapper(CURLOPT_ACCEPT_ENCODING,   "*/*",
+                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_ACCEPT_ENCODING:");
+            curlSetOptionWrapper(CURLOPT_USERAGENT,         "ThorsCurl-Client/0.1",
+                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_USERAGENT:");
+            curlSetOptionWrapper(CURLOPT_URL,               url.str().c_str(),
+                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_URL:");
+            curlSetOptionWrapper(CURLOPT_POSTFIELDSIZE,     message.size(), 
+                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_POSTFIELDSIZE:");
+            curlSetOptionWrapper(CURLOPT_COPYPOSTFIELDS,    message.data(),
+                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_COPYPOSTFIELDS:");
+            curlSetOptionWrapper(CURLOPT_WRITEFUNCTION,     curlConnectorGetData,
+                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_WRITEFUNCTION:");
+            curlSetOptionWrapper(CURLOPT_WRITEDATA,         this,
+                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_WRITEDATA:");
 
             switch(getRequestType())
             {
@@ -294,11 +307,21 @@ class CurlConnector
             }
             if (res != CURLE_OK)
             {
-                throw std::runtime_error(buildErrorMessage("CurlConnector::", __func__, ": curl_easy_setopt CURL_METHOD:", curl_easy_strerror(res)));
+                throw std::runtime_error(
+                          buildErrorMessage("CurlConnector::",
+                                            __func__,
+                                            ": curl_easy_setopt CURL_METHOD:",
+                                            curl_easy_strerror(res))
+                      );
             }
             if ((res = curl_easy_perform(curl)) != CURLE_OK)
             {
-                throw std::runtime_error(buildErrorMessage("CurlConnector::", __func__, ": curl_easy_perform:", curl_easy_strerror(res)));
+                throw std::runtime_error(
+                          buildErrorMessage("CurlConnector::",
+                                            __func__,
+                                            ": curl_easy_perform:",
+                                            curl_easy_strerror(res))
+                      );
             }
         }
         void recvMessage(std::string& message)
