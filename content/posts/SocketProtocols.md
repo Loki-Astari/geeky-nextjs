@@ -324,7 +324,12 @@ class CurlConnector
                     res = curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
                     break;
                 default:
-                    throw std::domain_error(buildErrorMessage("CurlConnector::", __func__, ": invalid method: ", static_cast<int>(getRequestType())));
+                    throw std::domain_error(
+                              buildErrorMessage("CurlConnector::",
+                                                __func__,
+                                                ": invalid method: ",
+                                                static_cast<int>(getRequestType()))
+                          );
             }
             if (res != CURLE_OK)
             {
