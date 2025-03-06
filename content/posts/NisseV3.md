@@ -99,8 +99,8 @@ To create a secure connection, specify the location of the SSL certificate file 
     // password from secure storage (as they should not be in the code)
 
     TASock::CertificateInfo    certificate{
-    						          SFS::canonical(SFS::path(certPath) /= "fullchain.pem"),
-                                 SFS::canonical(SFS::path(certPath) /= "privkey.pem")
+                                   SFS::canonical(SFS::path(certPath) /= "fullchain.pem"),
+                                   SFS::canonical(SFS::path(certPath) /= "privkey.pem")
                                };
     TASock::SSLctx             ctx{TASock::SSLMethodType::Server, certificate};
     TASock::Server             server(TASock::SServerInit{port, std::move(ctx)});
@@ -135,9 +135,10 @@ TASock::ServerInit getServerInit(int port, std::optional<std::filesystem::path> 
     // If we have a certificate path.
     // Use this to create a certificate object.
     // This assumes the standard names for these files as provided by "Let's encrypt".
-    TASock::CertificateInfo     certificate{SFS::canonical(SFS::path(*certPath) /= "fullchain.pem"),
-                                            SFS::canonical(SFS::path(*certPath) /= "privkey.pem")
-                                           };
+    TASock::CertificateInfo     certificate{
+                                    SFS::canonical(SFS::path(*certPath) /= "fullchain.pem"),
+                                    SFS::canonical(SFS::path(*certPath) /= "privkey.pem")
+                                };
     TASock::SSLctx              ctx{TASock::SSLMethodType::Server, certificate};
     
     // Now that we have created the appropriate SSL objects needed.
