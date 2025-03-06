@@ -51,7 +51,7 @@ There are two major techniques for tracking the shared owners of a pointer:
   <li>Keep a count:</li>
   <ul>
     <li>When the count is 1 you are the last owner.</li>
-    <li>This is a straightforward and logical technique. You have a shared counter that is incremented/decremented as SP instances take/release ownership of the pointer. The disadvantages are that you need dynamically allocated memory that must be managed, and in a threaded environment, you need to serialize accesses to counter.</li>
+    <li>This is a straightforward and logical technique. You have a shared counter that is incremented/decremented as SP instances take/release ownership of the pointer. The disadvantages are that you need dynamically allocated memory that must be managed, and in a threaded environment, you need to serialize accesses to the counter.</li>
   </ul>
   <li>Use a linked list of the owners:</li>
   <ul>
@@ -65,7 +65,7 @@ The list version is easier to implement correctly. There are no real gotchas (th
 
 The Shared Count is the technique used by the [`std::shared_ptr`](https://en.cppreference.com/w/cpp/memory/shared_ptr), though the standard version stores slightly more than the count to try to improve efficiency (see [`std::make_shared`](https://en.cppreference.com/w/cpp/memory/shared_ptr/make_shared)).
 
-The main mistake I see from beginners is not using dynamically allocated counter (i.e., they keep the counter in the SP object). You **must** dynamically allocate memory for the counter so that it can be shared by all SP instances (you can not tell how many there will be or the order in which they will be deleted).
+The main mistake I see from beginners is not using a dynamically allocated counter (i.e., they keep the counter in the SP object). You **must** dynamically allocate memory for the counter so that it can be shared by all SP instances (you can not tell how many there will be or the order in which they will be deleted).
 
 You must also serialize access to this counter to ensure the count is correctly maintained in a threaded environment. In the first version, I will only consider single-threaded environments for simplicity, so synchronization is unnecessary.
 
@@ -140,7 +140,7 @@ When a developer (attempts) to create an SP, they are handing over ownership of 
 
 In C++, memory allocation through new does not fail (unlike C where `malloc()` can return a Null on failure). In C++, a failure to allocate memory via the standard new generates a `std::bad_alloc` exception. Additionally, if we throw an exception out of a constructor, the destructor will never be called (the destructor is only called on fully formed objects when the instance's lifespan ends).
 
-So if an exception is thrown during construction (and thus the destructor will not be called), we must assume responsibility for ensuring that the pointer is deleted before the exception escapes the constructor. Otherwise, there will be a resultant leak of the data pointer.
+So, if an exception is thrown during construction (and thus the destructor will not be called), we must assume responsibility for ensuring that the pointer is deleted before the exception escapes the constructor. Otherwise, the data pointer will be leaked.
 
 #### Constructor takes responsibility for pointer
 ```c

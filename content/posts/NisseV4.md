@@ -230,9 +230,9 @@ Code typically follows this pattern:
     // If the thread reaches here, we know the resource is available for the thread.
 ```
 
-The first question most beginners ask is: `Why is the wait() function called inside a loop?`. This is because when a thread calls `notify_one()` to wake up a waiting thread and the point a waiting thread exists the wait() function, another thread may have already consumed the resource. Therefore, you need to validate that the resource is still available, and if not, go back into the wait().
+The first question most beginners ask is: `Why is the wait() function called inside a loop?`. This is because between a call to `notify_one()` to wake up a waiting thread and the point a thread exists the `wait()` function, another thread may have already consumed the resource. Therefore, you need to validate that the resource is still available, and if not, go back into the wait().
 
-This loop is essential, so the C++ `std::conditional_variable` actually builds it into the wait interface. You can pass a lambda to the test as a second parameter.
+This loop is essential, so the C++ `std::conditional_variable` actually builds it into the wait interface. As a second parameter, you can pass a lambda to the test.
 
 ```C++
         cv.wait(lock, [&](){return resourceIWantIsAvailable();});

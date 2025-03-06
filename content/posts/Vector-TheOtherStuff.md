@@ -40,7 +40,7 @@ For details, see the [latest copy of the C++ standard](https://stackoverflow.com
 * difference&#95;type
 * size&#95;type
 
-It is worth specifying the internal types defined here, as this allows you to abstract the implementation details of the container. This will allow you to change the implementation details without users having to change their implementation, as long as the changes still provide the same interface but the interface to reference/pointers/iterators are relatively trivial and well defined.
+It is worth specifying the internal types defined here, as this allows you to abstract the implementation details of the container. This will allow you to change the implementation details without users having to change their implementation, as long as the changes still provide the same interface, but the interface to reference/pointers/iterators is relatively trivial and well defined.
 
 #### Constructors
 

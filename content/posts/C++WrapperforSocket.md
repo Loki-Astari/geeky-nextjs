@@ -64,7 +64,7 @@ Surprisingly, this gives us three types of socket interface (not the two most pe
 * The ConnectSocket class connects and can be used to read/write
 * The DataSocket class is an already connected socket that can be used to read/write
 
-Since a socket is a resource we don't want to be able to duplicated it, but it can be moved .
+Since a socket is a resource we don't want to be able to duplicate it, but it can be moved.
 
 This lets me define a very simple interface like this:
 

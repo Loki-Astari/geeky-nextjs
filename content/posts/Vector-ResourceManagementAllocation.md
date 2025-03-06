@@ -75,7 +75,7 @@ int main()
 {
     Vector<int>   x;
     Vector<int>   y(x);     // Compiler generate copy constructor does
-                            // an element wise shallow copy of each element.
+                            // an element-wise shallow copy of each element.
                             // This means both `x` and `y` have a buffer
                             // member that points at the same area in memory.
                             //
@@ -200,7 +200,7 @@ class Vector
     }
     void pop_back()
     {
-        // When removing elements need to manually call the destructor
+        // When removing elements, you need to manually call the destructor
         // because we created them using placement new.
         --length;
         buffer[length].~T();

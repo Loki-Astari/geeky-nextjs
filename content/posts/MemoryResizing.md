@@ -59,7 +59,7 @@ Test two `r < Phi`:
     Resize 4        80            48              72                 -8 // Reuse released memory next iteration
 ```
 
-OK. That also seems to be holding. But can we show that holds for all values of B? Also, this is a bit anecdotal. Can we show this relationship holds? Time to break out some maths (not math as my American cousins seem to insist on for the shortening of mathematics).
+OK. That also seems to be holding. But can we show that it holds for all values of B? Also, this is a bit anecdotal. Can we show this relationship holds? Time to break out some maths (not math as my American cousins seem to insist on for the shortening of mathematics).
 
 
 So the size `S` of any block after `n` resize operations will be:

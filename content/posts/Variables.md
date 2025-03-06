@@ -10,7 +10,7 @@ tags: So-You-Want-To-Learn-C++
 sharing: true
 footer: true
 subtitle: So you want to learn C++
-description: C++ for beginners. Part 3 Variables. In most programming languages you have the concept of variables. These are named objects that hold a value (more formerly referred to as state). By manipulating a variable, you manipulate the state of the object the variable referees to.
+description: C++ for beginners. Part 3 Variables. In most programming languages, you have the concept of variables. These are named objects that hold a value (more formerly referred to as state). By manipulating a variable, you manipulate the state of the object the variable refers to.
 image: /images/post/post-5.png
 imageInfo:
     original:           https://unsplash.com/photos/W-oqNwbmin0
@@ -23,7 +23,7 @@ draft: false
 disqusId: "http://lokiastari.com/blog/2013/11/19/so-you-want-to-learn-c-plus-plus-part-3/"
 ---
 
-In most programming languages you have the concept of variables. These are named objects that hold a value (more formerly referred to as state). By manipulating a variable, you manipulate the state of the object the variable referees to.
+In most programming languages, you have the concept of variables. These are named objects that hold a value (more formerly referred to as state). By manipulating a variable, you manipulate the state of the object the variable refers to.
 
 #### add.cpp
 ```c

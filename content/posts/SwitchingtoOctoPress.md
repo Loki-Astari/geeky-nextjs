@@ -22,13 +22,13 @@ I have not blogged much, until recently, so I am not an HTML/CSS/Javascript expe
 
 ### MarkDown
 
-Markdown is a very simplistic form of 'Markup' (yes, programmers think they are funny with the up/down thing). It is explicitly designed to be simple and deal with the common issues of writing word-based articles. Coder sites usually extend this with basic support for placing code (or pre-formatted text) directly into the article. It is not designed for non technical people (they should be using a 'Visual' interface not markup) but for the technical writer who does not want the full blown power of HTML, but wants slightly more control than visual interfaces provide.
+Markdown is a very simplistic form of 'Markup' (yes, programmers think they are funny with the up/down thing). It is explicitly designed to be simple and deal with the common issues of writing word-based articles. Coder sites usually extend this with basic support for placing code (or pre-formatted text) directly into the article. It is not designed for nontechnical people (they should be using a 'Visual' interface, not markup), but for the technical writer who does not want the full blown power of HTML, but wants slightly more control than visual interfaces provide.
 
 ### Attack Vector
 
 WordPress is also infamous for being the target of attackers, thus new attacks are constantly being developed (the joy of being top dog). This can be mitigated by putting your WordPress site on [wordpress.com](https://wordpress.com). This not only provides you with free hosting, but they do keep on top of security vulnerabilities and ensure all hosted sites are not overexposed.
 
-If you want use your own domain name (i.e. [LokiAstari.com](https://LokiAstari.com)) or any other "featured" services then you either need to fork up the cash (not an insignificant sum) or run your own WordPress site. So I have been running my own WordPress sites. However, running your own site exposes you to WordPress attacks/vulnerabilities. Honestly, it was not a big deal until I tweeted about my articles (now very much so).
+If you want to use your own domain name (i.e. [LokiAstari.com](https://LokiAstari.com)) or any other "featured" services then you either need to fork up the cash (not an insignificant sum) or run your own WordPress site. So I have been running my own WordPress sites. However, running your own site exposes you to WordPress attacks/vulnerabilities. Honestly, it was not a big deal until I tweeted about my articles (now very much so).
 
 So the combination of these two issues has made me look for alternatives.
 
@@ -38,13 +38,13 @@ So the combination of these two issues has made me look for alternatives.
 
 The other significant advantage is that it natively supports MarkDown. In fact, you can plug in your favorite MarkDown engine (I am currently stuck with the default 'GitHub Markdown'). Thus, you can write your article in MarkDown, which will be translated to the appropriate HTML.
 
-Like WordPress it has multiple themes, unlike WordPress the user base is small so the pool of user created themes is tiny in comparison (a couple of dozen). Though not as well established as WordPress, you can easily extend it and build your own themes. There are already a couple of themes based on [Bootstrap](https://github.com/twbs/bootstrap) the most commonly forked HTML5/CSS/Javascript web-site project on [GitHub](https://github.com).
+Like WordPress, it has multiple themes, unlike WordPress, the user base is small, so the pool of user-created themes is tiny in comparison (a couple of dozen). Though not as well established as WordPress, you can easily extend it and build your own themes. There are already a couple of themes based on [Bootstrap](https://github.com/twbs/bootstrap), the most commonly forked HTML5/CSS/Javascript web-site project on [GitHub](https://github.com).
 
 ### GitHub
 
-OctoPress also integrates with [GitHub Pages](https://pages.github.com/) a feature of the site designed to allow you to create documentation for your software.
+OctoPress also integrates with [GitHub Pages](https://pages.github.com/), a site feature designed to allow you to create documentation for your software.
 
-Though this is still not my perfect writing environment, OctoPress is a step up from using WordPress (for me, if you 1are not used to writing code, it will not be suitable for you, and I would stick to WordPress's Visual editor). There are a couple of tweaks I still need to iron out here and there. Once I have a basic system working perfectly, I will talk about precisely what I did. I have some ideas on how to improve the basics which may be down the road a bit (I need to perform more research how others are using this tool so I don't reinvent the wheel).
+Though this is still not my perfect writing environment, OctoPress is a step up from using WordPress (for me, if you 1are not used to writing code, it will not be suitable for you, and I would stick to WordPress's Visual editor). There are a couple of tweaks I still need to iron out here and there. Once I have a basic system working perfectly, I will talk about precisely what I did. I have some ideas on how to improve the basics, which may be down the road a bit (I need to perform more research on how others are using this tool so I don't reinvent the wheel).
 
 
 

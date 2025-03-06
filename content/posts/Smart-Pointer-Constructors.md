@@ -120,13 +120,13 @@ int main()
                           //
                           // That seems like a lot of extra work. So we
                           // may as well define the assignment operator
-                          // to specifically user `nullptr`.
+                          // to specifically use `nullptr`.
 }
 ```
 ## Move Semantics
 Move semantics were introduced with C++ 11. So though we can not copy the `ThorsAnvil::UP` object, it should be movable. The compiler will generate a default move constructor for a class under certain situations, but because we have defined a destructor for `ThorsAnvil::UP`, we must manually define the move constructor.
 
-Move semantics say that the source object may be left in an undefined (but must be valid) state. So the easiest way to implement this is to swap the state of the current object with the source object (we know our state is valid, so just swap it with the incoming object state), its destructor will then take care of destroying the pointer we are holding.
+Move semantics say that the source object may be left in an undefined (but must be valid) state. So, the easiest way to implement this is to swap the state of the current object with the source object (we know our state is valid, so just swap it with the incoming object state). Its destructor will then take care of destroying the pointer we are holding.
 
 #### Smart Pointer Move Semantics
 ```c
@@ -165,7 +165,7 @@ namespace ThorsAnvil
 }
 ```
 ## Derived Type Assignment.
-Assigning derived class pointers to a base class pointer object is quite common feature in C++.
+Assigning derived class pointers to a base class pointer object is quite a common feature in C++.
 
 #### Derived Example
 ```c
@@ -207,7 +207,7 @@ int main(int argc, char* argv[])
     action->doAction();
 }
 ```
-This is because C++ considers `ThorsAnvil::UP<Derived1>`, `ThorsAnvil::UP<Derived2>` and `ThorsAnvil::UP<Base>` are three distinct classes that are unrelated. As this kind of pointer usage is inherent in how C++ is used, the smart pointer must be designed for this use case.
+This is because C++ considers `ThorsAnvil::UP<Derived1>`, `ThorsAnvil::UP<Derived2>` and `ThorsAnvil::UP<Base>` to be three distinct unrelated classes. As this kind of pointer usage is inherent in how C++ is used, the smart pointer must be designed for this use case.
 
 To solve this, we need to allow different types of smart pointers to be constructed from other types of smart pointers, but only where the enclosed types are related.
 

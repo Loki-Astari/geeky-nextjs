@@ -23,7 +23,7 @@ draft: false
 disqusId: "http://lokiastari.com/blog/2016/03/19/vector-simple-optimizations/"
 ---
 
-So now that we have used `std::is_nothrow_move_constructible` we can also look at a couple of other types available in the template utility library.
+Now that we have used `std::is_nothrow_move_constructible,` we can also examine a couple of other types available in the template utility library.
 
 # Optimized Destruction
 

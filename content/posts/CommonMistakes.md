@@ -83,7 +83,7 @@ boost::numeric::ublas::vector<double>    data2;
 ```
 
 ### 2: Prefixing identifiers with &#39;&#95;&#39;
-Many developers new to C++ try to learn by browsing the standard libraries and getting their habits from things done there or bringing conventions from their current favorite languages into their C++ code. One of the things they ultimately pick up on is using '&#95;' as a prefix for identifiers.
+Many developers new to C++ try to learn by browsing the standard libraries and acquiring habits from what they see or incorporating conventions from their current favorite languages into their C++ code. One thing they ultimately pick up on is using '&#95;' as a prefix for identifiers.
 
 Though technically not wrong in all situations, the actual rules on using the '&#95;' as an identifier prefix are nontrivial. The issue is that most identifiers with prefix '&#95;' are reserved for use by the implementation. Thus, the compiler/linker may potentially do special things with them. You can read up on the issue here: [What are the rules about using an underscore in a C++ identifier?](https://stackoverflow.com/q/228783/14065).
 
