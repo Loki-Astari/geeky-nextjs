@@ -275,33 +275,54 @@ class CurlConnector
 
             CURLcode res;
             auto sListDeleter = [](struct curl_slist* headers){curl_slist_free_all(headers);};
-            std::unique_ptr<struct curl_slist, decltype(sListDeleter)> headers(nullptr, sListDeleter);
-            headers = std::unique_ptr<struct curl_slist, decltype(sListDeleter)>(curl_slist_append(headers.get(), "Content-Type: text/text"), sListDeleter);
+            using Headers = std::unique_ptr<struct curl_slist, decltype(sListDeleter)>;
+            Headers headers(nullptr, sListDeleter);
+            headers = Headers(curl_slist_append(headers.get(),
+                              "Content-Type: text/text"),
+                              sListDeleter);
 
             curlSetOptionWrapper(CURLOPT_HTTPHEADER,        headers.get(),
-                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_HTTPHEADER:");
+                                 "CurlConnector::", __func__,
+                                 ": curl_easy_setopt CURLOPT_HTTPHEADER:");
             curlSetOptionWrapper(CURLOPT_ACCEPT_ENCODING,   "*/*",
-                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_ACCEPT_ENCODING:");
+                                 "CurlConnector::", __func__,
+                                 ": curl_easy_setopt CURLOPT_ACCEPT_ENCODING:");
             curlSetOptionWrapper(CURLOPT_USERAGENT,         "ThorsCurl-Client/0.1",
-                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_USERAGENT:");
+                                 "CurlConnector::", __func__,
+                                 ": curl_easy_setopt CURLOPT_USERAGENT:");
             curlSetOptionWrapper(CURLOPT_URL,               url.str().c_str(),
-                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_URL:");
+                                 "CurlConnector::", __func__,
+                                 ": curl_easy_setopt CURLOPT_URL:");
             curlSetOptionWrapper(CURLOPT_POSTFIELDSIZE,     message.size(), 
-                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_POSTFIELDSIZE:");
+                                 "CurlConnector::", __func__,
+                                 ": curl_easy_setopt CURLOPT_POSTFIELDSIZE:");
             curlSetOptionWrapper(CURLOPT_COPYPOSTFIELDS,    message.data(),
-                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_COPYPOSTFIELDS:");
+                                 "CurlConnector::", __func__,
+                                 ": curl_easy_setopt CURLOPT_COPYPOSTFIELDS:");
             curlSetOptionWrapper(CURLOPT_WRITEFUNCTION,     curlConnectorGetData,
-                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_WRITEFUNCTION:");
+                                 "CurlConnector::", __func__,
+                                 ": curl_easy_setopt CURLOPT_WRITEFUNCTION:");
             curlSetOptionWrapper(CURLOPT_WRITEDATA,         this,
-                                 "CurlConnector::", __func__, ": curl_easy_setopt CURLOPT_WRITEDATA:");
+                                 "CurlConnector::", __func__,
+                                 ": curl_easy_setopt CURLOPT_WRITEDATA:");
 
             switch(getRequestType())
             {
-                case Get:       res = CURLE_OK; /* The default is GET. So do nothing.*/         break;
-                case Head:      res = curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "HEAD");    break;
-                case Put:       res = curl_easy_setopt(curl, CURLOPT_PUT, 1);                   break;
-                case Post:      res = curl_easy_setopt(curl, CURLOPT_POST, 1);                  break;
-                case Delete:    res = curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");  break;
+                case Get:
+                    res = CURLE_OK; /* The default is GET. So do nothing.*/
+                    break;
+                case Head:
+                    res = curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "HEAD");
+                    break;
+                case Put:
+                    res = curl_easy_setopt(curl, CURLOPT_PUT, 1);
+                    break;
+                case Post:
+                    res = curl_easy_setopt(curl, CURLOPT_POST, 1);
+                    break;
+                case Delete:
+                    res = curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+                    break;
                 default:
                     throw std::domain_error(buildErrorMessage("CurlConnector::", __func__, ": invalid method: ", static_cast<int>(getRequestType())));
             }
