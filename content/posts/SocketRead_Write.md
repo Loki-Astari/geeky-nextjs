@@ -37,7 +37,8 @@ To determine whether you have read all the information available on a stream, yo
  *                  The message is complete. There is no more data to be read.
  *              >0  Message data has been read (and a null terminator added).
  *                  The value is the number of bytes read from the stream
- *                  You should call getMessage() again to get the next section of the message.
+ *                  You should call getMessage() again to get the next section
+ *                  of the message.
  *                  Note: the message is terminated when 0 is returned.
  *              -1  An error occurred.
  */
@@ -104,12 +105,14 @@ How the application reacts to a broken connection depends on the communication p
 The following error codes are recoverable from.
 
 ```
-    [EAGAIN]           The file was marked for non-blocking I/O, and no data were ready to be read.
+    [EAGAIN]           The file was marked for non-blocking I/O,
+                       and no data were ready to be read.
 ```
 These error codes are generated when you have a non-blocking stream. In a future article, we will discuss taking advantage of non-blocking streams.
 
 ```
-    [EINTR]            A read from a slow device was interrupted before any data arrived by the delivery of a signal.
+    [EINTR]            A read from a slow device was interrupted before
+                       any data arrived by the delivery of a signal.
 ```
 The exact action you take will depend on your application (e.g., doing useful work), but for our simple application, simply re-trying the read operation will be the standard action. Again, we will return to this, but taking advantage of timeouts will require a slightly more sophisticated approach than using the sockets API directly.
 
@@ -192,16 +195,21 @@ The following errors are the result of programming bugs and should not happen in
      [EINVAL]           The pointer associated with fildes is negative.
      [EBADF]            fildes is not a valid file descriptor open for writing.
      [ECONNRESET]       A write is attempted on a socket that is not connected.
-     [ENXIO]            A request is made of a nonexistent device, or the request is outside the capabilities of the device.
-     [EPIPE]            An attempt is made to write to a socket of type SOCK_STREAM that is not connected to a peer socket.
+     [ENXIO]            A request is made of a nonexistent device, or the request
+                        is outside the capabilities of the device.
+     [EPIPE]            An attempt is made to write to a socket of type SOCK_STREAM
+                        that is not connected to a peer socket.
 ```
 The following errors are potentially recoverable bugs. However, recovering from them requires some form of awareness of the context not provided at the read level. So, we must generate an error to stop reading and allow the caller to sort out the problem.
 
 ```
-     [EDQUOT]           The user's quota of disk blocks on the file system containing the file is exhausted.
-     [EFBIG]            An attempt is made to write a file that exceeds the process's file size limit or the maximum file size.
+     [EDQUOT]           The user's quota of disk blocks on the file system containing
+                        the file is exhausted.
+     [EFBIG]            An attempt is made to write a file that exceeds the process's
+                        file size limit or the maximum file size.
      [EIO]              An I/O error occurs while reading from or writing to the file system.
-     [ENETDOWN]         A write is attempted on a socket and the local network interface used to reach the destination is down.
+     [ENETDOWN]         A write is attempted on a socket and the local network interface
+                        used to reach the destination is down.
      [ENETUNREACH]      A write is attempted on a socket and no route to the network is present.
      [ENOSPC]           There is no free space remaining on the file system containing the file.
 ```
@@ -209,7 +217,8 @@ The following errors are potentially recoverable bugs. However, recovering from 
 The following error codes are recoverable, and we covered them above in the section on `read()`.
 
 ```
-     [EAGAIN]           The file is marked for non-blocking I/O, and no data could be written immediately.
+     [EAGAIN]           The file is marked for non-blocking I/O, and no data
+                        could be written immediately.
      [EINTR]            A signal interrupts the write before it could be completed.
 ```
 The resulting put function then looks like this.
