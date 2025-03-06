@@ -41,7 +41,7 @@ All the code for this article is in the directory [V1](https://github.com/Loki-A
   > git clone https://github.com/Loki-Astari/NisseBlogCode.git
   > cd NisseBlogCode/V1
   > make
-  > ./NisseV1 8080 /Directory/You/Want/To/Server/On/Port/8080
+  > ./NisseV1 8080 /Directory/To/Server/On/Port/8080
 ```
 
 I will go over a couple of things in the file that I believe are worth explicitly pointing out:

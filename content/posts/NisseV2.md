@@ -36,11 +36,12 @@ All new code for this article is in the directory [V2](https://github.com/Loki-A
 ### Build & Run
 
 ```bash
-  > brew install thors-mongo              # A header-only version of thors-mongo can be alternatively installed.
+  > brew install thors-mongo              # A header-only version of thors-mongo can 
+                                          # be alternatively installed.
   > git clone https://github.com/Loki-Astari/NisseBlogCode.git
   > cd NisseBlogCode/V2
   > make
-  > ./NisseV2 8080 /Directory/You/Want/To/Server/On/Port/8080
+  > ./NisseV2 8080 /Directory/To/Server/On/Port/8080
 ```
 
 ## ThorsSocket
@@ -73,8 +74,9 @@ class Socket: public Stream
         virtual void ignore(std::size_t size)                   override {stream.ignore(size);}
         virtual void sendMessage(std::string const& message)    override {stream << message;}
         virtual void sync()                                     override {stream.sync();}
-        virtual bool hasData()  const                           override {return static_cast<bool>(stream);}
         virtual void close()                                    override {stream.close();}
+        virtual bool hasData()  const                           override
+        {return static_cast<bool>(stream);}
 };
 ```
 

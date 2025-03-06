@@ -59,11 +59,12 @@ All the code for this article is in the directory [V3](https://github.com/Loki-A
 ### Build & Run
 
 ```bash
-  > brew install thors-mongo              # A header-only version of thors-mongo can be alternatively installed.
+  > brew install thors-mongo              # A header-only version of thors-mongo
+                                          # can be alternatively installed.
   > git clone https://github.com/Loki-Astari/NisseBlogCode.git
   > cd NisseBlogCode/V3
   > make
-  > ./NisseV3 8080 /Directory/You/Want/To/Server/On/Port/8080 /etc/letsencrypt/live/<MySite.com>/
+  > ./NisseV3 8080 /Directory/To/Server/On/Port/8080 /etc/letsencrypt/live/<MySite.com>/
 ```
 
 ## How to Use ThorsSocket With an SSL Certificate

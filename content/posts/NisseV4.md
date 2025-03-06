@@ -34,11 +34,12 @@ All the code for this article is in the directory [V4](https://github.com/Loki-A
 ### Build & Run
 
 ```bash
-  > brew install thors-mongo              # A header-only version of thors-mongo can be alternatively installed.
+  > brew install thors-mongo              # A header-only version of thors-mongo
+                                          # can be alternatively installed.
   > git clone https://github.com/Loki-Astari/NisseBlogCode.git
   > cd NisseBlogCode/V4
   > make
-  > ./NisseV4 8080 /Directory/You/Want/To/Server/On/Port/8080 /etc/letsencrypt/live/<MySite.com>/
+  > ./NisseV4 8080 /Directory/To/Server/On/Port/8080 /etc/letsencrypt/live/<MySite.com>/
 ```
 
 ## Threading Potential Concerns
