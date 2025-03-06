@@ -43,7 +43,7 @@ All the code for this article is in the directory [V4](https://github.com/Loki-A
 
 ## Threading Potential Concerns
 
-In some previous code reviews I have done, I have seen beginners create a new thread for each new connection that is created. The thread will handle the request and complete (thread exiting and being killed). This is acceptable for a Web Server that handles a very low volume of calls and will keep the code simple, but it is a problematic design for high-volume or general servers.
+In some previous code reviews, I have seen beginners create a new thread for each new connection. The thread will handle the request and complete it (the thread exits and is destroyed). This is acceptable for a Web Server that handles a very low volume of calls and keeps the code simple, but it is a problematic design for high-volume or general servers.
 
 Creating a thread is a resource-intensive process, so it's generally discouraged to create and destroy a large number of threads. Additionally, the CPU can typically handle only one thread per core at any time; therefore, making a vast number of threads may lead to [thrashing](https://en.wikipedia.org/wiki/Thrashing_(computer_science)#) as the scheduler attempts to allocate time slices for each thread to perform active work.
 
@@ -128,7 +128,9 @@ void WebServer::run()
 
 ### JobQueue
 
-In C++20 the standard library added a new thread type, `std::jthread`. Quote: [indi](https://codereview.stackexchange.com/users/170106/indi) `std::jthread is what std::thread should have been. It is superior in every way, with no drawbacks`.
+In C++20 the standard library added a new thread type, `std::jthread`.
+>Quote: [indi](https://codereview.stackexchange.com/users/170106/indi)  
+>std::jthread is what std::thread should have been. It is superior in every way, with no drawbacks.
 
 Unfortunately, my platform does not currently support `std::jthread` in its implementation of the C++20 standard library. Therefore, the following code must navigate some extra hoops to ensure that `std::thread` behaves correctly in all corner cases. One significant difference is that with `std::thread`, you must explicitly `join()` the thread of execution before the `std::thread` object is destroyed. In contrast, the `std::jthread` destructor will automatically `join()` the thread of execution if not already done.
 
@@ -148,11 +150,12 @@ JobQueue::JobQueue(std::size_t workerCount)
     {
         // because `std::thread` may potentially throw during construction.
         // We must ensure we correctly clean up any constructed `std::thread` objects
-        // otherwise, the thread of execution will not be correctly joined, and the application
-        // terminated. 
+        // otherwise, the thread of execution will not be correctly joined, and the
+        // application terminated. 
         stop();
 
-        // Once we know the threads have been correctly cleaned up, we can re-throw the exception.
+        // Once we know the threads have been correctly cleaned up,
+        // we can re-throw the exception.
         throw;
     }
 }
@@ -180,7 +183,8 @@ void JobQueue::stop()
     // thus completing.
     markFinished();
 
-    // Some threads may be waiting on a condition variable; this will release them to check for the next job.
+    // Some threads may be waiting on a condition variable; this will release them
+    // to check for the next job.
     workCV.notify_all();
 
     // Wait for all threads of execution to complete by execution `join()` on them.
@@ -215,8 +219,9 @@ Code typically follows this pattern:
     {
         cv.wait(lock);
         // The wait function will release the lock and suspend the thread.
-        // When a thread is woken up, it must first reacquire the lock before it returns from wait()
-        // So when the wait() function exists, it still has the lock it established above.
+        // When a thread is woken up, it must first reacquire the lock before it returns
+        // from wait() So when the wait() function exists, it still has the lock it
+        // established above.
     }
 
     // If the thread reaches here, we know the resource is available for the thread.
@@ -236,7 +241,8 @@ Now that we have covered the basics of a condition variable, the code used by th
 ```C++
 // Retrieve a job from the work queue.
 // Suspend on condition variable if needed.
-// Note 1: In a shutdown scenario, the `finished` variable is true. In this case return but with no work.
+// Note 1: In a shutdown scenario, the `finished` variable is true.
+//         In this case return but with no work.
 // Note 2: Because you can return without work, the return type is `std::optional`.
 std::optional<Work> JobQueue::getNextJob()
 {

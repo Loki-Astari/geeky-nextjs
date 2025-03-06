@@ -85,8 +85,8 @@ To create a secure connection, specify the location of the SSL certificate file 
     // Create a certificate object that contains the SSL Certificate and private key.
     // Note: Some files require you to provide a password to access the certificate; please see the documentation
     // on how to add appropriate lambda’s to retrieve the password from secure storage (as they should not be in the code)
-    ThorsAnvil::ThorsSocket::CertificateInfo     certificate{std::filesystem::canonical(std::filesystem::path(certPath) /= "fullchain.pem”,
-                                                             std::filesystem::canonical(std::filesystem::path(certPath) /= "privkey.pem”
+    ThorsAnvil::ThorsSocket::CertificateInfo     certificate{std::filesystem::canonical(std::filesystem::path(certPath) /= "fullchain.pem",
+                                                             std::filesystem::canonical(std::filesystem::path(certPath) /= "privkey.pem"
                                                             };
     ThorsAnvil::ThorsSocket::SSLctx              ctx{ThorsAnvil::ThorsSocket::SSLMethodType::Server, certificate};
     ThorsAnvil::ThorsSocket::Server              server(SServerInit{port, std::move(ctx)});
@@ -96,7 +96,7 @@ To create a secure connection, specify the location of the SSL certificate file 
 
 ## How to handle SSL or regular connections
 
-The `ThorsAnvil::ThorsSocket::Socket` class can be constructed with `ServerInit` or `SServerInit` object. To simplify this, the constructor also takes a `std::varient` (ServerInit) that can contain either of these objects. This allows us to write a function to initialize a server connection to initialize either type.
+The `ThorsAnvil::ThorsSocket::Socket` class can be constructed with `TASock::ServerInfo` or `TASock::SServerInfo` object. To simplify this, the constructor also takes a `std::varient<TASock::ServerInfo, TASock::SServerInfo>` (aka `TASock::ServerInit`) that can contain either of these objects. This allows us to write a function to initialize a server connection to initialize either type.
 
 ```C++
 namespace TASock = ThorsAnvil::ThorsSocket;
