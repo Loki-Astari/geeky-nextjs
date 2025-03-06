@@ -179,7 +179,8 @@ class CurlGlobal
         {
             if (curl_global_init(CURL_GLOBAL_ALL) != 0)
             {
-                throw std::runtime_error(buildErrorMessage("CurlGlobal::", __func__, ": curl_global_init: fail"));
+                throw std::runtime_error(buildErrorMessage("CurlGlobal::", __func__,
+                ": curl_global_init: fail"));
             }
         }
         ~CurlGlobal()
@@ -210,7 +211,9 @@ class CurlConnector
         CURLcode res;
         if ((res = curl_easy_setopt(curl, option, parameter)) != CURLE_OK)
         {
-            throw std::runtime_error(buildErrorMessage(errorMessage..., curl_easy_strerror(res)));
+            throw std::runtime_error(
+                      buildErrorMessage(errorMessage..., curl_easy_strerror(res))
+                  );
         }
     }
 
@@ -222,7 +225,9 @@ class CurlConnector
         {
             if (curl == NULL)
             {
-                throw std::runtime_error(buildErrorMessage("CurlConnector::", __func__, ": curl_easy_init: fail"));
+                throw std::runtime_error(
+                          buildErrorMessage("CurlConnector::", __func__, ": curl_easy_init: fail")
+                      );
             }
         }
         ~CurlConnector()

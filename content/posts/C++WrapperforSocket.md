@@ -29,7 +29,8 @@ The client code becomes trivial. Create a `ConnectSocket` specifying the host an
 #### [client.cpp](https://github.com/Loki-Astari/Examples/blob/master/Version2/client.cpp)
 ```c
 ConnectSocket    connect("localhost", 8080);          // Connect to a server
-ProtocolSimple   connectSimple(connect);              // Knows how to send/recv a message over a socket
+ProtocolSimple   connectSimple(connect);              // Knows how to send/recv
+                                                      // a message over a socket
 connectSimple.sendMessage("", "A test message going to the server");
 
 std::string message;
@@ -45,8 +46,9 @@ For the server end, this is nearly as trivial as the client. Create a `ServerSoc
 ServerSocket   server(8080);                          // Create a listening connection
 while(true)
 {
-    DataSocket      accept  = server.accept();            // Wait for a clinet to connect
-    ProtocolSimple  acceptSimple(accept);                 // Knows how to send/recv a message over a socket
+    DataSocket      accept  = server.accept();        // Wait for a client to connect
+    ProtocolSimple  acceptSimple(accept);             // Knows how to send/recv
+                                                      // a message over a socket
 
     std::string message;
     acceptSimple.recvMessage(message);
