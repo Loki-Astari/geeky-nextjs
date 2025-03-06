@@ -229,36 +229,38 @@ class Vector
         }
 
         // Non-Mutating functions
-        size_type           size() const                        {return length;}
-        bool                empty() const                       {return length == 0;}
+        size_type       size() const                      {return length;}
+        bool            empty() const                     {return length == 0;}
 
         // Validated element access
-        reference           at(size_type index)                 {validateIndex(index);return buffer[index];}
-        const_reference     at(size_type index) const           {validateIndex(index);return buffer[index];}
+        reference       at(size_type index)               {validateIndex(index);
+                                                           return buffer[index];}
+        const_reference at(size_type index) const         {validateIndex(index);
+                                                           return buffer[index];}
 
         // Non-Validated element access
-        reference           operator[](size_type index)         {return buffer[index];}
-        const_reference     operator[](size_type index) const   {return buffer[index];}
-        reference           front()                             {return buffer[0];}
-        const_reference     front() const                       {return buffer[0];}
-        reference           back()                              {return buffer[length - 1];}
-        const_reference     back() const                        {return buffer[length - 1];}
+        reference       operator[](size_type index)       {return buffer[index];}
+        const_reference operator[](size_type index) const {return buffer[index];}
+        reference       front()                           {return buffer[0];}
+        const_reference front() const                     {return buffer[0];}
+        reference       back()                            {return buffer[length - 1];}
+        const_reference back() const                      {return buffer[length - 1];}
 
         // Iterators
-        iterator            begin()                             {return buffer;}
-        riterator           rbegin()                            {return riterator(end());}
-        const_iterator      begin() const                       {return buffer;}
-        const_riterator     rbegin() const                      {return const_riterator(end());}
+        iterator        begin()                           {return buffer;}
+        riterator       rbegin()                          {return riterator(end());}
+        const_iterator  begin() const                     {return buffer;}
+        const_riterator rbegin() const                    {return const_riterator(end());}
 
-        iterator            end()                               {return buffer + length;}
-        riterator           rend()                              {return riterator(begin());}
-        const_iterator      end() const                         {return buffer + length;}
-        const_riterator     rend() const                        {return const_riterator(begin());}
+        iterator        end()                             {return buffer + length;}
+        riterator       rend()                            {return riterator(begin());}
+        const_iterator  end() const                       {return buffer + length;}
+        const_riterator rend() const                      {return const_riterator(begin());}
 
-        const_iterator      cbegin() const                      {return begin();}
-        const_riterator     crbegin() const                     {return rbegin();}
-        const_iterator      cend() const                        {return end();}
-        const_riterator     crend() const                       {return rend();}
+        const_iterator  cbegin() const                    {return begin();}
+        const_riterator crbegin() const                   {return rbegin();}
+        const_iterator  cend() const                      {return end();}
+        const_riterator crend() const                     {return rend();}
 
         // Comparison
         bool operator!=(Vector const& rhs) const {return !(*this == rhs);}

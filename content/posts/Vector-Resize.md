@@ -124,9 +124,11 @@ struct SimpleCopy
     // The object is to copy all the elements from src to dst Vector
     // using pushBackInternal or moveBackInternal
     //
-    // SimpleCopy<T, false>:        Defines a version that use pushBackInternal (copy constructor)
+    // SimpleCopy<T, false>:        Copy Constructor
+    //                              Defines a version that uses pushBackInternal 
     //                              This is always safe to use.
-    // SimpleCopy<T, true>:         Defines a version that uses moveBackInternal (move constructor)
+    // SimpleCopy<T, true>:         Move Constructor
+    //                              Defines a version that uses moveBackInternal
     //                              Safe when move construction does not throw.
     //
     void operator()(Vector<T>& src, Vector<T>& dst) const;

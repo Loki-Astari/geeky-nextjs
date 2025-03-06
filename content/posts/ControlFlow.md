@@ -62,27 +62,33 @@ The standard comparison operators that you find in most languages can be used. T
 #### Standard Comparison Operators
 ```
 /*
-| Operator  | Usage   | Result Type | Meaning                                                           |
-| ----------|---------|-------------|-------------------------------------------------------------------|
-|    !      |  !A     |  bool       | Not A. If A is true, then false; if A is false, then true.          |
-|           |         |             | If A is not a bool type, it is converted (see below)               |
-|    ==     |  A == B |  bool       | true if A and B are logically equivalent; otherwise, false.            |
-|    !=     |  A != B |  bool       | Should mean !(A == B)                                             |
-|    <      |  A <  B |  bool       | true if A is logically less than B.                               |
-|    <=     |  A <= B |  bool       | true if A is logically less than or equal to B.                   |
-|    >      |  A >  B |  bool       | true if A is logically greater than B.                            |
-|    >=     |  a >= B |  bool       | true if A is logically greater than or equal to B.                |
-|    &&     |  A && B |  bool       | true if A is true **AND** B is true.                              |
-|           |         |             | If the expressions A or B are not bool, then              |
-|           |         |             | it is converted (see below). Also worth noting is that            |
-|           |         |             | if A is **false** then the expression for B is not evaluated.     |
-|           |         |             | This is known as a shortcut operator we will describe this later. |
-|    ||     |  A || B |  bool       | true if A is true **OR** B is true.                               |
-|           |         |             | If the expressions A or B are not actually a bool then            |
-|           |         |             | it is converted (see below). Also worth noting is that            |
-|           |         |             | if A is **true** then the expression for B is not evaluated.      |
-|           |         |             | This is known as a shortcut operator we will describe this later. |
-|-----------|---------|-------------|-------------------------------------------------------------------|
+| Operator  | Usage   | Result Type | Meaning                                                  |
+| ----------|---------|-------------|----------------------------------------------------------|
+|    !      |  !A     |  bool       | Not A.                                                   |
+|           |         |             | If A is true, then false; if A is false, then true       |
+|           |         |             | If A is not a bool type, it is converted (see below)     |
+|    ==     |  A == B |  bool       | Equality: true if A and B are logically equivalent;      |
+|           |         |             | otherwise, false.                                        |
+|    !=     |  A != B |  bool       | Should mean !(A == B)                                    |
+|    <      |  A <  B |  bool       | true if A is logically less than B.                      |
+|    <=     |  A <= B |  bool       | true if A is logically less than or equal to B.          |
+|    >      |  A >  B |  bool       | true if A is logically greater than B.                   |
+|    >=     |  a >= B |  bool       | true if A is logically greater than or equal to B.       |
+|    &&     |  A && B |  bool       | true if A is true **AND** B is true.                     |
+|           |         |             | If the expressions A or B are not bool, then             |
+|           |         |             | it is converted (see below).                             |
+|           |         |             | Also worth noting is that if A is **false** then the     |
+|           |         |             | expression for B is not evaluated.                       |
+|           |         |             | This is known as a shortcut operator.                    |
+|           |         |             | we will describe this later.                             |
+|    ||     |  A || B |  bool       | true if A is true **OR** B is true.                      |
+|           |         |             | If the expressions A or B are not actually a bool then   |
+|           |         |             | it is converted (see below). Also worth noting is that   |
+|           |         |             | if A is **true** then the expression for B is not        |
+|           |         |             | evaluated.                                               |
+|           |         |             | This is known as a shortcut operator.                    |
+|           |         |             | we will describe this later.                             |
+|-----------|---------|-------------|----------------------------------------------------------|
 */
 ```
 
@@ -91,14 +97,14 @@ If the expression you use in &lt;Condition&gt; does not result in a bool value, 
 #### Type conversion
 ```
 /*
-| Type             | false      | true            | Notes                                               |
-|------------------|------------|-----------------|-----------------------------------------------------|
-| bool             | false      | true            | Should be obvious: No actual conversion used.       |
-| Integers         | 0          | (anything else) | Integer shorthand for (char/short/int/long)         |
-| Pointers         | NULL       | (anything else) | Will discuss pointers in detail later.              |
-| User Define Type | ?          | ?               | If a cast operator to bool/Integer/pointer exists   |
-|                  |            |                 | this will be used.                                  |
-|------------------|------------|-----------------|-----------------------------------------------------|
+| Type             | false      | true            | Notes                                      |
+|------------------|------------|-----------------|--------------------------------------------|
+| bool             | false      | true            | No actual conversion used.                 |
+| Integers         | 0          | (anything else) | Integer shorthand for (char/short/int/long)|
+| Pointers         | NULL       | (anything else) | Will discuss pointers in detail later.     |
+| User Define Type | ?          | ?               | If a cast operator to bool/Integer/pointer |
+|                  |            |                 | exists this will be used.                  |
+|------------------|------------|-----------------|--------------------------------------------|
 */
 ```
 
