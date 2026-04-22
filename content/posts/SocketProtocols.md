@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Socket Protocols"
-date: 2016-05-29T21:13:39-07:00
+date: 2016-05-29T21:13:39-0700
 author: Loki Astari (C)2016
 comments: true
 categories: ["C++", "Sockets", "C++-By-Example", "Coding"]
