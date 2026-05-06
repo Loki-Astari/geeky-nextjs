@@ -55,17 +55,17 @@ all:	$(OBJ)
 The code for a Mug plugin that implements a Slack Bot that will respond correctly to events from Slack, thus allowing you to confirm that the application is connecting correctly.
 ````CPP
 #include "NisseBolt/App.h"
-#include "NisseBolt/Config.h"
+#include "NisseBolt/AppConfig.h"
 
 class Bot: public ThorsAnvil::Nisse::Bolt::App
 {
 	public:
-		Bot(ThorsAnvil::Nisse::Bolt::Config const& config)
+		Bot(ThorsAnvil::Nisse::Bolt::AppConfig const& config)
 			: ThorsAnvil::Nisse::Bolt::App(config)
 		{}
 };
 
-THORS_ANVIL_NISSE_BOLT_SERVER_INIT(ThorsAnvil::Nisse::Bolt::Config, Bot);
+THORS_ANVIL_NISSE_BOLT_SERVER_INIT(ThorsAnvil::Nisse::Bolt::AppConfig, Bot);
 ````
 
 ### config.plugin
@@ -194,19 +194,7 @@ In the Slack Configuration for your app:
 
 12. Under "OAuth Tokens", there should be a button marked "Install to <Workspace>". Click this button. Click the "Allow" button.
 
-### Add Your Bot to a Channel
-
-In the Slack Application, find a channel in the workspace.
-
-1. Go to the "Channel Details" dialog.
-
-2. Click the "Integrations" tab.
-
-3. In the "Apps" section, click "Add Apps".
-
-4. You should be able to see your app in the list. Click the "Add" button next to your bot.
-
-All done — your app is now receiving events from Slack.
+13. This should bring you back to the "OAuth & Permissions" page. You should see a "Bot User OAuth Token" Copy this value and page in into `config.plugin' in the 'botToken' field.
 
 ## How It All Fits Together
 
