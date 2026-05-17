@@ -6,12 +6,18 @@ author: Loki Astari, (C)2026
 comments: true
 categories: ["C++", "Mug", "Slack", "Nisse", "C++-By-Example", "Coding"]
 series: Mug
-tags: Mug, Nisse, Plugins
+tags: NisseBolt
 sharing: true
 footer: true
 subtitle: C++ By Example
 description: Opening modal dialogs from a Slack Bot
 image: /images/post/post-6.png
+imageInfo:
+    original:           https://unsplash.com/photos/Bj6ENZDMSDY
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Ben Griffiths
+    AttributionLink:    https://unsplash.com/@benofthenorth
 featured: false
 draft: false
 ---

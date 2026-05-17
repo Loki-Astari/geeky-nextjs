@@ -6,12 +6,18 @@ author: Loki Astari, (C)2026
 comments: true
 categories: ["C++", "Mug", "Slack", "Nisse", "C++-By-Example", "Coding"]
 series: Mug
-tags: Mug, Nisse, Plugins
+tags: NisseBolt
 sharing: true
 footer: true
 subtitle: C++ By Example
 description: Handling Slack slash commands
 image: /images/post/post-5.png
+imageInfo:
+    original:           https://unsplash.com/photos/W-oqNwbmin0
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Oscar Nilsson
+    AttributionLink:    https://unsplash.com/@oscrse
 featured: false
 draft: false
 ---

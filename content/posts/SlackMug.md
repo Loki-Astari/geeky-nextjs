@@ -6,12 +6,18 @@ author: Loki Astari, (C)2026
 comments: true
 categories: ["C++", "Mug", "Slack", "Nisse", "C++-By-Example", "Coding"]
 series: Mug
-tags: Mug, Nisse, Plugins
+tags: NisseBolt
 sharing: true
 footer: true
 subtitle: C++ By Example
 description: Creating a Slack bot using the Mug plugin architecture.
 image: /images/post/post-3.png
+imageInfo:
+    original:           https://unsplash.com/photos/d6dxQwmxV2Q
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Ken Blode
+    AttributionLink:    https://unsplash.com/@benkolde
 featured: false
 draft: false
 ---

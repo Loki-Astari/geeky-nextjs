@@ -6,7 +6,7 @@ author: Loki Astari, (C)2025
 comments: true
 categories: ["C++", "Vim", "NeoVim", "Config", "IDE"]
 series: Vim
-tags: Vim, IDE
+tags: Vim
 sharing: true
 footer: true
 subtitle: NeoVim IDE

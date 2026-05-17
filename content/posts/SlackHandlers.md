@@ -6,12 +6,18 @@ author: Loki Astari, (C)2026
 comments: true
 categories: ["C++", "Mug", "Slack", "Nisse", "C++-By-Example", "Coding"]
 series: Mug
-tags: Mug, Nisse, Plugins
+tags: NisseBolt
 sharing: true
 footer: true
 subtitle: C++ By Example
 description: Handling events in the Slack Bot
 image: /images/post/post-4.png
+imageInfo:
+    original:           https://unsplash.com/photos/wX2L8L-fGeA
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        Roman Synkevych
+    AttributionLink:    https://unsplash.com/@synkevych
 featured: false
 draft: false
 ---

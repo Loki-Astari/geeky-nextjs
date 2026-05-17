@@ -6,12 +6,18 @@ author: Loki Astari, (C)2026
 comments: true
 categories: ["C++", "Mug", "Nisse", "C++-By-Example", "Coding"]
 series: Mug
-tags: Mug, Nisse, Plugins
+tags: Mug
 sharing: true
 footer: true
 subtitle: C++ By Example
 description: Mug is a small HTTP server executable that loads REST endpoints from shared libraries and hot-reloads them when rebuilt. It’s aimed at making the edit/build/test loop feel closer to Python Bottle, while keeping the core server fast and C++-native.
 image: /images/post/post-2.png
+imageInfo:
+    original:           https://unsplash.com/photos/uyfohHiTxho
+    License:            Unsplash License
+    LicenseLink:        https://unsplash.com/license
+    Attribution:        ThisisEngineering RAEng
+    AttributionLink:    https://unsplash.com/@thisisengineering
 featured: false
 draft: false
 ---
