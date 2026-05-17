@@ -130,7 +130,7 @@ Run ngrok to forward traffic to your machine:
 
 You should see a line that looks like:
 
-Forwarding                    https://903d-175-22-89-211.ngrok-free.app -> http://localhost:8080
+Forwarding                    https://903d-175-22-89-211.ngrok-free.app -&gt; http://localhost:8080
 
 In the following section, you would use "https://903d-175-22-89-211.ngrok-free.app" as the "Domain-Name".
 
@@ -181,7 +181,7 @@ In the Slack Configuration for your app:
 
 3. Check your `config.plugin` file for the "slot" information; this will be used in the next step.
 
-4. Set the "Request URL" to be: "<Domain-Name>/<slot>/event".
+4. Set the "Request URL" to be: "&lt;Domain-Name&gt;lt;slot&gt;event".
    I have the domain `thors-anvil.com` and use the slot `/slack/Bot`, so my Request URL is: `https://thors-anvil.com/slack/Bot/event`.
 
 5. After about 2 seconds, Slack should attempt a connection to the server to validate that it can correctly decode an event.
@@ -198,7 +198,7 @@ In the Slack Configuration for your app:
 
 11. Click on the "OAuth & Permissions" section in the left toolbar.
 
-12. Under "OAuth Tokens", there should be a button marked "Install to <Workspace>". Click this button. Click the "Allow" button.
+12. Under "OAuth Tokens", there should be a button marked "Install to &lt;Workspace&gt; Click this button. Click the "Allow" button.
 
 13. This should bring you back to the "OAuth & Permissions" page. You should see a "Bot User OAuth Token" Copy this value and page in into `config.plugin' in the 'botToken' field.
 
@@ -214,7 +214,7 @@ One of the most useful features of Mug is hot-reloading. It monitors your librar
 
 ### ThorsMug
 
-In the `Bot.cpp` file you will find the line `THORS_ANVIL_NISSE_BOLT_SERVER_INIT(<ConfigType>, <AppType>)`. This is a macro provided by NisseBolt that implements the ThorsMug interface for you. It creates an instance of `AppType`, passing an instance of `ConfigType` as the only parameter to the constructor. The `ConfigType` object is created from the config file (mentioned above) that was passed to Mug on startup.
+In the `Bot.cpp` file you will find the line `THORS_ANVIL_NISSE_BOLT_SERVER_INIT(&lt;ConfigType&gt; &lt;AppType&gt; This is a macro provided by NisseBolt that implements the ThorsMug interface for you. It creates an instance of `AppType`, passing an instance of `ConfigType` as the only parameter to the constructor. The `ConfigType` object is created from the config file (mentioned above) that was passed to Mug on startup.
 
 In this case, the `config` block from config.plugin is passed to the ThorsMug interface:
 

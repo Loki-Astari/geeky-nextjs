@@ -116,7 +116,7 @@ Go to [api.slack.com/apps](https://api.slack.com/apps) and select your app.
 
 2. Toggle "Interactivity" to **On** (if not already enabled from the previous article).
 
-3. Set the **Request URL** to your Bot's interactivity endpoint. Check your `config.plugin` for the "slot" value. The URL format is: `<Domain-Name>/<slot>/interact`.
+3. Set the **Request URL** to your Bot's interactivity endpoint. Check your `config.plugin` for the "slot" value. The URL format is: `&lt;Domain-Name&gt;lt;slot&gt;interact`.
    For example: `https://thors-anvil.com/slack/Bot/interact`.
 
 4. Click "Save Changes".
