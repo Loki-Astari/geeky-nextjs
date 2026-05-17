@@ -13,7 +13,7 @@ subtitle: C++ By Example
 description: Mug is a small HTTP server executable that loads REST endpoints from shared libraries and hot-reloads them when rebuilt. It’s aimed at making the edit/build/test loop feel closer to Python Bottle, while keeping the core server fast and C++-native.
 image: /images/post/post-2.png
 featured: false
-draft: true
+draft: false
 ---
 
 I like Python’s Bottle/Flask development loop: change code, hit refresh, keep moving.

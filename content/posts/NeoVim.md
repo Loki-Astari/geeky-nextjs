@@ -19,7 +19,7 @@ imageInfo:
     Attribution:        ThisisEngineering RAEng
     AttributionLink:    https://unsplash.com/@thisisengineering
 featured: false
-draft: true
+draft: false
 disqusId: "http://lokiastari.com/blog/2025/03/05/NeoVim/"
 ---
 

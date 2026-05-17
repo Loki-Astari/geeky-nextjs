@@ -13,7 +13,7 @@ subtitle: C++ By Example
 description: Creating a Slack bot using the Mug plugin architecture.
 image: /images/post/post-3.png
 featured: false
-draft: true
+draft: false
 ---
 
 ## Overview

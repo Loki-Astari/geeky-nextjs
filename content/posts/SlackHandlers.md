@@ -13,7 +13,7 @@ subtitle: C++ By Example
 description: Handling events in the Slack Bot
 image: /images/post/post-4.png
 featured: false
-draft: true
+draft: false
 ---
 
 ## Overview
