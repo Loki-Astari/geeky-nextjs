@@ -80,7 +80,7 @@ Go to [api.slack.com/apps](https://api.slack.com/apps) and select your app.
 
 3. Fill in the form:
    - **Command**: The slash command users will type (e.g., `/todo`).
-   - **Request URL**: Your Bot's slash command endpoint. Check your `config.plugin` for the "slot" value. The URL format is: `&lt;Domain-Name&gt;lt;slot&gt;slash/&lt;command-without-slash&gt;
+   - **Request URL**: Your Bot's slash command endpoint. Check your `config.plugin` for the "slot" value. The URL format is: `&lt;Domain-Name&gt;/&lt;slot&gt;/slash/&lt;command-without-slash&gt;
      For example, if your domain is `thors-anvil.com`, your slot is `/slack/Bot`, and your command is `/todo`, the Request URL is: `https://thors-anvil.com/slack/Bot/slash/todo`.
    - **Short Description**: A brief description shown to users (e.g., "Manage your todo list").
    - **Usage Hint**: Optional hint shown to users about what arguments to provide (e.g., "[task description]").
@@ -247,8 +247,8 @@ Bot(Bolt::AppConfig const& config)
 
 Looking at the `config.plugin` file, you will notice that slash commands use a different URL path than events:
 
-- Events: `&lt;slot&gt;event`
-- Slash commands: `&lt;slot&gt;slash/&lt;command-name-without-slash&gt;
+- Events: `&lt;slot&gt;/event`
+- Slash commands: `&lt;slot&gt;/slash/&lt;command-name-without-slash&gt;
 
 For example, with slot `/slack/Bot` and command `/todo`:
 

@@ -181,7 +181,7 @@ In the Slack Configuration for your app:
 
 3. Check your `config.plugin` file for the "slot" information; this will be used in the next step.
 
-4. Set the "Request URL" to be: "&lt;Domain-Name&gt;lt;slot&gt;event".
+4. Set the "Request URL" to be: "&lt;Domain-Name&gt;/&lt;slot&gt;/event".
    I have the domain `thors-anvil.com` and use the slot `/slack/Bot`, so my Request URL is: `https://thors-anvil.com/slack/Bot/event`.
 
 5. After about 2 seconds, Slack should attempt a connection to the server to validate that it can correctly decode an event.
