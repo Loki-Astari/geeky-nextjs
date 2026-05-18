@@ -123,13 +123,13 @@ For simple, small-scale development, `ngrok` can be used for free to forward req
 Install ngrok on your machine.
 
 ````bash
-brew install ngrok
+> brew install ngrok
 ````
 
 Run ngrok to forward traffic to your machine:
 
 ````bash
-ngrok http 8080
+> ngrok http 8080
 ````
 
 You should see a line that looks like:
@@ -168,13 +168,13 @@ Go to [api.slack.com/apps](https://api.slack.com/apps).
 To build the application into a shared library that can be loaded by Mug, simply run "make".
 
 ````bash
-make
+> make
 ````
 
 You should now run the Mug server and load your Slack Bot.
 
 ````bash
-mug --config=config.plugin
+> mug --config=config.plugin
 ````
 
 If everything is working, you have a Slack Bot running on port 8080 of your local machine.
@@ -222,7 +222,13 @@ One of the most useful features of Mug is hot-reloading. It monitors your librar
 
 ### ThorsMug
 
-In the `Bot.cpp` file you will find the line `THORS_ANVIL_NISSE_BOLT_SERVER_INIT(<ConfigType>, <AppType>)` This is a macro provided by NisseBolt that implements the ThorsMug interface for you. It creates an instance of `AppType`, passing an instance of `ConfigType` as the only parameter to the constructor. The `ConfigType` object is created from the config file (mentioned above) that was passed to Mug on startup.
+In the `Bot.cpp` file you will find the line:
+
+```c++
+`THORS_ANVIL_NISSE_BOLT_SERVER_INIT(<ConfigType>, <AppType>);
+````
+
+This is a macro provided by NisseBolt that implements the ThorsMug interface for you. It creates an instance of `AppType`, passing an instance of `ConfigType` as the only parameter to the constructor. The `ConfigType` object is created from the config file (mentioned above) that was passed to Mug on startup.
 
 In this case, the `config` block from config.plugin is passed to the ThorsMug interface:
 
