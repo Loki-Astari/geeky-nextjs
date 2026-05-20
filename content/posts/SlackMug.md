@@ -63,15 +63,22 @@ The code for a Mug plugin that implements a Slack Bot that will respond correctl
 #include "NisseBolt/App.h"
 #include "NisseBolt/AppConfig.h"
 
+struct BotConfig: public ThorsAnvil::Nisse::Bolt::AppConfig
+{
+	std::string     slot;
+};
+
 class Bot: public ThorsAnvil::Nisse::Bolt::App
 {
 	public:
-		Bot(ThorsAnvil::Nisse::Bolt::AppConfig const& config)
+		Bot(BotConfig const& config)
 			: ThorsAnvil::Nisse::Bolt::App(config)
 		{}
 };
 
-THORS_ANVIL_NISSE_BOLT_SERVER_INIT(ThorsAnvil::Nisse::Bolt::AppConfig, Bot);
+ThorsAnvil_ExpandTrait(ThorsAnvil::Nisse::Bolt::AppConfig, BotConfig, slot);
+
+THORS_ANVIL_NISSE_BOLT_SERVER_INIT(BotConfig, Bot);
 ````
 
 ### config.plugin
@@ -231,6 +238,8 @@ In the `Bot.cpp` file you will find the line:
 This is a macro provided by NisseBolt that implements the ThorsMug interface for you. It creates an instance of `AppType`, passing an instance of `ConfigType` as the only parameter to the constructor. The `ConfigType` object is created from the config file (mentioned above) that was passed to Mug on startup.
 
 In this case, the `config` block from config.plugin is passed to the ThorsMug interface:
+
+The only requirement of the config object is that it has a member "slot" that is used by the Mug interface to distinguish multiple Mug handlers.
 
 ````JSON
 "config": {
