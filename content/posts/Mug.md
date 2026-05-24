@@ -125,7 +125,7 @@ Your shared library must export this exact C symbol: **`mugCreateInstance`**
 
 Signature:
 
-* `extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugCreateInstance(char const* config);`
+* `extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugCreateInstance(int init, char const* config);`
 
 Mug passes a stringified version of the plugin’s JSON `config` value (so it can be an object/string/number/etc.) and expects a `MugPlugin*` back.
 
@@ -175,13 +175,20 @@ class HelloPlugin : public ThorsAnvil::ThorsMug::MugPluginSimple
 // Note: The configuration is meant as the way to initialize your object with context.
 static std::unique_ptr<HelloPlugin> plugin;
 
-extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugCreateInstance(char const* /*config*/)
+extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugCreateInstance(int init, char const* /*config*/)
 {
-    if (plugin) {
-      throw std::runtime_error("This plugin only supports one running instance");
+    if (init != 0)
+    {
+        if (plugin) {
+          throw std::runtime_error("This plugin only supports one running instance");
+        }
+        plugin = std::make_unique<HelloPlugin>();
+        return plugin.get();
     }
-    plugin = std::make_unique<HelloPlugin>();
-    return plugin.get();
+    else {
+        plugin.reset();
+        return nullptr;
+  }
 }
 ```
 
